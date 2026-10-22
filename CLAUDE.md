@@ -18,7 +18,9 @@
   - `SITE.adsense` に運営者IDを入れると、広告のないページ（`noAds`：about・プライバシー・免責・404）をのぞく全ページの head に AdSense のコードが入り、`/ads.txt` ができる。`verify-dist.mjs` はこのコードだけを外部の読み込みの例外にする
   - 広告の枠は `adSlot('home'|'mid'|'end')`：トップの目次の下、業種のページの「やること」と「出典」のあいだ、入口のいちばん下。掲示・業種の名前・ボタンのそばには置かない。枠には「広告」と書く。審査に通って `SITE.adSlots` に広告ユニットのIDを入れるまでは何も出さない。中身が来なかった枠は消す。印刷には出さない。自動広告は使わない（掲示やボタンのそばに入るため）
   - 問い合わせ・訂正の連絡先は `SITE.contact`（入れると about とプライバシーポリシーに出る）
-- 公開まで `SITE.launched: false`（全ページ noindex）。公開の日に true にし、sitemap・IndexNow・Search Console を足す。目次の「準備中」は公開のときに外す
+- 2026-10-22 公開（https://anzen-benricho.com、`SITE.launched: true`）。同じ日に AdSense の審査をリクエスト（運営者ID ca-pub-7891863499821813、審査待ち）、Search Console にドメインで登録してサイトマップを送った。通ったら広告ユニット3つの番号を `SITE.adSlots` に入れる
+- 検索エンジンへのお知らせ：sitemap.xml（ビルドで作る）と、本番の公開のたびに変わったページを IndexNow で知らせる（`scripts/indexnow.mjs`。Bing など。鍵は `public/<鍵>.txt`、前に知らせた記録は Actions の cache）。Google は Search Console とサイトマップ
+- 自動：毎月1日 9:10 に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`）
 
 ## サイト作りの方針（しょーくんの方針・10/17）：迷ったら上から順に優先する
 - 前提：中身が正しい・軽くて速い・利用者のデータを送らない・むだな通信をしない・SEO。公開前に高速化・デバッグ・SEO の点検

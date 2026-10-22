@@ -88,7 +88,7 @@ export const KOUTSU = {
         '長い時間働いたあとに車で帰る人に、眠いときは休んでから運転するよう伝える',
       ],
       src: [
-        { t: '北海道労働局 フォークリフトによる死亡災害の事例と対策（令和7年9月）', u: 'https://jsite.mhlw.go.jp/hokkaido-roudoukyoku/content/contents/002408381.pdf' },
+        { t: '北海道労働局 令和7年死亡災害速報（9月把握分。後進してきたフォークリフトにひかれた例）', u: 'https://jsite.mhlw.go.jp/hokkaido-roudoukyoku/content/contents/002408382.pdf' },
         { t: '厚生労働省 フォークリフトの安全（接触の防止・誘導者）', u: 'https://www.mhlw.go.jp/content/11201250/001599313.pdf' },
         { t: '厚生労働省 交通労働災害防止のためのガイドライン', u: 'https://www.mhlw.go.jp/content/001035192.pdf' },
       ],
