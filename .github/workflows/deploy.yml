@@ -2,12 +2,15 @@ name: Build and Deploy
 
 # テスト → ビルド → 全ページ点検 → Cloudflare Pages へ直接アップロード（Direct Upload）
 # Cloudflare 側ではビルドしないので、アカウント共有の「月500回のビルド枠」を使わない
-#   main への push        → 本番（公開までは anzen-benricho.pages.dev・検索には出さない）
+#   main への push        → 本番（https://anzen-benricho.com）。公開のあと、変わったページを IndexNow で知らせる
+#   毎月1日 9:10（日本時間）→ 本番を作り直す（法改正の「施行済み」・トップの「次の改正」を切りかえる）
 #   プルリクエスト        → プレビュー（PRにURLをコメント）
 
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '10 0 1 * *'
   pull_request:
   workflow_dispatch:
 
@@ -61,6 +64,26 @@ jobs:
             echo "### Cloudflare Pages（$BRANCH）"
             sed 's/^/- /' urls.txt
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 前に知らせたページの記録を読む（IndexNow）
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/cache/restore@v4
+        with:
+          path: .indexnow
+          key: indexnow-${{ github.run_id }}
+          restore-keys: indexnow-
+
+      - name: 変わったページを検索エンジンに知らせる（IndexNow。Bing など）
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        continue-on-error: true
+        run: node scripts/indexnow.mjs
+
+      - name: 記録をとっておく（IndexNow）
+        if: always() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/cache/save@v4
+        with:
+          path: .indexnow
+          key: indexnow-${{ github.run_id }}
 
       - name: PRにプレビューURLをコメント
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository

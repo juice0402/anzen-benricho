@@ -117,6 +117,9 @@ if (SITE.launched) {
     if (!m[1].startsWith(SITE.url + '/') || !resolves(m[1].slice(SITE.url.length))) fail('/sitemap.xml', `ページがない: ${m[1]}`);
   }
   if (!readFileSync(join(DIST, 'robots.txt'), 'utf8').includes(`Sitemap: ${SITE.url}/sitemap.xml`)) fail('/robots.txt', 'Sitemap の行がない');
+  // IndexNow の鍵（中身は鍵だけ）
+  const keys = readdirSync(DIST).filter((f) => /^[0-9a-f]{32}\.txt$/.test(f));
+  if (keys.length !== 1 || readFileSync(join(DIST, keys[0]), 'utf8') !== keys[0].replace('.txt', '')) fail('/', 'IndexNow の鍵のファイルがおかしい');
 }
 
 if (errors.length) {
