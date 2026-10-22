@@ -1,5 +1,5 @@
 // 12月「年末の大掃除」（4業種）。中身は 2026-10-22 の見本（プロジェクトの claude/kongetsu-anzen-mihon-12.md）のとおり
-// 公開前に直すこと（見本の「公開前に直したいこと」）：運動の期間を中災防の実施要綱で確かめる／NITE の出典を公式に／
+// 公開前に直すこと（見本の「公開前に直したいこと」）：運動の期間を中災防の実施要綱で確かめる（10/22 中災防のサイトが開けず未確認）／NITE の出典は公式のPDFにした（10/22）／
 // 長野労基署の例を労基署の資料に／飲食の数字（平成26年）を新しい統計に
 
 export const OOSOUJI = {
@@ -96,7 +96,7 @@ export const OOSOUJI = {
         { t: '武生労働基準監督署 はさまれ・巻き込まれ災害の撲滅に向けて', u: 'https://jsite.mhlw.go.jp/fukui-roudoukyoku/content/contents/001480527.pdf' },
         { t: '職場のあんぜんサイト ヒヤリ・ハット事例 製綿機の掃除中に手を巻き込まれそうになった', u: 'https://anzeninfo.mhlw.go.jp/hiyari/hiy_0104.html' },
         { t: '埼玉県 酸化と燃焼（ウエスの自然発火事例）', u: 'https://www.pref.saitama.lg.jp/documents/80304/shiryou19.pdf' },
-        { t: 'NITE 油の自然発火事故への注意喚起（ワックスや塗料が付いた布）', u: 'https://kyodonewsprwire.jp/release/202506200912' },
+        { t: 'NITE 油の自然発火の注意喚起（ワックスや塗料が付いた布をふくむ。2025年7月）', u: 'https://www.nite.go.jp/data/000158361.pdf' },
       ],
     },
     {
@@ -126,7 +126,7 @@ export const OOSOUJI = {
         { t: '鳥取労働局 はしご、脚立からの墜落・転落防止', u: 'https://jsite.mhlw.go.jp/tottori-roudoukyoku/content/contents/5.tenntouri-huretto-031027.pdf' },
         { t: '職場のあんぜんサイト ヒヤリ・ハット事例 漂白剤の入った容器に、誤って洗浄剤を入れてしまった', u: 'https://anzeninfo.mhlw.go.jp/hiyari/hiy_0125.html' },
         { t: '奈良労働局 化学物質の身近なギモン（混ぜると危険な洗剤）', u: 'https://jsite.mhlw.go.jp/nara-roudoukyoku/content/contents/002499307.pdf' },
-        { t: 'NITE 油の自然発火事故への注意喚起（ワックスや塗料が付いた布）', u: 'https://kyodonewsprwire.jp/release/202506200912' },
+        { t: 'NITE 油の自然発火の注意喚起（ワックスや塗料が付いた布をふくむ。2025年7月）', u: 'https://www.nite.go.jp/data/000158361.pdf' },
       ],
     },
   ],
