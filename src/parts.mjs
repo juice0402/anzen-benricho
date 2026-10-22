@@ -12,9 +12,13 @@ export const fuda = (href, current = '') =>
     (g) => `<a class="fuda-b" href="${href(g)}" data-k="${g.key}"${g.key === current ? ' aria-current="page"' : ''}>${fudaLabel(g.label)}</a>`,
   ).join('')}</nav>`;
 
+// テーマの名前。titleParts があれば、その切れ目だけで改行する（「ハラスメントとカス/ハラ」のような切れ方をさせない）
+export const titleHtml = (t) => (t.titleParts ? t.titleParts.map((p) => `<span class="nw">${esc(p)}</span>`).join('<wbr>') : esc(t.title));
+
+// title はエスケープずみのHTML
 export const monthHead = (month, h, title, sub = '', undo = null) => `<header class="th-head">
 <p class="cal-band">今月の安全衛生</p>
-<div class="th-month"><b class="mon">${month}<small>月</small></b><${h} class="th-title">${esc(title)}${sub ? `<small>${esc(sub)}</small>` : ''}</${h}></div>
+<div class="th-month"><b class="mon">${month}<small>月</small></b><${h} class="th-title">${title}${sub ? `<small>${esc(sub)}</small>` : ''}</${h}></div>
 ${undo ? `<p class="th-undo">今月の運動 <span>${esc(undo.name)}</span> <span class="nw">${esc(undo.span)}</span></p>` : ''}
 </header>`;
 

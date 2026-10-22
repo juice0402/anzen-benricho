@@ -3,13 +3,13 @@
 //   /anzen/theme/<slug>/<業種>/   業種のページ：掲示・朝礼・やること・出典（1業種1ページ。検索と広告の審査で中身が1ページにまとまるように）
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
-import { themePath, gyoshuPath, fuda, monthHead } from '../parts.mjs';
+import { themePath, gyoshuPath, fuda, monthHead, titleHtml } from '../parts.mjs';
 
 const fmtDate = (iso) => {
   const [y, m, d] = iso.split('-').map(Number);
   return `${y}年${m}月${d}日`;
 };
-const head = (t, h, sub = '') => monthHead(t.month, h, t.title, sub, t.undo);
+const head = (t, h, sub = '') => monthHead(t.month, h, titleHtml(t), sub, t.undo);
 
 const srcList = (list) =>
   `<ol class="src">${list
@@ -20,7 +20,7 @@ const sheet = (t, g) => `<div class="sheet">
 <div class="tora" aria-hidden="true"></div>
 <div class="sheet-in">
 <p class="s-kicker"><span>${t.month}月の安全</span><span>${esc(g.label)}</span></p>
-<p class="s-title">${esc(t.title)}</p>
+<p class="s-title">${titleHtml(t)}</p>
 <ol class="rules">${g.rules.map(([a, b]) => `<li><div>${esc(a)}<span>${esc(b)}</span></div></li>`).join('')}</ol>
 <table class="kakunin" aria-label="確認欄"><thead><tr><th>確認した日</th><th>名前</th><th>確認した日</th><th>名前</th></tr></thead><tbody>${'<tr><td></td><td></td><td></td><td></td></tr>'.repeat(5)}</tbody></table>
 <p class="s-foot"><span>出典：厚生労働省・労働局ほか</span><span>今月の安全衛生　${SITE.url.replace('https://', '')}</span></p>

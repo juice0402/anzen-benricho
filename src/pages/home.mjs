@@ -5,9 +5,9 @@ import { SITE, CORNERS } from '../site.mjs';
 import { themePath, entrancePath, fuda } from '../parts.mjs';
 import { houreiPath, fmtDate } from '../data/hourei.mjs';
 
-export default function home({ month, themes, kaisei }) {
+export default function home({ month, themes, allThemes, kaisei }) {
   const groups = [
-    { corner: 'anzen', name: '今月の安全衛生', items: themes.map((t) => ({ name: `${t.month}月 ${t.title}`, href: themePath(t) })) },
+    { corner: 'anzen', name: '今月の安全衛生', items: allThemes.map((t) => ({ name: `${t.month}月 ${t.title}`, href: themePath(t) })) },
     { corner: 'kyotsu', name: CORNERS.kyotsu.name, items: [{ name: '法改正の一覧', href: '/hourei/' }, { name: '資格の更新の期限', href: '/shikaku/koushin/' }] },
     { corner: 'seisou', name: '清掃・ビルメン', items: [] },
   ].filter((g) => g.items.length);

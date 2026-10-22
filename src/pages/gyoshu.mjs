@@ -3,19 +3,19 @@
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
-import { gyoshuPath, entrancePath, fuda, monthHead } from '../parts.mjs';
+import { gyoshuPath, entrancePath, fuda, monthHead, titleHtml } from '../parts.mjs';
 
 function entrance(month, themes, g) {
   const path = entrancePath(g);
   const items = themes.map((t) => {
     const tg = t.gyoshu.find((x) => x.key === g.key);
     return `<section class="sec sec-pick" aria-labelledby="h-${t.slug}">
-<h2 class="sec-h" id="h-${t.slug}"><a href="${gyoshuPath(t, tg)}">${esc(t.title)}</a></h2>
+<h2 class="sec-h" id="h-${t.slug}"><a href="${gyoshuPath(t, tg)}">${titleHtml(t)}</a></h2>
 <ol class="pick-rules">${tg.rules.map(([a]) => `<li>${esc(a)}</li>`).join('')}</ol>
 <p class="pick-go"><a href="${gyoshuPath(t, tg)}">掲示と朝礼の文</a></p>
 </section>`;
   });
-  const body = `${monthHead(month, 'h1', `${g.name}の安全衛生`)}
+  const body = `${monthHead(month, 'h1', esc(`${g.name}の安全衛生`))}
 ${fuda(entrancePath, g.key)}
 ${items.join('\n')}
 ${adSlot('end')}`;
