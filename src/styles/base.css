@@ -1,0 +1,149 @@
+/* 3案で共通の骨組み。色と飾りは案ごとのファイル（tenken・kairan・keiji）で決める */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; touch-action: manipulation; }
+body {
+  margin: 0;
+  background: var(--board);
+  color: var(--ink);
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans CJK JP", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+h1, h2, h3, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus, #1d6fd1); outline-offset: 2px; }
+
+.bar-in, .wrap, .foot-in { max-width: 640px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+.bar-in { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 10px; padding-bottom: 10px; }
+.logo { font-weight: 700; font-size: 17px; text-decoration: none; letter-spacing: .02em; }
+.logo-h { font-size: inherit; line-height: inherit; }
+.bar-corner { font-size: 13px; white-space: nowrap; }
+.wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; padding-top: 14px; padding-bottom: 40px; }
+.foot-in { padding-top: 14px; padding-bottom: 28px; font-size: 13px; display: grid; gap: 8px; }
+.crumbs ol { display: flex; flex-wrap: wrap; gap: 4px 0; }
+.crumbs li + li::before { content: "/"; margin: 0 8px; opacity: .6; }
+.foot-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.foot-links a { padding: 6px 0; }
+
+/* 業種ごとに多いけが */
+.memo { margin: 0; display: grid; gap: 4px; }
+.memo dt { font-weight: 700; padding-top: 8px; }
+.memo dd { margin: 0; font-size: 15px; }
+
+/* このサイトについて など */
+.doc { display: grid; gap: 18px; }
+.doc-h { font-size: 24px; line-height: 1.35; }
+.doc-sec { display: grid; gap: 8px; }
+.doc-sec h2 { font-size: 17px; }
+.doc-sec p, .doc-date { font-size: 15px; }
+.doc-tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
+.doc-tbl th, .doc-tbl td { border: 1px solid var(--thin); padding: 6px; text-align: left; vertical-align: top; }
+
+/* 広告の枠：「広告」と書き、ボタンから離す。中身が来なかった枠は消す */
+.ad { display: grid; gap: 4px; margin: 6px 0; min-height: 120px; }
+.ad-label { font-size: 12px; }
+.ad:has(ins[data-ad-status="unfilled"]) { display: none; }
+
+/* 月とテーマ */
+.th-head, .this-month { display: grid; gap: 6px; }
+.th-month { display: flex; align-items: center; gap: 14px; }
+.mon { font-size: 46px; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; flex: none; }
+.mon small { font-size: 18px; margin-left: 2px; letter-spacing: 0; }
+.th-title { font-size: 26px; line-height: 1.3; font-weight: 700; }
+.th-title a { text-decoration: none; }
+.th-title small { display: block; font-size: 15px; font-weight: 700; }
+.th-lead { font-size: 14px; }
+.tm-h { font-size: 15px; }
+.tm-list { display: grid; }
+.tm-list a { display: block; padding: 8px 0; font-size: 22px; font-weight: 700; line-height: 1.35; text-decoration: none; }
+.pick-rules { list-style: decimal; padding-left: 1.4em; display: grid; gap: 4px; font-weight: 700; }
+.pick-go { margin-top: 6px; }
+.pick-go a { display: inline-block; padding: 8px 0; }
+.th-undo { font-size: 14px; }
+.cal-band { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-align: center; }
+.tm-ask { font-size: 14px; margin-top: 6px; }
+
+/* 業種の札 */
+.fuda { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 2px 4px; }
+.nw { white-space: nowrap; }
+.fuda-b { white-space: nowrap; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 48px; padding: 6px 5px; font-size: 15px; line-height: 1.3; text-decoration: none; cursor: pointer; background: transparent; border: 0; position: relative; }
+
+/* 節 */
+.sec { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
+.sec-h { font-size: 15px; font-weight: 700; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.btn { justify-self: start; min-height: 46px; padding: 8px 18px; font-size: 15px; cursor: pointer; background: transparent; }
+.talk { display: grid; gap: 8px; }
+.todo label { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; padding: 9px 0; cursor: pointer; }
+.todo input { width: 20px; height: 20px; margin: 3px 0 0; }
+.src { display: grid; gap: 6px; font-size: 14px; counter-reset: s; }
+.src li { counter-increment: s; display: grid; grid-template-columns: 2em 1fr; }
+.src li::before { content: counter(s) "."; }
+.src a { overflow-wrap: anywhere; }
+.src .chk { grid-column: 2; font-size: 12px; }
+.src-note { font-size: 13px; }
+
+/* 次の改正 */
+.kaisei { font-size: 14px; display: flex; align-items: center; gap: 12px; }
+.kaisei-tag { flex: none; font-size: 12px; font-weight: 700; padding: 1px 8px; }
+.kaisei-date { display: block; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* 目次 */
+.index { display: grid; gap: 14px; }
+.idx-group { display: grid; gap: 4px; }
+.idx-group h3 { font-size: 14px; }
+.idx-group li { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; }
+.idx-group li a { flex: 1; padding: 10px 0; }
+
+/* 掲示（A4の紙）。印刷でもこの形のまま。文字の大きさは紙の幅に合わせる（cqw） */
+.sheet { container-type: inline-size; background: #fff; color: #1b1f22; aspect-ratio: 210 / 297; width: 100%; display: flex; flex-direction: column; position: relative; }
+.tora { height: 3.2cqw; flex: none; background: repeating-linear-gradient(-45deg, #f2c200 0 2.4cqw, #1b1f22 2.4cqw 4.8cqw); }
+/* 中身が多いときは紙のほうがのびる（文字が紙の外に出ないように） */
+.sheet-in { flex: 1; display: flex; flex-direction: column; gap: 4cqw; padding: 6cqw 7cqw 4.5cqw; }
+.s-kicker { font-size: 3.6cqw; font-weight: 700; display: flex; justify-content: space-between; gap: 3cqw; }
+.s-title { font-size: 10cqw; line-height: 1.15; font-weight: 700; letter-spacing: .02em; }
+.rules { display: grid; gap: 3.4cqw; counter-reset: r; }
+.rules li { word-break: auto-phrase; counter-increment: r; display: grid; grid-template-columns: 7.5cqw 1fr; gap: 2.6cqw; font-size: 5cqw; line-height: 1.45; font-weight: 700; }
+.rules li::before { content: counter(r); width: 7.5cqw; height: 7.5cqw; display: grid; place-items: center; font-size: 4.4cqw; border: .5cqw solid currentColor; margin-top: .4cqw; }
+.rules li span { display: block; font-size: 3.8cqw; font-weight: 400; }
+.kakunin { margin-top: auto; width: 100%; border-collapse: collapse; font-size: 3cqw; }
+.kakunin th, .kakunin td { border: .25cqw solid #9aa3a8; height: 5.6cqw; padding: 0 1.5cqw; text-align: left; font-weight: 400; }
+.s-foot { font-size: max(2.5cqw, 9px); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 3cqw; }
+.s-foot span { white-space: nowrap; }
+
+/* 法改正 */
+.pg-title { padding-top: 10px; }
+.pg-lead, .u-note, .hr-k, .ks-note { font-size: 13px; }
+.hr-list li + li { border-top: 1px solid var(--thin); }
+.hr-list a { display: grid; gap: 1px; padding: 12px 0; text-decoration: none; }
+.hr-date { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hr-st { font-size: 12px; font-weight: 400; margin-left: 8px; }
+.hr-t { font-size: 17px; line-height: 1.4; }
+.hr-facts { margin: 4px 0 0; display: grid; gap: 4px; border-top: 1px solid var(--thin); padding-top: 8px; }
+.hr-facts div { display: grid; grid-template-columns: 3.5em 1fr; gap: 8px; align-items: baseline; }
+.hr-facts dt { font-size: 13px; }
+.hr-facts dd { margin: 0; font-size: 15px; }
+.hr-facts .hr-day { font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hr-change { display: grid; gap: 8px; }
+.back a { display: inline-block; padding: 8px 0; }
+
+/* 資格の更新の期限 */
+.ks-pick { border: 0; padding: 0; margin: 0; display: grid; min-width: 0; }
+.ks-pick legend, .ks-date { font-size: 13px; padding: 0; }
+.ks-pick label { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: center; padding: 9px 0; font-size: 16px; font-weight: 700; cursor: pointer; }
+.ks-pick input { width: 20px; height: 20px; margin: 0; }
+.ks-date { display: grid; gap: 4px; }
+.ks-date input { font: inherit; font-size: 17px; min-height: 46px; padding: 6px 10px; border-radius: 0; width: 100%; max-width: 15em; }
+.ks-out { display: grid; gap: 4px; padding-top: 10px; }
+.ks-out[hidden] { display: none; }
+.ks-lim { font-size: 14px; }
+.ks-lim b { display: block; font-size: 26px; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.ks-left { font-weight: 700; }
+.ks-rules { margin: 0; display: grid; gap: 4px; }
+.ks-rules dt { font-weight: 700; padding-top: 8px; display: flex; justify-content: space-between; gap: 8px; }
+.ks-rules dt span { font-weight: 400; font-size: 13px; white-space: nowrap; }
+.ks-rules dd { margin: 0; font-size: 14px; display: grid; gap: 4px; }
+.ks-rules dd + dt { border-top: 1px solid var(--thin); margin-top: 8px; }
+.u-cond { border-top: 1px solid var(--thin); padding-top: 8px; }
+.u-cond .todo label { padding: 6px 0; }
