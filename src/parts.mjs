@@ -17,3 +17,10 @@ export const monthHead = (month, h, title, sub = '', undo = null) => `<header cl
 <div class="th-month"><b class="mon">${month}<small>月</small></b><${h} class="th-title">${esc(title)}${sub ? `<small>${esc(sub)}</small>` : ''}</${h}></div>
 ${undo ? `<p class="th-undo">今月の運動 <span>${esc(undo.name)}</span> <span class="nw">${esc(undo.span)}</span></p>` : ''}
 </header>`;
+
+// 月のないページの見出し（法改正・資格）。カレンダーと同じ紙で、帯にコーナーの名前
+export const bandHead = (band, title, extra = '') => `<header class="th-head">
+<p class="cal-band">${esc(band)}</p>
+<h1 class="th-title pg-title">${esc(title)}</h1>
+${extra}
+</header>`;

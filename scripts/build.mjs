@@ -2,11 +2,14 @@
 import { rmSync, mkdirSync, writeFileSync, cpSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { MONTH, THEMES, KAISEI_NEXT } from '../src/data/themes.mjs';
+import { MONTH, THEMES } from '../src/data/themes.mjs';
+import { nextKaisei } from '../src/data/hourei.mjs';
 import home from '../src/pages/home.mjs';
 import theme from '../src/pages/theme.mjs';
 import gyoshuPages from '../src/pages/gyoshu.mjs';
 import infoPages from '../src/pages/info.mjs';
+import houreiPages from '../src/pages/hourei.mjs';
+import shikakuPages from '../src/pages/shikaku.mjs';
 import { SITE } from '../src/site.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -20,8 +23,8 @@ const write = (path, html, name) => {
   writeFileSync(file, html);
 };
 
-const ctx = { month: MONTH, themes: THEMES, kaisei: KAISEI_NEXT };
-const pages = [home(ctx), ...gyoshuPages(ctx), ...THEMES.flatMap(theme), ...infoPages()];
+const ctx = { month: MONTH, themes: THEMES, kaisei: nextKaisei() };
+const pages = [home(ctx), ...gyoshuPages(ctx), ...THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...infoPages()];
 
 for (const p of pages) write(p.path, p.html, p.file);
 // AdSense の運営者IDを入れたら ads.txt を置く（Google の決まった書き方）

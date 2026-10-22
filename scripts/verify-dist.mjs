@@ -14,7 +14,7 @@ const htmlFiles = walk(DIST).filter((f) => f.endsWith('.html'));
 const count = (s, re) => (s.match(re) || []).length;
 // 全角1・半角0.55で数える（スマホの幅 360px で1行に入るか）
 const textWidth = (t) => [...t].reduce((w, c) => w + (/[\x20-\x7e]/.test(c) ? 0.55 : 1), 0);
-const ONE_LINE = [['tm-ask', 22], ['src-note', 82]];
+const ONE_LINE = [['tm-ask', 22], ['src-note', 82], ['pg-lead', 22], ['u-note', 26]];
 
 const resolves = (href) => {
   const p = href.split(/[?#]/)[0];
@@ -52,7 +52,8 @@ for (const file of htmlFiles) {
   if (emoji.length) fail(rel, `絵文字がある: ${[...new Set(emoji)].join(' ')}`);
   // AI がよく使う言い回しを使わない。サイト名の「便利帳」は名前なので数えない
   {
-    const visible = shown.replace(/<[^>]+>/g, ' ').split(SITE.name).join(' ');
+    // 出典の一覧は公式の資料名をそのまま書くので、使わない言葉の点検から外す
+    const visible = shown.replace(/<ol class="src">[\s\S]*?<\/ol>/g, ' ').replace(/<[^>]+>/g, ' ').split(SITE.name).join(' ');
     const NG = ['しましょう', 'ぜひ', '便利', '簡単', '安心', 'おすすめ', 'ポイント', 'コツ', '——'];
     const hit = NG.filter((w) => visible.includes(w));
     if (hit.length) fail(rel, `使わない言葉がある: ${hit.join('・')}`);

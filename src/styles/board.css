@@ -76,3 +76,16 @@
 .idx-group[data-corner="kyotsu"] { --c: var(--kyotsu); }
 .idx-group li { padding-left: 20px; border-top: 1px solid var(--thin); }
 .idx-group li a { font-weight: 700; text-decoration: none; }
+
+/* 法改正・資格：同じマグネットの紙 */
+.paper { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); padding: 18px 14px 14px; }
+.paper::before { content: ""; position: absolute; top: -7px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--m, var(--red)); box-shadow: 0 2px 0 rgba(0, 0, 0, .25); z-index: 1; }
+.paper + .paper { --m: var(--yellow); }
+.u-cond { --m: var(--blue); }
+.pg-lead, .u-note, .hr-k, .hr-st, .hr-facts dt, .ks-note, .ks-pick legend, .ks-date, .ks-rules dt span { color: var(--muted); }
+.hr-date, .hr-day { color: var(--ink); }
+.hr-date.soon, .hr-day.soon, .ks-lim b { color: var(--red); }
+.u-cond input, .ks-pick input { accent-color: var(--blue); }
+.ks-date input { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
+.ks-out { border-top: 2px solid var(--ink); }
+.back a { color: #fff; }

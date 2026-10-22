@@ -132,6 +132,3 @@ export const OOSOUJI = {
   ],
 };
 
-// 法改正（トップに「次の改正」を1行出す。一覧ページは第1弾で作る）
-// 出典：堺市 労働安全衛生法（改正の施行日） https://www.city.sakai.lg.jp/sangyo/careerweb/kanrenzyoho/horei/anzen_eisei.html
-export const KAISEI_NEXT = { date: '2027年1月1日', text: '個人事業者等の業務上災害の報告制度', status: '予定' };

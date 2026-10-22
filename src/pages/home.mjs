@@ -1,13 +1,14 @@
 // 総合トップ：今月のテーマと業種、次の法改正を1行、目次
 // 目次には、できたページだけを出す（中身のないコーナーや「準備中」の札は出さない）
 import { page, esc, script, adSlot } from '../layout.mjs';
-import { SITE } from '../site.mjs';
+import { SITE, CORNERS } from '../site.mjs';
 import { themePath, entrancePath, fuda } from '../parts.mjs';
+import { houreiPath, fmtDate } from '../data/hourei.mjs';
 
 export default function home({ month, themes, kaisei }) {
   const groups = [
     { corner: 'anzen', name: '今月の安全衛生', items: themes.map((t) => ({ name: `${t.month}月 ${t.title}`, href: themePath(t) })) },
-    { corner: 'kyotsu', name: '講習・資格', items: [] },
+    { corner: 'kyotsu', name: CORNERS.kyotsu.name, items: [{ name: '法改正の一覧', href: '/hourei/' }, { name: '資格の更新の期限', href: '/shikaku/koushin/' }] },
     { corner: 'seisou', name: '清掃・ビルメン', items: [] },
   ].filter((g) => g.items.length);
   const body = `<section class="this-month" aria-labelledby="tm-h">
@@ -17,7 +18,7 @@ export default function home({ month, themes, kaisei }) {
 <p class="tm-ask">業種をえらぶと掲示と朝礼が出ます</p>
 ${fuda(entrancePath)}
 </section>
-<p class="kaisei"><span class="kaisei-tag">次の改正</span><span class="kaisei-body"><span class="kaisei-date">${esc(kaisei.date)}</span>${esc(kaisei.text)}</span></p>
+<p class="kaisei"><span class="kaisei-tag">次の改正</span><span class="kaisei-body"><span class="kaisei-date">${fmtDate(kaisei.date)}</span><a href="${houreiPath(kaisei)}">${esc(kaisei.title)}</a></span></p>
 <section class="index" aria-labelledby="idx-h">
 <h2 class="sec-h" id="idx-h">目次</h2>
 ${groups

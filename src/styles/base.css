@@ -111,3 +111,39 @@ button { font: inherit; color: inherit; }
 .kakunin th, .kakunin td { border: .25cqw solid #9aa3a8; height: 5.6cqw; padding: 0 1.5cqw; text-align: left; font-weight: 400; }
 .s-foot { font-size: max(2.5cqw, 9px); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 3cqw; }
 .s-foot span { white-space: nowrap; }
+
+/* 法改正 */
+.pg-title { padding-top: 10px; }
+.pg-lead, .u-note, .hr-k, .ks-note { font-size: 13px; }
+.hr-list li + li { border-top: 1px solid var(--thin); }
+.hr-list a { display: grid; gap: 1px; padding: 12px 0; text-decoration: none; }
+.hr-date { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hr-st { font-size: 12px; font-weight: 400; margin-left: 8px; }
+.hr-t { font-size: 17px; line-height: 1.4; }
+.hr-facts { margin: 4px 0 0; display: grid; gap: 4px; border-top: 1px solid var(--thin); padding-top: 8px; }
+.hr-facts div { display: grid; grid-template-columns: 3.5em 1fr; gap: 8px; align-items: baseline; }
+.hr-facts dt { font-size: 13px; }
+.hr-facts dd { margin: 0; font-size: 15px; }
+.hr-facts .hr-day { font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hr-change { display: grid; gap: 8px; }
+.back a { display: inline-block; padding: 8px 0; }
+
+/* 資格の更新の期限 */
+.ks-pick { border: 0; padding: 0; margin: 0; display: grid; min-width: 0; }
+.ks-pick legend, .ks-date { font-size: 13px; padding: 0; }
+.ks-pick label { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: center; padding: 9px 0; font-size: 16px; font-weight: 700; cursor: pointer; }
+.ks-pick input { width: 20px; height: 20px; margin: 0; }
+.ks-date { display: grid; gap: 4px; }
+.ks-date input { font: inherit; font-size: 17px; min-height: 46px; padding: 6px 10px; border-radius: 0; width: 100%; max-width: 15em; }
+.ks-out { display: grid; gap: 4px; padding-top: 10px; }
+.ks-out[hidden] { display: none; }
+.ks-lim { font-size: 14px; }
+.ks-lim b { display: block; font-size: 26px; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.ks-left { font-weight: 700; }
+.ks-rules { margin: 0; display: grid; gap: 4px; }
+.ks-rules dt { font-weight: 700; padding-top: 8px; display: flex; justify-content: space-between; gap: 8px; }
+.ks-rules dt span { font-weight: 400; font-size: 13px; white-space: nowrap; }
+.ks-rules dd { margin: 0; font-size: 14px; display: grid; gap: 4px; }
+.ks-rules dd + dt { border-top: 1px solid var(--thin); margin-top: 8px; }
+.u-cond { border-top: 1px solid var(--thin); padding-top: 8px; }
+.u-cond .todo label { padding: 6px 0; }
