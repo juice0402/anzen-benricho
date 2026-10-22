@@ -11,8 +11,8 @@
 .wrap { gap: 26px; padding-top: 22px; }
 
 /* マグネットでとめた紙 */
-.th-head, .this-month, .kaisei, .sec-talk, .sec-todo, .sec-memo, .index, .doc, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); }
-.kaisei::before, .sec-talk::before, .sec-todo::before, .sec-memo::before, .index::before, .doc::before, .sheet::before {
+.th-head, .this-month, .kaisei, .sec-talk, .sec-todo, .sec-memo, .sec-pick, .index, .doc, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); }
+.kaisei::before, .sec-talk::before, .sec-todo::before, .sec-memo::before, .sec-pick::before, .index::before, .doc::before, .sheet::before {
   content: ""; position: absolute; top: -7px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--m, var(--red)); box-shadow: 0 2px 0 rgba(0, 0, 0, .25); z-index: 1;
 }
 .sec-talk { --m: var(--yellow); }
@@ -21,7 +21,11 @@
 .index { --m: var(--yellow); }
 .sec-memo { --m: var(--blue); }
 .doc { --m: var(--yellow); }
-.sec-talk, .sec-todo, .sec-memo, .index, .doc { padding: 18px 14px 14px; }
+.sec-pick + .sec-pick { --m: var(--yellow); }
+.sec-talk, .sec-todo, .sec-memo, .sec-pick, .index, .doc { padding: 18px 14px 14px; }
+.tm-list a { border-bottom: 1px solid var(--thin); }
+.sec-pick .sec-h { font-size: 19px; }
+.sec-pick .sec-h a { text-decoration: none; }
 .th-lead { color: #fff; }
 .ad-label { color: #cfdcd4; }
 /* 朝礼は罫線の紙 */

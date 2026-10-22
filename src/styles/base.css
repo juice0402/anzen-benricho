@@ -55,6 +55,12 @@ button { font: inherit; color: inherit; }
 .th-title a { text-decoration: none; }
 .th-title small { display: block; font-size: 15px; font-weight: 700; }
 .th-lead { font-size: 14px; }
+.tm-h { font-size: 15px; }
+.tm-list { display: grid; }
+.tm-list a { display: block; padding: 8px 0; font-size: 22px; font-weight: 700; line-height: 1.35; text-decoration: none; }
+.pick-rules { list-style: decimal; padding-left: 1.4em; display: grid; gap: 4px; font-weight: 700; }
+.pick-go { margin-top: 6px; }
+.pick-go a { display: inline-block; padding: 8px 0; }
 .th-undo { font-size: 14px; }
 .cal-band { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-align: center; }
 .tm-ask { font-size: 14px; margin-top: 6px; }

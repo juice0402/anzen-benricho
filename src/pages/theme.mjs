@@ -1,27 +1,15 @@
 // 毎月のテーマ（例 12月「年末の大掃除」）
 //   /anzen/theme/<slug>/          テーマの入口：運動、業種ごとに多いけが、業種をえらぶ
 //   /anzen/theme/<slug>/<業種>/   業種のページ：掲示・朝礼・やること・出典（1業種1ページ。検索と広告の審査で中身が1ページにまとまるように）
-import { page, esc, script, fudaLabel, adSlot } from '../layout.mjs';
+import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
+import { themePath, gyoshuPath, fuda, monthHead } from '../parts.mjs';
 
 const fmtDate = (iso) => {
   const [y, m, d] = iso.split('-').map(Number);
   return `${y}年${m}月${d}日`;
 };
-const themePath = (t) => `/anzen/theme/${t.slug}/`;
-const gyoshuPath = (t, g) => `${themePath(t)}${g.key}/`;
-
-// 業種をえらぶ：紙に並べた業種の名前。いまのページの業種を赤ペンで丸く囲む
-export const fuda = (t, current) =>
-  `<nav class="fuda" aria-label="業種">${t.gyoshu
-    .map((g) => `<a class="fuda-b" href="${gyoshuPath(t, g)}" data-k="${g.key}"${g.key === current ? ' aria-current="page"' : ''}>${fudaLabel(g.label)}</a>`)
-    .join('')}</nav>`;
-
-const head = (t, h, sub = '') => `<header class="th-head">
-<p class="cal-band">今月の安全衛生</p>
-<div class="th-month"><b class="mon">${t.month}<small>月</small></b><${h} class="th-title">${esc(t.title)}${sub ? `<small>${esc(sub)}</small>` : ''}</${h}></div>
-<p class="th-undo">今月の運動 <span>${esc(t.undo.name)}</span> <span class="nw">${esc(t.undo.span)}</span></p>
-</header>`;
+const head = (t, h, sub = '') => monthHead(t.month, h, t.title, sub, t.undo);
 
 const srcList = (list) =>
   `<ol class="src">${list
@@ -44,7 +32,7 @@ function overview(t) {
   const path = themePath(t);
   const body = `${head(t, 'h1')}
 <p class="th-lead">業種をえらぶと、その業種の掲示と朝礼が出ます。</p>
-${fuda(t, '')}
+${fuda((g) => gyoshuPath(t, g))}
 <section class="sec sec-memo" aria-labelledby="memo-h">
 <h2 class="sec-h" id="memo-h">業種ごとに多いけが</h2>
 <dl class="memo">${t.gyoshu.map((g) => `<dt><a href="${gyoshuPath(t, g)}">${esc(g.name)}</a></dt><dd>${esc(g.memo)}</dd>`).join('')}</dl>
@@ -73,7 +61,7 @@ ${adSlot('end')}`;
 function gyoshuPage(t, g) {
   const path = gyoshuPath(t, g);
   const body = `${head(t, 'h1', g.label)}
-${fuda(t, g.key)}
+${fuda((x) => gyoshuPath(t, x), g.key)}
 <section class="sec sec-poster" aria-labelledby="poster-h">
 <h2 class="sec-h" id="poster-h">掲示</h2>
 ${sheet(t, g)}
@@ -108,6 +96,6 @@ ${srcList([...t.common, ...g.src])}
   };
 }
 
-export default function theme({ data: t }) {
+export default function theme(t) {
   return [overview(t), ...t.gyoshu.map((g) => gyoshuPage(t, g))];
 }

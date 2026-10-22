@@ -1,13 +1,14 @@
 // 毎月のテーマのデータの決まり（設計書の「毎月の3点セットの決まり」「正確さを保つ仕組み」）
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { OOSOUJI } from '../src/data/oosouji.mjs';
-
-const THEMES = [OOSOUJI];
+import { THEMES, MONTH } from '../src/data/themes.mjs';
+import { GYOSHU } from '../src/data/gyoshu.mjs';
 
 for (const t of THEMES) {
   test(`${t.title}：4業種そろっている`, () => {
-    assert.deepEqual(t.gyoshu.map((g) => g.key), ['jimusho', 'inshoku', 'seizo', 'seisou']);
+    assert.deepEqual(t.gyoshu.map((g) => [g.key, g.label, g.name]), GYOSHU.map((g) => [g.key, g.label, g.name]));
+    assert.equal(t.month, MONTH);
+    for (const g of t.gyoshu) assert.ok(g.memo, `${g.label} の多いけが`);
   });
 
   test(`${t.title}：掲示の決まりは3つ、やることは3つ`, () => {
