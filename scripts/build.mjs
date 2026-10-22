@@ -2,11 +2,9 @@
 import { rmSync, mkdirSync, writeFileSync, cpSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SITE, DESIGNS } from '../src/site.mjs';
 import { OOSOUJI, KAISEI_NEXT } from '../src/data/oosouji.mjs';
 import home from '../src/pages/home.mjs';
 import theme from '../src/pages/theme.mjs';
-import compare from '../src/pages/compare.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
@@ -19,21 +17,8 @@ const write = (path, html) => {
   writeFileSync(file, html);
 };
 
-const pages = [];
-const add = (base, p) => pages.push({ path: base + p.path, html: p.html });
-
-if (SITE.designPhase) {
-  // くらべる間：トップは3案の入口、案ごとに /design/<id>/ の下に同じページを作る
-  add('', compare({ data: OOSOUJI }));
-  for (const d of DESIGNS) {
-    const base = `/design/${d.id}`;
-    const ctx = { base, design: d.id, data: OOSOUJI, kaisei: KAISEI_NEXT };
-    add(base, home(ctx));
-    add(base, theme(ctx));
-  }
-} else {
-  throw new Error('デザインが決まったら、ここで1つの案をトップに作る');
-}
+const ctx = { data: OOSOUJI, kaisei: KAISEI_NEXT };
+const pages = [home(ctx), theme(ctx)];
 
 for (const p of pages) write(p.path, p.html);
 if (existsSync(join(ROOT, 'public'))) cpSync(join(ROOT, 'public'), DIST, { recursive: true });

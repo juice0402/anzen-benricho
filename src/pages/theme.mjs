@@ -46,14 +46,14 @@ ${sheet(t, g)}
 </div>`;
 };
 
-export default function theme({ base, design, data: t }) {
+export default function theme({ data: t }) {
   const path = `/anzen/theme/${t.slug}/`;
   const body = `<header class="th-head">
 <div class="th-month"><b class="mon">${t.month}<small>月</small></b><h1 class="th-title">${esc(t.title)}</h1></div>
 <p class="th-undo">今月の運動 <span>${esc(t.undo.name)}</span> <span class="nw">${esc(t.undo.span)}</span></p>
 </header>
 <div class="fuda" role="tablist" aria-label="業種">${t.gyoshu
-    .map((g, i) => `<button class="fuda-b" type="button" role="tab" id="t-${g.key}" data-k="${g.key}" data-in="${esc(g.label[0])}" aria-controls="p-${g.key}" aria-selected="${i ? 'false' : 'true'}"${i ? ' tabindex="-1"' : ''}>${fudaLabel(g.label)}</button>`)
+    .map((g, i) => `<button class="fuda-b" type="button" role="tab" id="t-${g.key}" data-k="${g.key}" aria-controls="p-${g.key}" aria-selected="${i ? 'false' : 'true'}"${i ? ' tabindex="-1"' : ''}>${fudaLabel(g.label)}</button>`)
     .join('')}</div>
 ${t.gyoshu.map((g, i) => panel(t, g, i)).join('\n')}`;
   return {
@@ -62,8 +62,6 @@ ${t.gyoshu.map((g, i) => panel(t, g, i)).join('\n')}`;
       title: `${t.month}月の安全衛生テーマ ${t.title}の掲示と朝礼｜${SITE.name}`,
       description: `${t.month}月の安全衛生のテーマ「${t.title}」。事務所・飲食・製造・清掃の業種ごとに、A4の掲示1枚、1分の朝礼、担当者のやること3つを出典つきでまとめています。`,
       path,
-      base,
-      design,
       corner: 'anzen',
       body,
       js: script('theme'),

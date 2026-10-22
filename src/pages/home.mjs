@@ -8,7 +8,8 @@ const item = (base, it) =>
     ? `<li><a href="${base}${it.href}">${esc(it.name)}</a></li>`
     : `<li class="soon"><span>${esc(it.name)}</span><em>準備中</em></li>`;
 
-export default function home({ base, design, data: t, kaisei }) {
+export default function home({ data: t, kaisei }) {
+  const base = '';
   const themeHref = `${base}/anzen/theme/${t.slug}/`;
   const groups = [
     {
@@ -29,7 +30,7 @@ export default function home({ base, design, data: t, kaisei }) {
 <p class="th-undo">今月の運動 <span>${esc(t.undo.name)}</span> <span class="nw">${esc(t.undo.span)}</span></p>
 <p class="tm-ask">業種をえらぶと掲示と朝礼が出ます</p>
 <nav class="fuda" aria-label="業種">${t.gyoshu
-    .map((g) => `<a class="fuda-b" href="${themeHref}#${g.key}" data-k="${g.key}" data-in="${esc(g.label[0])}">${fudaLabel(g.label)}</a>`)
+    .map((g) => `<a class="fuda-b" href="${themeHref}#${g.key}" data-k="${g.key}">${fudaLabel(g.label)}</a>`)
     .join('')}</nav>
 </section>
 <p class="kaisei"><span class="kaisei-tag">次の改正</span><span class="kaisei-body"><span class="kaisei-date">${esc(kaisei.date)}</span>${esc(kaisei.text)}</span></p>
@@ -45,8 +46,6 @@ ${groups
       title: `${SITE.name}｜今月の安全衛生の掲示と朝礼・清掃の資料`,
       description: '職場の安全衛生の担当者が毎月そのまま使える掲示・朝礼・やることを、業種ごとにまとめています。清掃・ビルメンの資料と、講習・資格の更新の目安も載せます。',
       path: '/',
-      base,
-      design,
       body,
       js: script('home'),
       isHome: true,

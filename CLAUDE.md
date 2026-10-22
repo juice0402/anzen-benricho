@@ -5,9 +5,9 @@
 2026-10-22 に「今月の安全衛生」と「清掃・ビルメンのまとめ帳」を統合して始めた。設計はプロジェクトの資料 `claude/anzen-seisou-tougou-plan.md`、元の設計は `claude/kongetsu-anzen-spec.md`・`claude/seisou-matome-spec.md`、共通の原則は `claude/site-principles.md`。
 
 ## いまの状態
-- デザインを3案（点検表 `tenken`・回覧板 `kairan`・掲示板 `keiji`）でくらべている。`src/site.mjs` の `designPhase: true` のあいだは、トップが3案の入口で、案ごとに `/design/<id>/` の下に同じページを作る
-- 案が決まったら：`designPhase: false`、`scripts/build.mjs` でえらんだ案をトップに作る、ほかの案の CSS を消す、`page()` の `data-design` と `base` を整理する
-- 公開まで `SITE.launched: false`（全ページ noindex）。公開の日に true にし、sitemap・IndexNow・Search Console を足す
+- 見た目は「職場の掲示板」（10/22 しょーくんが点検表・回覧板・掲示板の3案から決めた）。緑のフェルトの板にアルミの枠、紙はマグネットでとめる、今月は月めくりのカレンダー
+- 業種の札は「名札かけ」（10/22 しょーくん「業種切り替えのボタンが、すごくクロードの特徴が出てしまっている」）。棒から白い名札をさげ、えらんだ名札は赤い字で少し下がる。色の帯をつけた四角いボタンは使わない
+- 公開まで `SITE.launched: false`（全ページ noindex）。公開の日に true にし、sitemap・IndexNow・Search Console を足す。目次の「準備中」は公開のときに外す
 
 ## サイト作りの方針（しょーくんの方針・10/17）：迷ったら上から順に優先する
 - 前提：中身が正しい・軽くて速い・利用者のデータを送らない・むだな通信をしない・SEO。公開前に高速化・デバッグ・SEO の点検
@@ -33,11 +33,11 @@
 ## ファイル
 | 場所 | 中身 |
 |---|---|
-| `src/site.mjs` | サイト名・URL・コーナー・デザインの3案 |
+| `src/site.mjs` | サイト名・URL・コーナー |
 | `src/data/*.mjs` | 毎月のテーマ（業種ごとの掲示・朝礼・やること・出典）と法改正 |
 | `src/layout.mjs` | ページの外側（head・ヘッダー・フッター・パンくず） |
-| `src/pages/*.mjs` | ページ（`home` 総合トップ、`theme` 毎月のテーマ、`compare` 3案の入口） |
+| `src/pages/*.mjs` | ページ（`home` 総合トップ、`theme` 毎月のテーマ） |
 | `src/client/*.js` | ブラウザ用のスクリプト（業種の札・印刷・コピー） |
-| `src/styles/` | `base.css` 骨組みと掲示の紙、案ごとの色と飾り、`print.css` 掲示だけを A4 1枚に |
+| `src/styles/` | `base.css` 骨組みと掲示の紙、`board.css` 掲示板の色と飾り、`print.css` 掲示だけを A4 1枚に |
 | `scripts/verify-dist.mjs` | 全ページ点検（noindex・title・description・h1・タグ・id・リンク切れ・外部読み込み・絵文字・使わない言葉） |
 | `tests/` | `node --test` |
