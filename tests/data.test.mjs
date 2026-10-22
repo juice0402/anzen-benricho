@@ -15,6 +15,11 @@ for (const t of THEMES) {
     for (const g of t.gyoshu) {
       assert.equal(g.rules.length, 3, g.label);
       assert.equal(g.todo.length, 3, g.label);
+      // 掲示の太字の1行は20字まで、小さな1行は22字まで（A4で読める大きさ）
+      for (const [a, b] of g.rules) {
+        assert.ok([...a].length <= 20, `${g.label} 太字が長い: ${a}`);
+        assert.ok([...b].length <= 22, `${g.label} 小さな行が長い: ${b}`);
+      }
     }
   });
 
