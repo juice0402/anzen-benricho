@@ -8,11 +8,11 @@ import { fmtDate } from '../data/hourei.mjs';
 export default function shikakuPages() {
   const path = '/shikaku/koushin/';
   const form = `<section class="sec paper ks" aria-labelledby="ks-h">
-<h2 class="sec-h" id="ks-h">修了した日から期限を出す</h2>
+<h2 class="sec-h" id="ks-h">期限を出す</h2>
 <fieldset class="ks-pick"><legend>資格</legend>
 ${SHIKAKU.map((s, i) => `<label for="k-${s.key}"><input type="radio" name="k" id="k-${s.key}" value="${s.key}" data-years="${s.years}" data-early="${s.early}"${i ? '' : ' checked'}><span>${esc(s.name)}</span></label>`).join('\n')}
 </fieldset>
-<label class="ks-date" for="k-day">修了した日<input type="date" id="k-day" min="2000-01-01" max="2099-12-31"></label>
+<label class="ks-date" for="k-day">修了証書の日付<input type="date" id="k-day" min="2000-01-01" max="2099-12-31"></label>
 <div class="ks-out" aria-live="polite" hidden>
 <p class="ks-lim">期限 <b id="k-lim"></b></p>
 <p class="ks-left" id="k-left"></p>
@@ -29,7 +29,7 @@ ${SHIKAKU.map((s, i) => `<label for="k-${s.key}"><input type="radio" name="k" id
 <ol class="src">${SHIKAKU.flatMap((s) => s.src).map((s) => `<li><a href="${esc(s.u)}" rel="noopener">${esc(s.t)}</a></li>`).join('')}</ol>
 <p class="src-note">確認日 ${fmtDate(SHIKAKU_CHECKED)}。講習の日程と申し込みは、協会の公式ページで確認してください。</p>
 </section>`;
-  const body = `${bandHead('講習・資格', '資格の更新の期限', '<p class="pg-lead">修了した日から、次の期限が出ます</p>')}
+  const body = `${bandHead('講習・資格', '資格の更新の期限', '<p class="pg-lead">修了証書の日付から、次の期限が出ます</p>')}
 ${form}
 ${table}
 ${src}
