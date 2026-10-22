@@ -6,9 +6,10 @@ import { KOUTSU } from './koutsu.mjs';
 import { KANSEN } from './kansen.mjs';
 import { HARASSMENT } from './harassment.mjs';
 import { TENTOU } from './tentou.mjs';
+import { YOUTSU } from './youtsu.mjs';
 import { todayJst } from './hourei.mjs';
 
-export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU];
+export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, YOUTSU];
 
 export const monthFor = (iso = todayJst(), themes = ALL_THEMES) => {
   const [, m, d] = iso.split('-').map(Number);
