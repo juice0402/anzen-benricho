@@ -1,5 +1,5 @@
 /* 見た目は「職場の掲示板」：アルミの枠の、緑のフェルトの掲示板。紙はマグネットでとめる。
-   今月は月めくりのカレンダー。業種の札は名札かけ：棒にかけた白い名札で、えらんだ名札は赤い字にして少し下げる */
+   今月は月めくりのカレンダー。業種は紙に書いた言葉で、えらんだ業種を赤ペンで丸く囲む（10/22 しょーくんが3案から決めた） */
 :root {
   --board: #3f6454; --paper: #fff; --ink: #1d2327; --muted: #5d676d; --thin: #cdd5d9; --frame: #cdd3d8; --edge: #2c4a3d;
   --red: #cf3b2e; --yellow: #e5b21d; --blue: #2f6cb3; --anzen: #1d7a4b; --seisou: #1f5f9e; --kyotsu: #5d676d; --focus: #ffd84a;
@@ -11,53 +11,54 @@
 .wrap { gap: 26px; padding-top: 22px; }
 
 /* マグネットでとめた紙 */
-.th-head, .this-month, .kaisei, .sec:not(.sec-poster), .index, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); }
-.kaisei::before, .sec:not(.sec-poster)::before, .index::before, .sheet::before {
+.th-head, .this-month, .kaisei, .sec-talk, .sec-todo, .index, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); }
+.kaisei::before, .sec-talk::before, .sec-todo::before, .index::before, .sheet::before {
   content: ""; position: absolute; top: -7px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--m, var(--red)); box-shadow: 0 2px 0 rgba(0, 0, 0, .25); z-index: 1;
 }
 .sec-talk { --m: var(--yellow); }
 .sec-todo { --m: var(--blue); }
-.sec-src { --m: var(--yellow); }
 .kaisei { --m: var(--blue); }
 .index { --m: var(--yellow); }
-.sec:not(.sec-poster), .index { padding: 18px 14px 14px; }
+.sec-talk, .sec-todo, .index { padding: 18px 14px 14px; }
+/* 朝礼は罫線の紙 */
+.talk { gap: 0; }
+.talk p { line-height: 30px; background: repeating-linear-gradient(transparent 0 29px, #c5d3e0 29px 30px); }
+.talk p + p { margin-top: 0; }
+/* 出典は紙にせず、板に白い字で */
+.sec-src { color: #e8efe9; }
+.sec-src a { color: #fff; }
+.sec-src .chk, .sec-src .src-note { color: #cfdcd4; }
 
 /* 今月：月めくりのカレンダー（上にとじ具、大きな月） */
 .th-head, .this-month { padding: 0 14px 14px; gap: 8px; }
-.th-head::before, .this-month::before { content: ""; order: -1; height: 14px; margin: 0 -14px; background: #2a3034; }
+.cal-band { margin: 0 -14px; padding: 3px 0; background: #2a3034; color: #fff; }
 .th-month { gap: 12px; padding-top: 10px; }
 .mon { font-size: 60px; color: var(--red); }
 .mon small { color: var(--ink); }
 .th-title { font-size: 25px; }
 .th-undo { color: var(--muted); border-top: 1px solid var(--thin); padding-top: 6px; }
 .th-undo span { color: var(--ink); font-weight: 700; }
-.tm-kicker { padding-top: 10px; color: var(--anzen); }
 .tm-ask { color: var(--muted); }
 
-/* 業種の札：名札かけ。上の棒から、ひもで白い名札をさげる。えらんだ名札は赤い字で、少し下にさがる */
-.fuda { gap: 8px; position: relative; padding: 12px 0 4px; }
-.fuda::before { content: ""; position: absolute; left: -4px; right: -4px; top: 2px; height: 4px; border-radius: 2px; background: #9aa3a9; }
-.fuda-b { background: #fff; color: var(--ink); border: 1.5px solid var(--ink); min-height: 54px; padding: 8px 2px 6px; font-weight: 700; box-shadow: 0 2px 0 var(--edge); }
-.this-month .fuda-b { box-shadow: none; }
-.fuda-b::before { content: ""; position: absolute; top: -7.5px; left: 50%; width: 2px; height: 6px; margin-left: -1px; background: #2a3034; }
-.fuda-b[aria-selected="true"], .fuda-b[aria-current="true"] { color: var(--red); border-color: var(--red); transform: translateY(4px); }
-.fuda-b[aria-selected="true"]::before, .fuda-b[aria-current="true"]::before { top: -11.5px; height: 10px; }
-@media (prefers-reduced-motion: no-preference) { .fuda-b { transition: transform .15s ease-out; } }
+/* 業種：紙に書いた言葉。えらんだ業種を赤ペンで丸く囲む（四角いボタンにしない） */
+.fuda { background: var(--paper); box-shadow: 0 2px 0 var(--edge); padding: 10px 4px; }
+.this-month .fuda { box-shadow: none; padding: 2px 0; margin: 0 -8px; }
+@media (max-width: 374px) { .fuda-b { font-size: 14px; padding: 6px 3px; } }
+.fuda-b { color: var(--ink); font-weight: 700; }
+.fuda-b[aria-selected="true"]::after, .fuda-b[aria-current="true"]::after { content: ""; position: absolute; inset: 3px -1px; border: 2.5px solid var(--red); border-radius: 50%; transform: rotate(-4deg); }
 
 /* 節の見出し：板に貼った白い字 */
-.sec-poster > .sec-h { color: #fff; }
-.sec-poster > .sec-h small { color: #d6e2dc; }
-.sec:not(.sec-poster) > .sec-h small { color: var(--muted); }
+.sec-poster > .sec-h, .sec-src > .sec-h { color: #fff; }
 .sheet { margin-top: 4px; }
 .btn { background: #fff; color: var(--ink); border: 0; box-shadow: 0 2px 0 var(--edge); font-weight: 700; }
-.sec:not(.sec-poster) .btn { border: 1.5px solid var(--ink); box-shadow: none; }
+.sec-talk .btn { border: 1.5px solid var(--ink); box-shadow: none; margin-top: 10px; }
 .todo li + li { border-top: 1px solid var(--thin); }
 .todo input { accent-color: var(--blue); }
-.src .chk, .src-note { color: var(--muted); }
 
 /* 次の改正 */
 .kaisei { padding: 14px 14px 10px; }
-.kaisei-tag { background: var(--ink); color: #fff; }
+.kaisei-tag { padding: 0; color: var(--muted); }
+.kaisei-date { color: var(--red); }
 
 /* 目次：コーナーの色はマグネットの色 */
 .idx-group h3 { display: flex; align-items: center; gap: 8px; }

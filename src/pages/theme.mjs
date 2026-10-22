@@ -20,15 +20,14 @@ const sheet = (t, g) => `<div class="sheet">
 </div>`;
 
 const panel = (t, g, i) => {
-  const talkLen = g.talk.join('').length;
   return `<div class="panel" id="p-${g.key}" role="tabpanel" aria-labelledby="t-${g.key}"${i ? ' hidden' : ''}>
 <section class="sec sec-poster">
-<h2 class="sec-h">掲示<small>A4・白黒で印刷できます</small></h2>
+<h2 class="sec-h">掲示</h2>
 ${sheet(t, g)}
-<button class="btn print-btn" type="button">掲示を印刷</button>
+<button class="btn print-btn" type="button">A4で印刷</button>
 </section>
 <section class="sec sec-talk">
-<h2 class="sec-h">朝礼<small>約${Math.round(talkLen / 10) * 10}字・1分ほど</small></h2>
+<h2 class="sec-h">朝礼</h2>
 <div class="talk">${g.talk.map((p) => `<p>${esc(p)}</p>`).join('')}</div>
 <button class="btn copy-btn" type="button">文章をコピー</button>
 </section>
@@ -37,11 +36,11 @@ ${sheet(t, g)}
 <ul class="todo">${g.todo.map((s, j) => `<li><label for="c-${g.key}-${j}"><input type="checkbox" id="c-${g.key}-${j}"><span>${esc(s)}</span></label></li>`).join('')}</ul>
 </section>
 <section class="sec sec-src">
-<h2 class="sec-h">出典<small>確認日 ${fmtDate(t.checked)}</small></h2>
+<h2 class="sec-h">出典</h2>
 <ol class="src">${[...t.common, ...g.src]
     .map((s) => `<li><a href="${esc(s.u)}" rel="noopener">${esc(s.t)}</a>${s.chk ? `<span class="chk">${esc(s.chk)}</span>` : ''}</li>`)
     .join('')}</ol>
-<p class="src-note">${esc(t.note)}</p>
+<p class="src-note">確認日 ${fmtDate(t.checked)}。${esc(t.note)}</p>
 </section>
 </div>`;
 };
@@ -49,6 +48,7 @@ ${sheet(t, g)}
 export default function theme({ data: t }) {
   const path = `/anzen/theme/${t.slug}/`;
   const body = `<header class="th-head">
+<p class="cal-band">今月の安全衛生</p>
 <div class="th-month"><b class="mon">${t.month}<small>月</small></b><h1 class="th-title">${esc(t.title)}</h1></div>
 <p class="th-undo">今月の運動 <span>${esc(t.undo.name)}</span> <span class="nw">${esc(t.undo.span)}</span></p>
 </header>

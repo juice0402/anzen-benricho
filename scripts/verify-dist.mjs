@@ -14,7 +14,7 @@ const htmlFiles = walk(DIST).filter((f) => f.endsWith('.html'));
 const count = (s, re) => (s.match(re) || []).length;
 // 全角1・半角0.55で数える（スマホの幅 360px で1行に入るか）
 const textWidth = (t) => [...t].reduce((w, c) => w + (/[\x20-\x7e]/.test(c) ? 0.55 : 1), 0);
-const ONE_LINE = [['tm-ask', 22], ['src-note', 70]];
+const ONE_LINE = [['tm-ask', 22], ['src-note', 82]];
 
 const resolves = (href) => {
   const p = href.split(/[?#]/)[0];

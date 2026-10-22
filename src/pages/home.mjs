@@ -18,7 +18,7 @@ export default function home({ data: t, kaisei }) {
     { corner: 'seisou', name: '清掃・ビルメン', items: [] },
   ].filter((g) => g.items.length);
   const body = `<section class="this-month" aria-labelledby="tm-h">
-<p class="tm-kicker">今月の安全衛生</p>
+<p class="cal-band">今月の安全衛生</p>
 <div class="th-month"><b class="mon">${t.month}<small>月</small></b><h2 class="th-title" id="tm-h"><a href="${themeHref}">${esc(t.title)}</a></h2></div>
 <p class="th-undo">今月の運動 <span>${esc(t.undo.name)}</span> <span class="nw">${esc(t.undo.span)}</span></p>
 <p class="tm-ask">業種をえらぶと掲示と朝礼が出ます</p>

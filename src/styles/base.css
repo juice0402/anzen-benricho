@@ -33,20 +33,19 @@ button { font: inherit; color: inherit; }
 .th-title { font-size: 26px; line-height: 1.3; font-weight: 700; }
 .th-title a { text-decoration: none; }
 .th-undo { font-size: 14px; }
-.tm-kicker { font-size: 13px; font-weight: 700; }
+.cal-band { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-align: center; }
 .tm-ask { font-size: 14px; margin-top: 6px; }
 
 /* 業種の札 */
-.fuda { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.fuda { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 2px 4px; }
 .nw { white-space: nowrap; }
-.fuda-b { word-break: keep-all; overflow-wrap: anywhere; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 52px; padding: 6px 4px; font-size: 14px; line-height: 1.3; text-decoration: none; cursor: pointer; background: transparent; border: 0; position: relative; }
+.fuda-b { white-space: nowrap; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 48px; padding: 6px 5px; font-size: 15px; line-height: 1.3; text-decoration: none; cursor: pointer; background: transparent; border: 0; position: relative; }
 
 /* 節 */
 .panel { display: grid; gap: 26px; }
 .panel[hidden] { display: none; }
 .sec { display: grid; gap: 10px; min-width: 0; }
 .sec-h { font-size: 15px; font-weight: 700; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-.sec-h small { font-weight: 400; font-size: 12px; }
 .btn { justify-self: start; min-height: 46px; padding: 8px 18px; font-size: 15px; cursor: pointer; background: transparent; }
 .talk { display: grid; gap: 8px; }
 .todo label { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; padding: 9px 0; cursor: pointer; }
