@@ -33,6 +33,9 @@ jobs:
         run: |
           if node scripts/check-sources.mjs > report.md; then echo "ng=0" >> "$GITHUB_OUTPUT"; else echo "ng=1" >> "$GITHUB_OUTPUT"; fi
           cat report.md >> "$GITHUB_STEP_SUMMARY"
+          # 画面の注記にも出す（スマホの GitHub でも見える）
+          echo "::notice title=出典の点検::$(head -1 report.md)"
+          grep '^- ' report.md | head -40 | while IFS= read -r l; do echo "::warning title=出典の点検::$l"; done
 
       - name: Issue に書く
         if: steps.chk.outputs.ng == '1' && github.event_name != 'pull_request'
