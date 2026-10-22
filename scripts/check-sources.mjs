@@ -1,6 +1,6 @@
 // 毎週の出典の点検：データにある出典のURLを開けるか、確認日が90日に近づいていないか
 // 問題があれば Markdown を出して終了コード1（ワークフローが Issue にする）。Claude の使用量は使わない
-import { THEMES } from '../src/data/themes.mjs';
+import { ALL_THEMES as THEMES } from '../src/data/themes.mjs';
 import { HOUREI, HOUREI_CHECKED } from '../src/data/hourei.mjs';
 import { SHIKAKU, SHIKAKU_CHECKED } from '../src/data/shikaku.mjs';
 

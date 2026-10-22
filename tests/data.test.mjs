@@ -1,13 +1,13 @@
 // 毎月のテーマのデータの決まり（設計書の「毎月の3点セットの決まり」「正確さを保つ仕組み」）
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { THEMES, MONTH } from '../src/data/themes.mjs';
+import { ALL_THEMES as THEMES, monthFor } from '../src/data/themes.mjs';
 import { GYOSHU } from '../src/data/gyoshu.mjs';
 
 for (const t of THEMES) {
   test(`${t.title}：4業種そろっている`, () => {
     assert.deepEqual(t.gyoshu.map((g) => [g.key, g.label, g.name]), GYOSHU.map((g) => [g.key, g.label, g.name]));
-    assert.equal(t.month, MONTH);
+    assert.ok(Number.isInteger(t.month) && t.month >= 1 && t.month <= 12, `${t.title} の月`);
     for (const g of t.gyoshu) assert.ok(g.memo, `${g.label} の多いけが`);
   });
 
@@ -40,3 +40,13 @@ for (const t of THEMES) {
     assert.ok(days <= 90, `確認日 ${t.checked} から ${Math.floor(days)} 日。公式を開いて確かめ直し、checked を直す`);
   });
 }
+
+test('今月：15日からは翌月。テーマがなければ2か月先まで、それもなければ今の月', () => {
+  const ts = [{ month: 12 }, { month: 1 }];
+  assert.equal(monthFor('2026-10-23', ts), 12);
+  assert.equal(monthFor('2026-12-14', ts), 12);
+  assert.equal(monthFor('2026-12-15', ts), 1);
+  assert.equal(monthFor('2027-01-20', ts), 1);
+  assert.equal(monthFor('2027-02-03', ts), 1);
+  assert.equal(monthFor('2026-11-30', [{ month: 12 }]), 12);
+});

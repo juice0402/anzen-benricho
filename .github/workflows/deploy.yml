@@ -3,14 +3,14 @@ name: Build and Deploy
 # テスト → ビルド → 全ページ点検 → Cloudflare Pages へ直接アップロード（Direct Upload）
 # Cloudflare 側ではビルドしないので、アカウント共有の「月500回のビルド枠」を使わない
 #   main への push        → 本番（https://anzen-benricho.com）。公開のあと、変わったページを IndexNow で知らせる
-#   毎月1日 9:10（日本時間）→ 本番を作り直す（法改正の「施行済み」・トップの「次の改正」を切りかえる）
+#   毎月1日と15日 9:10（日本時間）→ 本番を作り直す（今月のテーマ・法改正の「施行済み」・トップの「次の改正」を切りかえる）
 #   プルリクエスト        → プレビュー（PRにURLをコメント）
 
 on:
   push:
     branches: [main]
   schedule:
-    - cron: '10 0 1 * *'
+    - cron: '10 0 1,15 * *'
   pull_request:
   workflow_dispatch:
 
