@@ -3,9 +3,10 @@
 // その月のテーマがまだなければ、テーマのある次の月を出す。作り直しは毎月1日と15日（deploy.yml）
 import { OOSOUJI } from './oosouji.mjs';
 import { KOUTSU } from './koutsu.mjs';
+import { KANSEN } from './kansen.mjs';
 import { todayJst } from './hourei.mjs';
 
-export const ALL_THEMES = [OOSOUJI, KOUTSU];
+export const ALL_THEMES = [OOSOUJI, KOUTSU, KANSEN];
 
 export const monthFor = (iso = todayJst(), themes = ALL_THEMES) => {
   const [, m, d] = iso.split('-').map(Number);
