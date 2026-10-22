@@ -30,5 +30,11 @@ for (const p of pages) write(p.path, p.html, p.file);
 // AdSense の運営者IDを入れたら ads.txt を置く（Google の決まった書き方）
 if (SITE.adsense) writeFileSync(join(DIST, 'ads.txt'), `google.com, ${SITE.adsense.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
 if (existsSync(join(ROOT, 'public'))) cpSync(join(ROOT, 'public'), DIST, { recursive: true });
+// 公開したら sitemap.xml（404 はのぞく）。lastmod は作り直した日
+if (SITE.launched) {
+  const day = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+  const urls = pages.filter((p) => !p.file).map((p) => `<url><loc>${SITE.url}${p.path}</loc><lastmod>${day}</lastmod></url>`);
+  writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
+}
 
 console.log(`${pages.length} ページを作りました`);

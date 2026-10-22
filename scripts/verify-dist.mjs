@@ -109,6 +109,16 @@ for (const file of htmlFiles) {
   for (const m of html.matchAll(/<a\b[^>]*href="(http:[^"]*)"/g)) fail(rel, `http のリンク: ${m[1]}`);
 }
 
+// 公開したら sitemap.xml の URL がすべてページになっているか
+if (SITE.launched) {
+  const sm = existsSync(join(DIST, 'sitemap.xml')) ? readFileSync(join(DIST, 'sitemap.xml'), 'utf8') : '';
+  if (!sm) fail('/sitemap.xml', 'ない');
+  for (const m of sm.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    if (!m[1].startsWith(SITE.url + '/') || !resolves(m[1].slice(SITE.url.length))) fail('/sitemap.xml', `ページがない: ${m[1]}`);
+  }
+  if (!readFileSync(join(DIST, 'robots.txt'), 'utf8').includes(`Sitemap: ${SITE.url}/sitemap.xml`)) fail('/robots.txt', 'Sitemap の行がない');
+}
+
 if (errors.length) {
   console.error(errors.join('\n'));
   console.error(`\n点検で ${errors.length} 件の問題`);

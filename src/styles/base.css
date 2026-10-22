@@ -20,7 +20,7 @@ button { font: inherit; color: inherit; }
 .logo { font-weight: 700; font-size: 17px; text-decoration: none; letter-spacing: .02em; }
 .logo-h { font-size: inherit; line-height: inherit; }
 .bar-corner { font-size: 13px; white-space: nowrap; }
-.wrap { display: grid; gap: 22px; padding-top: 14px; padding-bottom: 40px; }
+.wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; padding-top: 14px; padding-bottom: 40px; }
 .foot-in { padding-top: 14px; padding-bottom: 28px; font-size: 13px; display: grid; gap: 8px; }
 .crumbs ol { display: flex; flex-wrap: wrap; gap: 4px 0; }
 .crumbs li + li::before { content: "/"; margin: 0 8px; opacity: .6; }
@@ -71,7 +71,7 @@ button { font: inherit; color: inherit; }
 .fuda-b { white-space: nowrap; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 48px; padding: 6px 5px; font-size: 15px; line-height: 1.3; text-decoration: none; cursor: pointer; background: transparent; border: 0; position: relative; }
 
 /* 節 */
-.sec { display: grid; gap: 10px; min-width: 0; }
+.sec { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
 .sec-h { font-size: 15px; font-weight: 700; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .btn { justify-self: start; min-height: 46px; padding: 8px 18px; font-size: 15px; cursor: pointer; background: transparent; }
 .talk { display: grid; gap: 8px; }
