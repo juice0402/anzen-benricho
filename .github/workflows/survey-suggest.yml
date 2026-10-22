@@ -1,0 +1,23 @@
+name: 検索候補の調べ（1回だけ）
+on:
+  push:
+    branches: ['survey/suggest']
+    paths: ['survey/seeds.txt', 'survey/suggest.mjs']
+permissions:
+  contents: write
+jobs:
+  suggest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: node survey/suggest.mjs
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add survey/suggest.json
+          git commit -m "検索候補の結果"
+          git push
