@@ -1,0 +1,70 @@
+/* 案2 回覧板：紺の回覧板に「回覧」の文字と黒い目玉クリップ。
+   業種の札は回覧の印の欄で、えらんだ業種に赤いはんこ。見出しは明朝で「一 掲示」のようなお知らせの書き方 */
+:root {
+  --board: #2b4e77; --paper: #fff; --ink: #1d2329; --muted: #5f6870; --navy: #2b4e77; --thin: #cfd6dc;
+  --red: #c0271f; --anzen: #1d7a4b; --seisou: #1f5f9e; --kyotsu: #5f6870; --focus: #2b4e77;
+  --mincho: "Hiragino Mincho ProN", "Yu Mincho", "BIZ UDPMincho", "Noto Serif CJK JP", serif;
+}
+.bar { color: #fff; }
+.bar-corner { color: #dbe5ef; }
+.foot { color: #cddbe9; }
+
+/* 板に「回覧」、紙を目玉クリップでとめる */
+.wrap { background: var(--paper); width: calc(100% - 20px); max-width: 640px; margin: 64px auto 0; padding-top: 34px; position: relative; }
+.wrap::before { content: "回　覧"; position: absolute; left: 0; right: 0; top: -56px; text-align: center; color: #fff; font-family: var(--mincho); font-weight: 700; font-size: 22px; letter-spacing: .3em; }
+.wrap::after { content: ""; position: absolute; left: 50%; top: -14px; width: 104px; height: 30px; margin-left: -52px; background: #1a1d20; border-radius: 3px 3px 10px 10px; box-shadow: 0 -10px 0 -6px #9aa1a7; }
+
+/* 月とテーマ：お知らせの題 */
+.th-head, .this-month { justify-items: center; text-align: center; gap: 8px; }
+.th-month { flex-direction: column; gap: 4px; }
+.mon { font-family: var(--mincho); font-size: 18px; font-weight: 700; color: var(--muted); }
+.mon small { font-size: 16px; }
+.th-title { font-family: var(--mincho); font-size: 28px; padding: 0 6px 4px; border-bottom: 4px double var(--ink); }
+.th-undo { color: var(--muted); }
+.th-undo span { color: var(--ink); }
+.tm-kicker { font-family: var(--mincho); color: var(--navy); letter-spacing: .1em; }
+.tm-ask { color: var(--muted); }
+.this-month .fuda { width: 100%; margin-top: 4px; }
+
+/* 業種の札：回覧の印の欄。えらんだ欄に赤いはんこ */
+.fuda { gap: 0; border: 1.5px solid var(--ink); }
+.fuda-b { flex-direction: column; justify-content: flex-start; gap: 0; padding: 0; min-height: 104px; font-size: 13px; color: var(--ink); }
+.fuda-b + .fuda-b { border-left: 1.5px solid var(--ink); }
+.fuda-b::before { content: ""; order: 2; flex: 1; width: 100%; }
+.fuda-b { padding-top: 6px; }
+.fuda-b[aria-selected="true"], .fuda-b[aria-current="true"] { font-weight: 700; }
+.fuda-b[aria-selected="true"]::after, .fuda-b[aria-current="true"]::after {
+  content: attr(data-in); position: absolute; left: 50%; bottom: 9px; width: 40px; height: 40px; margin-left: -20px;
+  border: 2.5px solid var(--red); border-radius: 50%; color: var(--red); font-family: var(--mincho); font-weight: 700; font-size: 21px; line-height: 35px; text-align: center; transform: rotate(-10deg);
+}
+.fuda-b { background: linear-gradient(var(--ink), var(--ink)) no-repeat 0 46px / 100% 1px; }
+
+/* 節：一 掲示、二 朝礼 … */
+.panel { counter-reset: k; }
+.sec { counter-increment: k; }
+.sec-h { font-family: var(--mincho); font-size: 18px; justify-content: flex-start; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--thin); }
+.sec-h::before { content: counter(k, cjk-ideographic); color: var(--navy); }
+.index > .sec-h::before { content: none; }
+.sec-h small { margin-left: auto; color: var(--muted); font-family: inherit; }
+.sheet { border: 1px solid var(--thin); }
+.btn { border: 1.5px solid var(--navy); color: var(--navy); border-radius: 3px; }
+.todo li + li { border-top: 1px dashed var(--thin); }
+.todo input { accent-color: var(--navy); }
+.src .chk, .src-note { color: var(--muted); }
+
+/* 次の改正 */
+.kaisei { border-top: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); padding: 8px 0; }
+.kaisei-tag { background: var(--navy); color: #fff; }
+
+/* 目次：文書の目次のように点線でつなぐ */
+.idx-group h3 { font-family: var(--mincho); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.idx-group h3::before { content: ""; width: 4px; height: 15px; background: var(--c); }
+.idx-group[data-corner="anzen"] { --c: var(--anzen); }
+.idx-group[data-corner="seisou"] { --c: var(--seisou); }
+.idx-group[data-corner="kyotsu"] { --c: var(--kyotsu); }
+.idx-group li { padding-left: 12px; }
+.idx-group li::after { content: ""; order: 1; flex: 1; border-bottom: 1.5px dotted var(--thin); margin: 0 4px; align-self: center; }
+.idx-group li a, .idx-group li span { flex: none; order: 0; text-decoration: none; }
+.idx-group li a { color: var(--navy); font-weight: 700; }
+.idx-group li em { order: 2; }
+.idx-group .soon { opacity: 1; color: var(--muted); }

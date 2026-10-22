@@ -1,0 +1,23 @@
+// サイトの名前・URL・コーナー
+export const SITE = {
+  name: '安全衛生の便利帳',
+  url: 'https://anzen-benricho.com',
+  // 公開前は全ページ noindex（検索に出さない）。公開の日に true にする
+  launched: false,
+  // デザインを3案でくらべている間は true。トップを「くらべるページ」にして、案ごとに /design/<id>/ の下に作る
+  designPhase: true,
+};
+
+// コーナー。色はデザインのCSSで決め、ここでは名前と場所だけ
+export const CORNERS = {
+  anzen: { name: '今月の安全衛生', path: '/anzen/' },
+  seisou: { name: '清掃・ビルメン', path: '/seisou/' },
+  kyotsu: { name: '講習・法令', path: '/' },
+};
+
+// 見た目の3案（10/22 しょーくんと決めた候補。本物の画面でくらべて1つにする）
+export const DESIGNS = [
+  { id: 'tenken', name: '点検表', note: 'クリップボードにはさんだ点検表' },
+  { id: 'kairan', name: '回覧板', note: '回して確認印をおす回覧板' },
+  { id: 'keiji', name: '掲示板', note: '職場の掲示板とマグネット' },
+];

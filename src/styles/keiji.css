@@ -1,0 +1,68 @@
+/* 案3 掲示板：アルミの枠の、緑のフェルトの掲示板。紙はマグネットでとめる。
+   今月は月めくりのカレンダー、業種の札はマグネットの名札で、えらんだ札に赤いマグネット */
+:root {
+  --board: #3f6454; --paper: #fff; --ink: #1d2327; --muted: #5d676d; --thin: #cdd5d9; --frame: #cdd3d8;
+  --red: #cf3b2e; --yellow: #e5b21d; --blue: #2f6cb3; --anzen: #1d7a4b; --seisou: #1f5f9e; --kyotsu: #5d676d; --focus: #ffd84a;
+}
+.bar, .foot { background: var(--frame); color: var(--ink); }
+.bar { border-bottom: 4px solid #a9b1b8; }
+.foot { border-top: 4px solid #a9b1b8; margin-top: 8px; }
+.bar-corner { color: var(--muted); }
+.wrap { gap: 26px; padding-top: 22px; }
+
+/* マグネットでとめた紙 */
+.th-head, .this-month, .kaisei, .sec:not(.sec-poster), .index, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 #2c4a3d; }
+.th-head::before, .this-month::before, .kaisei::before, .sec:not(.sec-poster)::before, .index::before, .sheet::before {
+  content: ""; position: absolute; top: -7px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--m, var(--red)); box-shadow: 0 2px 0 rgba(0, 0, 0, .25); z-index: 1;
+}
+.sec-talk { --m: var(--yellow); }
+.sec-todo { --m: var(--blue); }
+.sec-src { --m: var(--yellow); }
+.kaisei { --m: var(--blue); }
+.index { --m: var(--yellow); }
+.sec:not(.sec-poster), .index { padding: 18px 14px 14px; }
+
+/* 今月：月めくりのカレンダー（上にとじ具、大きな月） */
+.th-head, .this-month { padding: 0 14px 14px; gap: 8px; }
+.th-head::after, .this-month::after { content: ""; order: -1; height: 14px; margin: 0 -14px; background: #2a3034; }
+.th-head::before, .this-month::before { top: 1px; left: 22px; margin: 0; width: 12px; height: 12px; background: #f0f2f3; box-shadow: none; }
+.th-month { gap: 12px; padding-top: 10px; }
+.mon { font-size: 60px; color: var(--red); }
+.mon small { color: var(--ink); }
+.th-title { font-size: 25px; }
+.th-undo { color: var(--muted); border-top: 1px solid var(--thin); padding-top: 6px; }
+.th-undo span { color: var(--ink); font-weight: 700; }
+.tm-kicker { padding-top: 10px; color: var(--anzen); }
+.tm-ask { color: var(--muted); }
+
+/* 業種の札：マグネットの名札。えらんだ札に赤いマグネット */
+.fuda { gap: 8px; }
+.fuda-b { background: #fff; color: var(--ink); border-left: 5px solid var(--anzen); box-shadow: 0 2px 0 #2c4a3d; padding: 10px 4px 8px; }
+.this-month .fuda-b { box-shadow: none; border: 1px solid var(--thin); border-left: 5px solid var(--anzen); }
+.fuda-b[aria-selected="true"], .fuda-b[aria-current="true"] { background: #fff5c9; font-weight: 700; }
+.fuda-b[aria-selected="true"]::after, .fuda-b[aria-current="true"]::after { content: ""; position: absolute; top: -6px; right: -4px; width: 16px; height: 16px; border-radius: 50%; background: var(--red); box-shadow: 0 2px 0 rgba(0, 0, 0, .25); }
+
+/* 節の見出し：板に貼った白い字 */
+.sec-poster > .sec-h { color: #fff; }
+.sec-poster > .sec-h small { color: #d6e2dc; }
+.sec:not(.sec-poster) > .sec-h small { color: var(--muted); }
+.sheet { margin-top: 4px; }
+.btn { background: #fff; color: var(--ink); border: 0; box-shadow: 0 2px 0 #2c4a3d; font-weight: 700; }
+.sec:not(.sec-poster) .btn { border: 1.5px solid var(--ink); box-shadow: none; }
+.todo li + li { border-top: 1px solid var(--thin); }
+.todo input { accent-color: var(--blue); }
+.src .chk, .src-note { color: var(--muted); }
+
+/* 次の改正 */
+.kaisei { padding: 14px 14px 10px; }
+.kaisei-tag { background: var(--ink); color: #fff; }
+
+/* 目次 */
+.idx-group h3 { display: flex; align-items: center; gap: 8px; }
+.idx-group h3::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--c); }
+.idx-group[data-corner="anzen"] { --c: var(--anzen); }
+.idx-group[data-corner="seisou"] { --c: var(--seisou); }
+.idx-group[data-corner="kyotsu"] { --c: var(--kyotsu); }
+.idx-group li { padding-left: 20px; border-top: 1px solid var(--thin); }
+.idx-group li a { font-weight: 700; text-decoration: none; }
+.idx-group li a::after { content: "見る"; float: right; font-size: 12px; font-weight: 400; color: var(--muted); border: 1px solid var(--thin); padding: 0 8px; }
