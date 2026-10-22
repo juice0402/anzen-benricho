@@ -69,8 +69,6 @@ button { font: inherit; color: inherit; }
 .idx-group h3 { font-size: 14px; }
 .idx-group li { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; }
 .idx-group li a { flex: 1; padding: 10px 0; }
-.idx-group .soon { opacity: .6; }
-.idx-group .soon em { font-style: normal; font-size: 12px; }
 
 /* 掲示（A4の紙）。印刷でもこの形のまま。文字の大きさは紙の幅に合わせる（cqw） */
 .sheet { container-type: inline-size; background: #fff; color: #1b1f22; aspect-ratio: 210 / 297; width: 100%; display: flex; flex-direction: column; position: relative; }

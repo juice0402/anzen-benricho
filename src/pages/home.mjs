@@ -1,12 +1,9 @@
 // 総合トップ：今月のテーマと業種の札、次の法改正を1行、目次
-// 目次の「準備中」は、デザインをくらべる間だけ並べておく（公開のときは、できたページだけにする）
+// 目次には、できたページだけを出す（中身のないコーナーや「準備中」の札は出さない）
 import { page, esc, script, fudaLabel } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 
-const item = (base, it) =>
-  it.href
-    ? `<li><a href="${base}${it.href}">${esc(it.name)}</a></li>`
-    : `<li class="soon"><span>${esc(it.name)}</span><em>準備中</em></li>`;
+const item = (base, it) => `<li><a href="${base}${it.href}">${esc(it.name)}</a></li>`;
 
 export default function home({ data: t, kaisei }) {
   const base = '';
@@ -15,15 +12,11 @@ export default function home({ data: t, kaisei }) {
     {
       corner: 'anzen',
       name: '今月の安全衛生',
-      items: [
-        { name: `${t.month}月 ${t.title}`, href: `/anzen/theme/${t.slug}/` },
-        { name: '12月 年末の交通安全' },
-        { name: '法改正の一覧' },
-      ],
+      items: [{ name: `${t.month}月 ${t.title}`, href: `/anzen/theme/${t.slug}/` }],
     },
-    { corner: 'kyotsu', name: '講習・資格', items: [{ name: '資格の更新チェッカー' }, { name: '講習の道案内' }] },
-    { corner: 'seisou', name: '清掃・ビルメン', items: [{ name: '洗剤の仕様表と希釈' }, { name: '清掃のチェックシート' }] },
-  ];
+    { corner: 'kyotsu', name: '講習・資格', items: [] },
+    { corner: 'seisou', name: '清掃・ビルメン', items: [] },
+  ].filter((g) => g.items.length);
   const body = `<section class="this-month" aria-labelledby="tm-h">
 <p class="tm-kicker">今月の安全衛生</p>
 <div class="th-month"><b class="mon">${t.month}<small>月</small></b><h2 class="th-title" id="tm-h"><a href="${themeHref}">${esc(t.title)}</a></h2></div>
