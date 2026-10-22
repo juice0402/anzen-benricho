@@ -1,6 +1,7 @@
 // 総合トップ：今月のテーマと業種の札、次の法改正を1行、目次
 // 目次には、できたページだけを出す（中身のないコーナーや「準備中」の札は出さない）
-import { page, esc, script, fudaLabel } from '../layout.mjs';
+import { page, esc, script, adSlot } from '../layout.mjs';
+import { fuda } from './theme.mjs';
 import { SITE } from '../site.mjs';
 
 const item = (base, it) => `<li><a href="${base}${it.href}">${esc(it.name)}</a></li>`;
@@ -22,9 +23,7 @@ export default function home({ data: t, kaisei }) {
 <div class="th-month"><b class="mon">${t.month}<small>月</small></b><h2 class="th-title" id="tm-h"><a href="${themeHref}">${esc(t.title)}</a></h2></div>
 <p class="th-undo">今月の運動 <span>${esc(t.undo.name)}</span> <span class="nw">${esc(t.undo.span)}</span></p>
 <p class="tm-ask">業種をえらぶと掲示と朝礼が出ます</p>
-<nav class="fuda" aria-label="業種">${t.gyoshu
-    .map((g) => `<a class="fuda-b" href="${themeHref}#${g.key}" data-k="${g.key}">${fudaLabel(g.label)}</a>`)
-    .join('')}</nav>
+${fuda(t, '')}
 </section>
 <p class="kaisei"><span class="kaisei-tag">次の改正</span><span class="kaisei-body"><span class="kaisei-date">${esc(kaisei.date)}</span>${esc(kaisei.text)}</span></p>
 <section class="index" aria-labelledby="idx-h">
@@ -32,7 +31,8 @@ export default function home({ data: t, kaisei }) {
 ${groups
     .map((g) => `<div class="idx-group" data-corner="${g.corner}"><h3>${esc(g.name)}</h3><ul>${g.items.map((it) => item(base, it)).join('')}</ul></div>`)
     .join('\n')}
-</section>`;
+</section>
+${adSlot('home')}`;
   return {
     path: '/',
     html: page({
@@ -40,7 +40,7 @@ ${groups
       description: '職場の安全衛生の担当者が毎月そのまま使える掲示・朝礼・やることを、業種ごとにまとめています。清掃・ビルメンの資料と、講習・資格の更新の目安も載せます。',
       path: '/',
       body,
-      js: script('home'),
+      js: script('remember'),
       isHome: true,
     }),
   };

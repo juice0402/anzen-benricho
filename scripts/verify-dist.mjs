@@ -27,7 +27,9 @@ for (const file of htmlFiles) {
   const rel = '/' + relative(DIST, file).replace(/index\.html$/, '');
   const html = readFileSync(file, 'utf8');
   const noindex = html.includes('<meta name="robots" content="noindex">');
-  if (!SITE.launched && !noindex) fail(rel, '公開前なのに noindex がない');
+  if ((!SITE.launched || rel === '/404.html') && !noindex) fail(rel, '公開前か404なのに noindex がない');
+  // 広告の枠には「広告」と書く
+  if (html.includes('class="adsbygoogle"') && !html.includes('<p class="ad-label">広告</p>')) fail(rel, '広告の枠に「広告」の表示がない');
 
   if (!html.startsWith('<!doctype html>')) fail(rel, 'doctype がない');
   if (!/<html lang="ja"[ >]/.test(html)) fail(rel, 'lang="ja" がない');
@@ -92,8 +94,11 @@ for (const file of htmlFiles) {
     try { new vm.Script(m[1]); } catch (e) { fail(rel, `スクリプトの文法: ${e.message}`); }
   }
   // 外部のファイルを読み込まない（速さのため。広告を入れるときにここで例外を決める）
+  // 例外は AdSense のコードだけ（SITE.adsense を入れたとき、広告のないページ以外）
+  const ADSENSE = /^<script async src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-\d+"/;
   for (const m of html.matchAll(/<(?:script|img|link|iframe)\b[^>]*\b(?:src|href)="(https?:)?\/\/[^"]*"/g)) {
     if (m[0].includes('rel="canonical"')) continue;
+    if (SITE.adsense && ADSENSE.test(m[0])) continue;
     fail(rel, `外部のファイルを読み込んでいる: ${m[0].slice(0, 80)}`);
   }
   for (const m of html.matchAll(/\b(?:href|src)="(\/[^"]*)"/g)) {

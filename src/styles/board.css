@@ -11,15 +11,19 @@
 .wrap { gap: 26px; padding-top: 22px; }
 
 /* マグネットでとめた紙 */
-.th-head, .this-month, .kaisei, .sec-talk, .sec-todo, .index, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); }
-.kaisei::before, .sec-talk::before, .sec-todo::before, .index::before, .sheet::before {
+.th-head, .this-month, .kaisei, .sec-talk, .sec-todo, .sec-memo, .index, .doc, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); }
+.kaisei::before, .sec-talk::before, .sec-todo::before, .sec-memo::before, .index::before, .doc::before, .sheet::before {
   content: ""; position: absolute; top: -7px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--m, var(--red)); box-shadow: 0 2px 0 rgba(0, 0, 0, .25); z-index: 1;
 }
 .sec-talk { --m: var(--yellow); }
 .sec-todo { --m: var(--blue); }
 .kaisei { --m: var(--blue); }
 .index { --m: var(--yellow); }
-.sec-talk, .sec-todo, .index { padding: 18px 14px 14px; }
+.sec-memo { --m: var(--blue); }
+.doc { --m: var(--yellow); }
+.sec-talk, .sec-todo, .sec-memo, .index, .doc { padding: 18px 14px 14px; }
+.th-lead { color: #fff; }
+.ad-label { color: #cfdcd4; }
 /* 朝礼は罫線の紙 */
 .talk { gap: 0; }
 .talk p { line-height: 30px; background: repeating-linear-gradient(transparent 0 29px, #c5d3e0 29px 30px); }
@@ -45,7 +49,7 @@
 .this-month .fuda { box-shadow: none; padding: 2px 0; margin: 0 -8px; }
 @media (max-width: 374px) { .fuda-b { font-size: 14px; padding: 6px 3px; } }
 .fuda-b { color: var(--ink); font-weight: 700; }
-.fuda-b[aria-selected="true"]::after, .fuda-b[aria-current="true"]::after { content: ""; position: absolute; inset: 3px -1px; border: 2.5px solid var(--red); border-radius: 50%; transform: rotate(-4deg); }
+.fuda-b[aria-current]::after { content: ""; position: absolute; inset: 3px -1px; border: 2.5px solid var(--red); border-radius: 50%; transform: rotate(-4deg); }
 
 /* 節の見出し：板に貼った白い字 */
 .sec-poster > .sec-h, .sec-src > .sec-h { color: #fff; }

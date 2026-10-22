@@ -23,10 +23,26 @@ const minJs = (js) =>
 export const css = () => minCss(read('styles/base.css') + read('styles/board.css') + read('styles/print.css'));
 export const script = (name) => minJs(read(`client/${name}.js`));
 
-export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false }) {
+// 広告の枠：審査に通って広告ユニットのIDを入れるまでは何も出さない。出すときは「広告」と書き、ボタンや掲示から離した所に置く
+export const adSlot = (name) => {
+  const id = SITE.adsense && SITE.adSlots[name];
+  if (!id) return '';
+  return `<aside class="ad" aria-label="広告"><p class="ad-label">広告</p><ins class="adsbygoogle" style="display:block" data-ad-client="${SITE.adsense}" data-ad-slot="${id}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></aside>`;
+};
+const ADSENSE_TAG = () =>
+  `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SITE.adsense}" crossorigin="anonymous"></script>`;
+
+const FOOT_LINKS = [
+  ['/about/', 'このサイトについて'],
+  ['/privacy/', 'プライバシーポリシー'],
+  ['/disclaimer/', '免責事項'],
+];
+
+export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false, noAds = false, noindex: forceNoindex = false }) {
   const base = '';
   const url = SITE.url + path;
-  const noindex = !SITE.launched;
+  const noindex = !SITE.launched || forceNoindex;
+  const ads = SITE.adsense && !noAds;
   const cornerName = corner ? CORNERS[corner].name : '';
   const logo = `<a class="logo" href="${base}/">${esc(SITE.name)}</a>`;
   const crumbHtml = crumbs.length
@@ -57,6 +73,7 @@ export function page({ title, description, path, corner, body, js = '', crumbs =
 ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
 <meta name="theme-color" content="#2b3238">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+${ads ? ADSENSE_TAG() : ''}
 <style>${css()}</style>
 ${lds}
 </head>
@@ -65,7 +82,7 @@ ${lds}
 <main class="wrap">
 ${body}
 </main>
-<footer class="foot"><div class="foot-in">${crumbHtml}<p class="foot-name">${esc(SITE.name)}</p></div></footer>
+<footer class="foot"><div class="foot-in">${crumbHtml}<p class="foot-links">${FOOT_LINKS.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</p><p class="foot-name">${esc(SITE.name)}</p></div></footer>
 ${js ? `<script>${js}</script>` : ''}
 </body>
 </html>
