@@ -9,6 +9,7 @@ for (const t of THEMES) {
     assert.deepEqual(t.gyoshu.map((g) => [g.key, g.label, g.name]), GYOSHU.map((g) => [g.key, g.label, g.name]));
     assert.ok(Number.isInteger(t.month) && t.month >= 1 && t.month <= 12, `${t.title} の月`);
     for (const g of t.gyoshu) assert.ok(g.memo, `${g.label} の多いけが`);
+    if (t.titleParts) assert.equal(t.titleParts.join(''), t.title, '改行の切れ目をつないだら名前と同じ');
   });
 
   test(`${t.title}：掲示の決まりは3つ、やることは3つ`, () => {

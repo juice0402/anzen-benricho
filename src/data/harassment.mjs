@@ -8,6 +8,7 @@ export const HARASSMENT = {
   slug: 'harassment',
   month: 12,
   title: 'ハラスメントとカスハラ',
+  titleParts: ['ハラスメントと', 'カスハラ'],
   undo: { name: '職場のハラスメント撲滅月間', span: '毎年12月' },
   checked: '2026-10-23',
   common: [
