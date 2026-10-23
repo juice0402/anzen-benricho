@@ -151,6 +151,7 @@ export const HOUREI = [
   {
     slug: 'stress-check',
     seoTitle: '50人未満のストレスチェック義務化はいつから（2028年4月1日）',
+    related: [{ t: '10人・50人で変わる安全衛生の決まり', href: '/kihon/ninzu/' }],
     date: '2028-04-01',
     title: '50人未満の職場もストレスチェックが義務',
     kind: '義務',

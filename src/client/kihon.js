@@ -97,10 +97,12 @@
         return (head ? line(head, '') : '') + line(esc(r.form), '期限：' + esc(due));
       },
       part: function () {
-        var qs = td.questions || [], picks = [];
-        for (var i = 0; i < qs.length; i++) { var c = tb.querySelector('input[name="kt-q' + i + '"]:checked'); if (!c) return ''; picks.push(qs[i].options[+c.value]); }
-        for (var j = 0; j < picks.length; j++) if (picks[j].result) return line(esc(picks[j].result), picks[j].note ? esc(picks[j].note) : '');
-        return line(esc(td.yes || ''), td.yesNote ? esc(td.yesNote) : '');
+        var c = tb.querySelector('input[name="kt-t"]:checked'), h = +val('kt-hr'), n = +val('kt-nr');
+        if (!c || !h || !n) return '';
+        var t = td.term[+c.value], sp = document.getElementById('kt-s').checked;
+        var ok = t.ok || (sp && t.tokutei), r = h / n;
+        var key = ok && r >= td.must ? 'must' : ok && r >= td.want ? 'want' : 'none';
+        return line(esc(td.text[key]), '週の時間は通常の労働者の' + Math.round(r * 100) + '%');
       },
     }[tb.getAttribute('data-tool')];
     var run = function () { var h = calc(); ko.innerHTML = h; ko.hidden = !h; };

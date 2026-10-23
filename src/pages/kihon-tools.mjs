@@ -17,8 +17,11 @@ const TOOLS = {
     body: `<div class="kt-in">${date('kt-a', d.input.injured)}${date('kt-b', d.input.back)}<label class="kt-chk" for="kt-x"><input id="kt-x" type="checkbox">${esc(d.input.death)}</label></div>`,
   }),
   part: (d) => ({
-    h: 'この人は健康診断の対象か',
-    body: `<div class="kt-in">${(d.questions || []).map((q, i) => `<fieldset class="kt-q"><legend>${esc(q.q)}</legend>${q.options.map((o, j) => `<label for="kt-q${i}-${j}"><input type="radio" name="kt-q${i}" id="kt-q${i}-${j}" value="${j}">${esc(o.t)}</label>`).join('')}</fieldset>`).join('')}</div>`,
+    h: 'パート・アルバイトは健康診断の対象か',
+    body: `<div class="kt-in"><fieldset class="kt-q"><legend>雇う期間</legend>${d.term.map((t, i) => `<label for="kt-t${i}"><input type="radio" name="kt-t" id="kt-t${i}" value="${i}">${esc(t.label)}</label>`).join('')}</fieldset>
+<label class="kt-chk" for="kt-s"><input id="kt-s" type="checkbox">${esc(d.tokuteiLabel)}</label>
+${num('kt-hr', 'この人の週の所定労働時間（時間）')}${num('kt-nr', '同じ仕事をする通常の労働者の週の所定労働時間（時間）')}</div>
+<p class="kt-def">${esc(d.note)}</p>`,
   }),
 };
 

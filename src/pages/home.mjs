@@ -9,9 +9,9 @@ import { KIHON } from '../data/kihon/index.mjs';
 export default function home({ month, themes, allThemes, kaisei }) {
   const now = Number(todayJst().slice(5, 7));
   const groups = [
-    { corner: 'anzen', name: '月ごとのテーマ', items: [...new Set(allThemes.map((t) => t.month))].map((m) => ({ name: `${m}月の安全衛生テーマ`, href: `/anzen/${m}/` })) },
+    { corner: 'anzen', name: '月ごとのテーマ', items: [...[...new Set(allThemes.map((t) => t.month))].map((m) => ({ name: `${m}月の安全衛生テーマ`, href: `/anzen/${m}/` })), ...KIHON.filter((p) => p.path.startsWith('/anzen/')).map((p) => ({ name: p.h1, href: p.path }))] },
     { corner: 'kihon', name: '基本の決まり', items: KIHON.filter((p) => p.path.startsWith('/kihon/')).map((p) => ({ name: p.h1, href: p.path })) },
-    { corner: 'kyotsu', name: CORNERS.kyotsu.name, items: [{ name: '法改正の一覧', href: '/hourei/' }, { name: '資格の更新の期限', href: '/shikaku/koushin/' }] },
+    { corner: 'kyotsu', name: CORNERS.kyotsu.name, items: [{ name: '法改正の一覧', href: '/hourei/' }, { name: '資格の更新の期限', href: '/shikaku/koushin/' }, ...KIHON.filter((p) => p.path.startsWith('/shikaku/')).map((p) => ({ name: p.h1, href: p.path }))] },
     { corner: 'seisou', name: '清掃・ビルメン', items: [] },
   ].filter((g) => g.items.length);
   const body = `<section class="this-month" aria-labelledby="tm-h">

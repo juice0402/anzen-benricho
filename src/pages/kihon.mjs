@@ -84,6 +84,7 @@ ${foot}
     paper = `<div class="psheet pg"><div class="ps-in">
 <p class="ps-title">${esc(s.title)}</p>
 ${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
+${s.fields ? `<dl class="pg-f">${s.fields.map((f) => `<div><dt>${esc(f)}</dt><dd></dd></div>`).join('')}</dl>` : ''}
 <table class="pg-t"><thead><tr>${s.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${Array.from({ length: s.rows }, (_, i) => `<tr>${s.cols.map((_, j) => `<td>${j === 0 && first[i] ? esc(first[i]) : ''}</td>`).join('')}</tr>`).join('')}</tbody></table>
 ${foot}
 </div></div>`;
