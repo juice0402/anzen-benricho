@@ -16,7 +16,8 @@ export const SITE = {
 
 // コーナー。色はデザインのCSSで決め、ここでは名前と場所だけ
 export const CORNERS = {
-  anzen: { name: '今月の安全衛生', path: '/anzen/' },
+  anzen: { name: '月ごとのテーマ', path: '/anzen/' },
   seisou: { name: '清掃・ビルメン', path: '/seisou/' },
-  kyotsu: { name: '講習・法令', path: '/' },
+  kyotsu: { name: '講習・法令', path: '/hourei/' },
+  kihon: { name: '基本の決まり', path: '/kihon/' },
 };

@@ -8,7 +8,8 @@ export const TENTOU = {
   slug: 'tentou',
   month: 1,
   title: '冬の転倒',
-  undo: { name: '冬の労働災害防止の運動', span: '雪の多い地域で、労働局ごと' },
+  undo: { name: '雪の多い地域の冬の運動', span: '名前と期間は労働局ごと' },
+  related: [{ t: '高年齢労働者の労災防止（法改正・努力義務）', href: '/hourei/koureisha/' }, { t: '労働者死傷病報告 いつまで・どの様式', href: '/kihon/shishobyo/' }],
   checked: '2026-10-23',
   common: [
     { t: '厚生労働省 令和7年における労働災害発生状況（確定値）（事故の型別：転倒37,195人でいちばん多い）', u: 'https://www.mhlw.go.jp/content/11302000/001704887.pdf' },

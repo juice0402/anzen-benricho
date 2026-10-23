@@ -3,13 +3,22 @@
 //   /anzen/theme/<slug>/<業種>/   業種のページ：掲示・朝礼・やること・出典（1業種1ページ。検索と広告の審査で中身が1ページにまとまるように）
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
-import { themePath, gyoshuPath, fuda, monthHead, titleHtml } from '../parts.mjs';
+import { themePath, gyoshuPath, fuda, monthHead, titleHtml, undoLine } from '../parts.mjs';
+import { ALL_THEMES } from '../data/themes.mjs';
+
+const seo = (t) => t.seoName || t.title;
+// 同じ月のほかのテーマと、関係するページ（法改正・基本の決まり）
+const links = (t, g) => {
+  const sib = ALL_THEMES.filter((x) => x.month === t.month && x.slug !== t.slug).map((x) => ({ t: `${t.month}月 ${x.title}`, href: g ? gyoshuPath(x, g) : themePath(x) }));
+  const all = [...sib, ...(t.related || [])];
+  return all.length ? `<section class="sec paper np" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel">${all.map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('')}</ul>\n</section>` : '';
+};
 
 const fmtDate = (iso) => {
   const [y, m, d] = iso.split('-').map(Number);
   return `${y}年${m}月${d}日`;
 };
-const head = (t, h, sub = '') => monthHead(t.month, h, titleHtml(t), sub, t.undo);
+const head = (t, h) => monthHead(t.month, h, titleHtml(t), '', t.undo);
 
 const srcList = (list) =>
   `<ol class="src">${list
@@ -23,7 +32,7 @@ const sheet = (t, g) => `<div class="sheet">
 <p class="s-title">${titleHtml(t)}</p>
 <ol class="rules">${g.rules.map(([a, b]) => `<li><div>${esc(a)}<span>${esc(b)}</span></div></li>`).join('')}</ol>
 <table class="kakunin" aria-label="確認欄"><thead><tr><th>確認した日</th><th>名前</th><th>確認した日</th><th>名前</th></tr></thead><tbody>${'<tr><td></td><td></td><td></td><td></td></tr>'.repeat(5)}</tbody></table>
-<p class="s-foot"><span>出典：厚生労働省・労働局ほか</span><span>今月の安全衛生　${SITE.url.replace('https://', '')}</span></p>
+<p class="s-foot"><span>${esc(t.posterSrc || '出典：厚生労働省・労働局ほか')}</span><span>${esc(SITE.name)}　${SITE.url.replace('https://', '')}</span></p>
 </div>
 </div>`;
 
@@ -34,7 +43,7 @@ function overview(t) {
 <p class="th-lead">業種をえらぶと、その業種の掲示と朝礼が出ます。</p>
 ${fuda((g) => gyoshuPath(t, g))}
 <section class="sec sec-memo" aria-labelledby="memo-h">
-<h2 class="sec-h" id="memo-h">業種ごとに多いけが</h2>
+<h2 class="sec-h" id="memo-h">業種ごとに多いこと</h2>
 <dl class="memo">${t.gyoshu.map((g) => `<dt><a href="${gyoshuPath(t, g)}">${esc(g.name)}</a></dt><dd>${esc(g.memo)}</dd>`).join('')}</dl>
 </section>
 <section class="sec sec-src" aria-labelledby="src-h">
@@ -42,25 +51,27 @@ ${fuda((g) => gyoshuPath(t, g))}
 ${srcList([...t.common, ...t.gyoshu.map((g) => g.src[0])])}
 <p class="src-note">確認日 ${fmtDate(t.checked)}。${esc(t.note)}</p>
 </section>
+${links(t)}
 ${adSlot('end')}`;
   return {
     path,
     html: page({
-      title: `${t.month}月の安全衛生テーマ ${t.title}の掲示と朝礼｜${SITE.name}`,
-      description: `${t.month}月の安全衛生のテーマ「${t.title}」。事務所・店舗、飲食店、製造業、清掃・ビルメンの業種ごとに、印刷して貼れる掲示と1分で話せる朝礼の文を出典つきでまとめています。`,
+      title: `${t.month}月の安全衛生テーマ「${seo(t)}」朝礼ネタと掲示物（業種別）｜${SITE.name}`,
+      description: `${t.month}月の安全衛生のテーマ「${seo(t)}」。事務所・店舗、飲食店、製造業、清掃・ビルメンの業種ごとに、印刷して貼れる掲示と1分で話せる朝礼の文を出典つきでまとめています。`,
       path,
       corner: 'anzen',
       body,
       js: script('remember'),
-      crumbs: [{ name: `${t.month}月 ${t.title}` }],
+      crumbs: [{ name: `${t.month}月の安全衛生`, href: `/anzen/${t.month}/` }, { name: t.title }],
     }),
+    lastmod: t.checked,
   };
 }
 
 // 業種のページ
 function gyoshuPage(t, g) {
   const path = gyoshuPath(t, g);
-  const body = `${head(t, 'h1', g.label)}
+  const body = `${monthHead(t.month, 'h1', titleHtml(t), `${g.name}の`)}
 ${fuda((x) => gyoshuPath(t, x), g.key)}
 <section class="sec sec-poster" aria-labelledby="poster-h">
 <h2 class="sec-h" id="poster-h">掲示</h2>
@@ -80,19 +91,22 @@ ${adSlot('mid')}
 <section class="sec sec-src" aria-labelledby="src-h">
 <h2 class="sec-h" id="src-h">出典</h2>
 ${srcList([...t.common, ...g.src])}
+${t.undo ? undoLine(t.month, t.undo).replace('class="th-undo"', 'class="th-undo src-note"') : ''}
 <p class="src-note">確認日 ${fmtDate(t.checked)}。${esc(t.note)}</p>
-</section>`;
+</section>
+${links(t, g)}`;
   return {
     path,
     html: page({
-      title: `${g.name}の${t.title} 安全の掲示と朝礼（${t.month}月）｜${SITE.name}`,
-      description: `${g.name}向けの${t.month}月の安全衛生テーマ「${t.title}」。「${g.rules[0][0]}」「${g.rules[1][0]}」などをA4の掲示にして、1分で話せる朝礼の文と出典もつけています。`,
+      title: `${g.name}の${seo(t)}｜${t.month}月の朝礼（1分の例文）と掲示｜${SITE.name}`,
+      description: `${g.name}向けの${t.month}月の安全衛生テーマ「${seo(t)}」。「${g.rules[0][0]}」「${g.rules[1][0]}」などをA4の掲示にして、1分で話せる朝礼の文と出典もつけています。`,
       path,
       corner: 'anzen',
       body,
       js: script('gyoshu'),
-      crumbs: [{ name: `${t.month}月 ${t.title}`, href: themePath(t) }, { name: g.label }],
+      crumbs: [{ name: `${t.month}月の安全衛生`, href: `/anzen/${t.month}/` }, { name: t.title, href: themePath(t) }, { name: g.label }],
     }),
+    lastmod: t.checked,
   };
 }
 

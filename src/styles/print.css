@@ -6,5 +6,13 @@
   .bar, .foot, .fuda, .th-head, .sec-h, .btn, .sec-talk, .sec-todo, .sec-src, .ad { display: none !important; }
   .wrap::before, .wrap::after, .sec::before, .sheet::before, .sheet::after { display: none !important; }
   .sheet { width: 186mm !important; height: 272mm !important; aspect-ratio: auto !important; transform: none !important; border: 1px solid #9aa3a8 !important; box-shadow: none !important; margin: 0 !important; break-inside: avoid; }
-  .tora, .kakunin th, .kakunin td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* 掲示が長いときも A4 1枚に収める（すき間を少しつめる） */
+  .sheet-in { gap: 2.6cqw !important; padding: 5cqw 6.5cqw 4cqw !important; }
+  .rules { gap: 2.4cqw !important; }
+  .kakunin th, .kakunin td { height: 5cqw !important; }
+  /* 知識のページ：A4 の紙だけ */
+  .np, .ks-ctl { display: none !important; }
+  .ps-in { padding: 5cqw 6.5cqw 4cqw !important; gap: 2.4cqw !important; }
+  .psheet { width: 186mm !important; height: 272mm !important; aspect-ratio: auto !important; border: 1px solid #9aa3a8 !important; box-shadow: none !important; margin: 0 !important; break-inside: avoid; }
+  .pg-t th, .pf-rows dd, .tora, .kakunin th, .kakunin td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

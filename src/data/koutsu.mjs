@@ -5,6 +5,7 @@ export const KOUTSU = {
   slug: 'koutsu',
   month: 12,
   title: '年末の交通安全',
+  posterSrc: '出典：警察庁・内閣府・厚生労働省ほか',
   undo: { name: '年末の交通安全運動', span: '期間は都道府県ごと' },
   checked: '2026-10-22',
   common: [

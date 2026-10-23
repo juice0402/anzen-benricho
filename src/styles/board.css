@@ -74,6 +74,7 @@
 .idx-group[data-corner="anzen"] { --c: var(--anzen); }
 .idx-group[data-corner="seisou"] { --c: var(--seisou); }
 .idx-group[data-corner="kyotsu"] { --c: var(--kyotsu); }
+.idx-group[data-corner="kihon"] { --c: var(--blue); }
 .idx-group li { padding-left: 20px; border-top: 1px solid var(--thin); }
 .idx-group li a { font-weight: 700; text-decoration: none; }
 
@@ -89,3 +90,21 @@
 .ks-date input { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
 .ks-out { border-top: 2px solid var(--ink); }
 .back a { color: #fff; }
+
+/* 知識のページ */
+.kp .fuda { box-shadow: none; padding: 2px 0; margin: 0 -8px; }
+.fuda-b[aria-pressed="true"]::after { content: ""; position: absolute; inset: 3px -1px; border: 2.5px solid var(--red); border-radius: 50%; transform: rotate(-4deg); }
+.kres { color: var(--muted); }
+.kres.on { color: var(--red); }
+.ktbl .law, .ks-hint, .khub span { color: var(--muted); }
+.ks-ctl { background: var(--paper); box-shadow: 0 2px 0 var(--edge); }
+.ks-ctl select, .ks-ctl input { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
+.krel a, .khub a { color: var(--ink); }
+.psheet { box-shadow: 0 2px 0 var(--edge); margin-top: 4px; }
+.mt-g span { color: var(--muted); }
+.mu span { color: var(--muted); font-size: 14px; }
+.kt-in input[type="number"], .kt-in input[type="date"] { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
+.kt-out { border-top: 2px solid var(--ink); }
+.kt-out b { color: var(--red); }
+.kt-out span, .kt-law, .kt-def, .kt-notes { color: var(--muted); }
+.kt-chk input, .kt-q input { accent-color: var(--blue); }
