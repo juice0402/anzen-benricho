@@ -48,7 +48,7 @@ button { font: inherit; color: inherit; }
 .ad:has(ins[data-ad-status="unfilled"]) { display: none; }
 
 /* 月とテーマ */
-.th-head, .this-month { display: grid; gap: 6px; }
+.th-head, .yotei { display: grid; gap: 6px; }
 .th-month { display: flex; align-items: center; gap: 14px; }
 .mon { font-size: 46px; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; flex: none; }
 .mon small { font-size: 18px; margin-left: 2px; letter-spacing: 0; }
@@ -56,9 +56,18 @@ button { font: inherit; color: inherit; }
 .th-title a { text-decoration: none; }
 .th-title small { display: block; font-size: 15px; font-weight: 700; }
 .th-lead { font-size: 14px; }
-.tm-h { font-size: 15px; }
-.tm-list { display: grid; }
-.tm-list a { display: block; padding: 8px 0; font-size: 22px; font-weight: 700; line-height: 1.35; text-decoration: none; }
+.site-lead { font-size: 14px; font-weight: 700; margin: -4px 2px 0; }
+.yt { display: grid; }
+.yt > li { display: grid; grid-template-columns: 54px 1fr; gap: 10px; padding: 9px 0; position: relative; align-items: start; }
+.ym { font-size: 13px; font-weight: 700; white-space: nowrap; position: relative; justify-self: center; padding: 0 6px; }
+.ym b { font-size: 28px; line-height: 1; font-variant-numeric: tabular-nums; }
+.yt-ev { font-size: 13px; line-height: 1.5; }
+.yt-mark { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+.yt-th { display: flex; flex-wrap: wrap; gap: 0 14px; margin-top: 2px; }
+.yt-th a { font-size: 17px; font-weight: 700; line-height: 1.6; }
+.yt-pick .yt-th a { font-size: 19px; }
+.yt-today { position: absolute; left: 0; right: 0; bottom: -1px; }
+.yt-today span { position: absolute; right: 0; bottom: 2px; font-size: 12px; font-weight: 700; padding-left: 6px; }
 .pick-rules { list-style: decimal; padding-left: 1.4em; display: grid; gap: 4px; font-weight: 700; }
 .pick-go { margin-top: 6px; }
 .pick-go a { display: inline-block; padding: 8px 0; }
