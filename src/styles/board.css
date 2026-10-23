@@ -11,7 +11,7 @@
 .wrap { gap: 26px; padding-top: 22px; }
 
 /* マグネットでとめた紙 */
-.th-head, .this-month, .kaisei, .sec-talk, .sec-todo, .sec-memo, .sec-pick, .index, .doc, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); }
+.th-head, .yotei, .kaisei, .sec-talk, .sec-todo, .sec-memo, .sec-pick, .index, .doc, .sheet { background: var(--paper); position: relative; box-shadow: 0 2px 0 var(--edge); }
 .kaisei::before, .sec-talk::before, .sec-todo::before, .sec-memo::before, .sec-pick::before, .index::before, .doc::before, .sheet::before {
   content: ""; position: absolute; top: -7px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--m, var(--red)); box-shadow: 0 2px 0 rgba(0, 0, 0, .25); z-index: 1;
 }
@@ -23,7 +23,13 @@
 .doc { --m: var(--yellow); }
 .sec-pick + .sec-pick { --m: var(--yellow); }
 .sec-talk, .sec-todo, .sec-memo, .sec-pick, .index, .doc { padding: 18px 14px 14px; }
-.tm-list a { border-bottom: 1px solid var(--thin); }
+.site-lead { color: #fff; }
+.yt > li { border-bottom: 1px solid var(--thin); }
+.yt-ev { color: var(--muted); }
+.yt-mark, .yt-today span { color: var(--red); }
+.yt-today { border-bottom: 2.5px solid var(--red); }
+.yt-today span { background: var(--paper); }
+.yt-pick .ym::after { content: ""; position: absolute; inset: -6px -4px -4px; border: 2.5px solid var(--red); border-radius: 50%; transform: rotate(-5deg); }
 .sec-pick .sec-h { font-size: 19px; }
 .sec-pick .sec-h a { text-decoration: none; }
 .th-lead { color: #fff; }
@@ -38,7 +44,7 @@
 .sec-src .chk, .sec-src .src-note { color: #cfdcd4; }
 
 /* 今月：月めくりのカレンダー（上にとじ具、大きな月） */
-.th-head, .this-month { padding: 0 14px 14px; gap: 8px; }
+.th-head, .yotei { padding: 0 14px 14px; gap: 8px; }
 .cal-band { margin: 0 -14px; padding: 3px 0; background: #2a3034; color: #fff; }
 .th-month { gap: 12px; padding-top: 10px; }
 .mon { font-size: 60px; color: var(--red); }
@@ -50,8 +56,8 @@
 
 /* 業種：紙に書いた言葉。えらんだ業種を赤ペンで丸く囲む（四角いボタンにしない） */
 .fuda { background: var(--paper); box-shadow: 0 2px 0 var(--edge); padding: 10px 4px; }
-.this-month .fuda { box-shadow: none; padding: 2px 0; margin: 0 -8px; }
-@media (max-width: 374px) { .fuda-b { font-size: 14px; padding: 6px 3px; } }
+.yotei .fuda { box-shadow: none; padding: 2px 0; margin: 0 -8px; }
+@media (max-width: 374px) { .fuda-b { font-size: 14px; padding: 6px 3px; } .yt-pick .yt-th a { font-size: 17px; } }
 .fuda-b { color: var(--ink); font-weight: 700; }
 .fuda-b[aria-current]::after { content: ""; position: absolute; inset: 3px -1px; border: 2.5px solid var(--red); border-radius: 50%; transform: rotate(-4deg); }
 
