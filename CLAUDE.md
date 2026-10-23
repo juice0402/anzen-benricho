@@ -12,13 +12,16 @@
 - テーマは `src/data/themes.mjs` の `ALL_THEMES`（月は各テーマの `month`）。トップと業種の入口の「今月」は作り直した日で決まる（15日からは翌月、テーマのない月はとばす）。業種は `src/data/gyoshu.mjs`（どのテーマもこの4つ・この順。テストが見る）
 - 法改正 `/hourei/`（施行日の順。うちの職場の印で絞る）と `/hourei/<改正>/`。データは `src/data/hourei.mjs`（義務か努力義務か・対象・出典が必須）。トップの「次の改正」は作り直しの日に、まだ施行されていないいちばん近いものを出す
 - 資格の更新の期限 `/shikaku/koushin/`（`src/data/shikaku.mjs`、計算は `src/client/koushin.js`。端末の中だけ）。いまは清掃作業監督者・病院清掃受託責任者
+- 知識のページ（10/23。討論はプロジェクトの claude/anzen-chishiki-debate-2026-10-23.md）：`src/data/kihon/*.mjs`（1ページ1ファイル、並びは index.mjs）、部品は `src/pages/kihon.mjs`・道具は `kihon-tools.mjs` と `src/client/kihon.js`。目次 `/kihon/`。1ページ1つの問い、答えは40字まで、判定・道具・チェック・印刷のどれかが必ずある、条文を書くなら e-Gov を出典に（`tests/kihon.test.mjs`）。「法令の区分では」と書き、区分に迷う業種は「労働基準監督署に確認」。いまは推進者・人数・入社・特別教育・資格の期限・設備・保存期間・死傷病報告・1年・ヒヤリハット・KY
+- 月ごとのテーマ `/anzen/`（一覧）と `/anzen/<月>/`（運動・テーマごとの業種の入口・その月の法改正）
+- 印刷は A4 1枚。知識のページは紙（.psheet）だけ、ほかは np で印刷に出さない。印刷が1枚に収まるかは Playwright で PDF にして数える（長い掲示は print.css ですき間をつめている）
 - 業種の入口 `/anzen/gyoshu/<業種>/`（トップの業種の名前から）：その業種の今月のテーマと掲示の決まり
 - ページの形（10/22）：テーマの入口 `/anzen/theme/<slug>/`（運動・業種ごとに多いけが・業種をえらぶ）と、1業種1ページ `/anzen/theme/<slug>/<業種>/`（掲示・朝礼・やること・出典）。業種の名前は各ページへのリンクで、いまのページの業種に赤ペンの丸。えらんだ業種はブラウザに覚え、トップと入口で丸をつける
 - AdSense（10/22 しょーくん「早々に審査に出したい」）：審査は第1弾を公開した日に出す（独自ドメイン・noindex を外したあと）。そのために、このサイトについて・プライバシーポリシー（Google が求める広告の Cookie の説明・広告設定・aboutads.info・外部への送信の表）・免責事項・404 を作り、フッターからリンクした。空のページ・「準備中」は出さない
   - `SITE.adsense` に運営者IDを入れると、広告のないページ（`noAds`：about・プライバシー・免責・404）をのぞく全ページの head に AdSense のコードが入り、`/ads.txt` ができる。`verify-dist.mjs` はこのコードだけを外部の読み込みの例外にする
   - 広告の枠は `adSlot('home'|'mid'|'end')`：トップの目次の下、業種のページの「やること」と「出典」のあいだ、入口のいちばん下。掲示・業種の名前・ボタンのそばには置かない。枠には「広告」と書く。審査に通って `SITE.adSlots` に広告ユニットのIDを入れるまでは何も出さない。中身が来なかった枠は消す。印刷には出さない。自動広告は使わない（掲示やボタンのそばに入るため）
   - 問い合わせ・訂正の連絡先は `SITE.contact`（入れると about とプライバシーポリシーに出る）
-- 2026-10-22 公開（https://anzen-benricho.com、`SITE.launched: true`）。同じ日に AdSense の審査をリクエスト（運営者ID ca-pub-7891863499821813、審査待ち）、Search Console にドメインで登録してサイトマップを送った。通ったら広告ユニット3つの番号を `SITE.adSlots` に入れる
+- 2026-10-22 公開（https://anzen-benricho.com、`SITE.launched: true`）。AdSense に通ったら、画面で自動広告がオフか確かめる（掲示やボタンのそばに入るため）。同じ日に AdSense の審査をリクエスト（運営者ID ca-pub-7891863499821813、審査待ち）、Search Console にドメインで登録してサイトマップを送った。通ったら広告ユニット3つの番号を `SITE.adSlots` に入れる
 - 検索エンジンへのお知らせ：sitemap.xml（ビルドで作る）と、本番の公開のたびに変わったページを IndexNow で知らせる（`scripts/indexnow.mjs`。Bing など。鍵は `public/<鍵>.txt`、前に知らせた記録は Actions の cache）。Google は Search Console とサイトマップ
 - 自動：毎月1日と15日 9:10 に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`）
 

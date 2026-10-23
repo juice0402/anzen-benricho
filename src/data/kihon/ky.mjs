@@ -55,7 +55,7 @@ export default {
   faq: [
     { q: 'KY活動のやり方は？', a: '作業の前に、ひそむ危険を出し合い、対策と行動目標を決めて指差し唱和で確かめる。訓練ではKYT基礎4ラウンド法を使う。' },
     { q: 'KY活動の例文は？', a: '危険は「〜なので〜して〜になる」の形にし、落ちる・ころぶなどの事故の型で言い切る。記入例は、厚生労働省の社会福祉施設向けマニュアルのKY活動の章（脚立で窓をふく作業）にある。' },
-    { q: 'KY活動は意味ない？', a: 'KYTは、危険に気づく力（危険感受性）を鋭くするための訓練とされている。毎回同じにならないよう、過去の災害事例を題材にしたKYも勧められている。' },
+    { q: 'KY活動は意味ない？', a: 'KYTは、危険に気づく力（危険感受性）を鋭くするための訓練とされている。過去の災害事例を題材にしたKYも勧められている。' },
     { q: 'KY活動のネタ切れは？', a: '職場のあんぜんサイトの労働災害事例やヒヤリ・ハット事例を、危険予知の題材に使える。業種と作業が近いものを選ぶ。' },
     { q: '指差呼称の効果は？', a: '鉄道総合技術研究所の実験（平成6年）で、指差呼称をすると押し間違いが約6分の1に減ったとされる。' },
   ],
@@ -67,10 +67,10 @@ export default {
   src: [
     { t: '職場のあんぜんサイト 安全衛生キーワード「危険予知訓練（KYT）」（KYT基礎4ラウンド法・1R〜4Rの問い・5〜6人・指差し唱和・タッチ・アンド・コール）', u: 'https://anzeninfo.mhlw.go.jp/yougo/yougo40_1.html' },
     { t: '厚生労働省・中央労働災害防止協会 社会福祉施設における安全衛生対策マニュアル 第3章 KY活動（4ラウンドの名前・15分以内・指差し呼称のしかた・記入例。年の記載なし）', u: 'https://www.mhlw.go.jp/new-info/kobetu/roudou/gyousei/anzen/dl/1911-1_2e.pdf' },
-    { t: '厚生労働省 KY活動 KYT基礎4R法（現状把握・本質追究・対策樹立・目標設定、これが危険のポイントだ・私たちはこうする、シートの欄。年の記載なし）', u: 'https://www.mhlw.go.jp/new-info/kobetu/roudou/gyousei/anzen/dl/shakai_e_Part3.pdf' },
+    { t: '厚生労働省 KY活動 KYT基礎4R法（現状把握・本質追究・対策樹立・目標設定、第2ラウンド・第4ラウンドの言い方、シートの欄。年の記載なし）', u: 'https://www.mhlw.go.jp/new-info/kobetu/roudou/gyousei/anzen/dl/shakai_e_Part3.pdf' },
     { t: '新見労働基準監督署 高校生実践KYTマニュアル（4ラウンドの進め方・15分以内・指差し呼称でミスが84％減る。2024年10月）', u: 'https://jsite.mhlw.go.jp/okayama-roudoukyoku/content/contents/001984861.pdf' },
     { t: '職場のあんぜんサイト STOP!転倒災害プロジェクト：4S活動、KY活動（業務の前に危険を話し合い対策を決める・過去の災害事例をもとにしたKY）', u: 'https://anzeninfo.mhlw.go.jp/information/tentou1501_22.html' },
-    { t: '岐阜労働局 安全教育の資料（KYT・TBM・ワンポイントKYで全員で再確認・指差し呼称でミスが約1/6。2017年掲載）', u: 'https://jsite.mhlw.go.jp/gifu-roudoukyoku/var/rev0/0119/7981/201763011202.pdf' },
+    { t: '岐阜労働局 安全教育の資料（KYT・TBM・短いKYで全員で再確認・指差し呼称でミスが約1/6。2017年掲載）', u: 'https://jsite.mhlw.go.jp/gifu-roudoukyoku/var/rev0/0119/7981/201763011202.pdf' },
     { t: '古川労働基準監督署 労働災害防止の取組強化のための安全宣言書（作業の前に一人KY。2022年）', u: 'https://jsite.mhlw.go.jp/miyagi-roudoukyoku/content/contents/001077181.pdf' },
     { t: '林野庁 関東森林管理局 現場一人KYカード 解説リーフレット（作業前に一人KYと指差呼称。年の記載なし）', u: 'https://www.rinya.maff.go.jp/kanto/gunma/attach/pdf/hitoriky-2.pdf' },
     { t: '福岡労働局 職場のあんぜんサイトの紹介（災害事例・ヒヤリハット事例を安全衛生教育や危険予知に活用。2021年9月）', u: 'https://jsite.mhlw.go.jp/fukuoka-roudoukyoku/content/contents/001069656.pdf' },

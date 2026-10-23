@@ -67,7 +67,8 @@
     var esc = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
     var calc = {
       toilet: function () {
-        var m = +val('kt-m') || 0, f = +val('kt-f') || 0, k = +val('kt-k') || 0;
+        var cnt = function (id) { return Math.max(0, Math.floor(+val(id) || 0)); };
+        var m = cnt('kt-m'), f = cnt('kt-f'), k = cnt('kt-k');
         if (!m && !f) return '';
         var law = td.law[sel.g === 'jimusho' ? 'jimusho' : 'other'];
         var h = '';
@@ -75,8 +76,10 @@
         td.rows.forEach(function (r) {
           var n = r.who === 'm' ? m : f;
           if (!n) return;
-          var c = Math.max(td.kojitsu.min, Math.ceil((n - k * td.kojitsu.minus) / r.per));
-          h += line(esc(r.label) + '　' + c + 'つ以上', '1つを' + r.per + '人以内ごとに' + (k ? '（独立個室型' + k + 'つぶん、' + (k * td.kojitsu.minus) + '人を引いて数える）' : ''));
+          var rest = n - k * td.kojitsu.minus;
+          if (rest <= 0) { h += line(esc(r.label) + '　1個以上', '個室で引いたあとの人数が0以下のときの数え方は、労働基準監督署に確認'); return; }
+          var c = Math.max(td.kojitsu.min, Math.ceil(rest / r.per));
+          h += line(esc(r.label) + '　' + c + '個以上', '1個を' + r.per + '人以内ごとに' + (k ? '（独立個室型' + k + '個ぶん、' + (k * td.kojitsu.minus) + '人を引いて数える）' : ''));
         });
         return h + '<p class="kt-law">' + esc(law.base) + (k ? '・' + esc(law.kojitsu) : '') + '</p>';
       },
@@ -86,8 +89,9 @@
         var r;
         if (dead) r = td.rules[0];
         else {
-          var days = Math.round((Date.parse(b) - Date.parse(a)) / 864e5) - 1;
-          if (days < 0) return line('もどった日が、けがの日より前になっています', '');
+          var gap = Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
+          if (gap < 0) return line('もどった日が、けがの日より前になっています', '');
+          var days = Math.max(0, gap - 1);
           r = td.rules.filter(function (x) { var w = x.when; return w !== 'death' && (w.minDays === undefined || days >= w.minDays) && (w.maxDays === undefined || days <= w.maxDays); })[0];
           var head = '休んだ日数　' + days + '日';
         }

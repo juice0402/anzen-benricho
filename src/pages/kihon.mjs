@@ -62,6 +62,7 @@ const sheetBlock = (p) => {
 <label for="kk-role">役目<select id="kk-role">${s.roles.map((r, i) => `<option value="${i}">${esc(r.name)}</option>`).join('')}</select></label>
 <label for="kk-name">名前<input id="kk-name" type="text" maxlength="20" autocomplete="off" placeholder="名前を入れる"></label>
 <p class="ks-hint">入れた名前はこの端末の中だけで使い、送りません</p>
+${s.note ? `<p class="ks-hint">${esc(s.note)}</p>` : ''}
 </div>
 <script type="application/json" class="kk-d">${json(s.roles)}</script>`;
     paper = `<div class="psheet pk"><div class="tora" aria-hidden="true"></div><div class="ps-in">
