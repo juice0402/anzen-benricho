@@ -80,7 +80,9 @@ export function page({ title, description, path, corner, body, js = '', crumbs =
 <meta name="description" content="${esc(description)}">
 ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
 <meta name="theme-color" content="#2b3238">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 ${ads ? ADSENSE_TAG() : ''}
 <style>${css()}</style>
 ${lds}
