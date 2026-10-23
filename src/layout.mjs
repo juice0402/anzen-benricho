@@ -1,5 +1,6 @@
 // ページの外側（head・ヘッダー・フッター）。CSS とスクリプトは各ページに埋め込む（読み込みは HTML の1回だけ）
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, CORNERS } from './site.mjs';
@@ -7,6 +8,9 @@ import { KIHON } from './data/kihon/index.mjs';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
 const read = (p) => readFileSync(join(SRC, p), 'utf8');
+// アイコンの URL に中身から作った短い印をつける（?v=）。絵を変えると URL が変わるので、ブラウザは古いアイコンを使い続けずに読み直す
+const iconV = (f) => createHash('sha256').update(readFileSync(join(SRC, '..', 'public', f))).digest('hex').slice(0, 8);
+const ICON_V = { ico: iconV('favicon.ico'), svg: iconV('favicon.svg'), apple: iconV('apple-touch-icon.png') };
 
 export const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -80,7 +84,9 @@ export function page({ title, description, path, corner, body, js = '', crumbs =
 <meta name="description" content="${esc(description)}">
 ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
 <meta name="theme-color" content="#2b3238">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico?v=${ICON_V.ico}" sizes="32x32">
+<link rel="icon" href="/favicon.svg?v=${ICON_V.svg}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=${ICON_V.apple}">
 ${ads ? ADSENSE_TAG() : ''}
 <style>${css()}</style>
 ${lds}

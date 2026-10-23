@@ -44,6 +44,7 @@
 ## しくみ
 - 依存パッケージなしの Node だけのビルド（`scripts/build.mjs`）。コマンドは `npm run check`（テスト → ビルド → 全ページ点検）。PR 前に必ず緑にする
 - CSS とスクリプトは各ページに埋め込む。外部のファイル・フォントは読まない
+- アイコン（10/23 しょーくんが3案から「掲示板」に決めた）は `public/` の favicon.svg・favicon.ico・apple-touch-icon.png。head の URL に中身から作った印（?v=）がつくので、ファイルを差しかえるだけで古いアイコンが読み直される
 - 公開：GitHub Actions（`.github/workflows/deploy.yml`）が Cloudflare Pages へ Direct Upload。PR → プレビュー（PR に URL のコメント）／main → 本番。Secrets は `CLOUDFLARE_API_TOKEN`（Pages の編集だけ）・`CLOUDFLARE_ACCOUNT_ID`
 - 流れ：ブランチ `claude/...` → PR → CI が緑・プレビューで確認 → しょーくんに知らせてから Merge。Cloudflare のビルド枠は使わないが、push はまとめて少なく
 
