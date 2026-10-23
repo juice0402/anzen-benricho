@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, CORNERS } from './site.mjs';
+import { KIHON } from './data/kihon/index.mjs';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
 const read = (p) => readFileSync(join(SRC, p), 'utf8');
@@ -32,6 +33,13 @@ export const adSlot = (name) => {
 const ADSENSE_TAG = () =>
   `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SITE.adsense}" crossorigin="anonymous"></script>`;
 
+// フッターの文字のリンク（サイトの中の行き先）
+const FOOT_NAV = [
+  ['/anzen/', '月ごとのテーマ'],
+  ...(KIHON.length ? [['/kihon/', '基本の決まり']] : []),
+  ['/hourei/', '法改正の一覧'],
+  ['/shikaku/koushin/', '資格の更新の期限'],
+];
 const FOOT_LINKS = [
   ['/about/', 'このサイトについて'],
   ['/privacy/', 'プライバシーポリシー'],
@@ -78,11 +86,11 @@ ${ads ? ADSENSE_TAG() : ''}
 ${lds}
 </head>
 <body${corner ? ` data-corner="${corner}"` : ''}>
-<header class="bar"><div class="bar-in">${isHome ? `<h1 class="logo-h">${logo}</h1>` : logo}${cornerName ? `<span class="bar-corner">${esc(cornerName)}</span>` : ''}</div></header>
+<header class="bar"><div class="bar-in">${isHome ? `<h1 class="logo-h">${logo}</h1>` : logo}${cornerName ? `<a class="bar-corner" href="${CORNERS[corner].path}">${esc(cornerName)}</a>` : ''}</div></header>
 <main class="wrap">
 ${body}
 </main>
-<footer class="foot"><div class="foot-in">${crumbHtml}<p class="foot-links">${FOOT_LINKS.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</p><p class="foot-name">${esc(SITE.name)}</p></div></footer>
+<footer class="foot"><div class="foot-in">${crumbHtml}<nav class="foot-nav" aria-label="サイトの中">${FOOT_NAV.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</nav><p class="foot-links">${FOOT_LINKS.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</p><p class="foot-name">${esc(SITE.name)}</p></div></footer>
 ${js ? `<script>${js}</script>` : ''}
 </body>
 </html>

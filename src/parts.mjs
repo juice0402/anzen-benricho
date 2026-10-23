@@ -15,11 +15,13 @@ export const fuda = (href, current = '') =>
 // テーマの名前。titleParts があれば、その切れ目だけで改行する（「ハラスメントとカス/ハラ」のような切れ方をさせない）
 export const titleHtml = (t) => (t.titleParts ? t.titleParts.map((p) => `<span class="nw">${esc(p)}</span>`).join('<wbr>') : esc(t.title));
 
+export const undoLine = (month, undo) => `<p class="th-undo">${month}月の運動 <span>${esc(undo.name)}</span> <span class="nw">${esc(undo.span)}</span></p>`;
+
 // title はエスケープずみのHTML
 export const monthHead = (month, h, title, sub = '', undo = null) => `<header class="th-head">
-<p class="cal-band">今月の安全衛生</p>
-<div class="th-month"><b class="mon">${month}<small>月</small></b><${h} class="th-title">${title}${sub ? `<small>${esc(sub)}</small>` : ''}</${h}></div>
-${undo ? `<p class="th-undo">今月の運動 <span>${esc(undo.name)}</span> <span class="nw">${esc(undo.span)}</span></p>` : ''}
+<p class="cal-band">${month}月の安全衛生</p>
+<div class="th-month"><b class="mon">${month}<small>月</small></b><${h} class="th-title">${sub ? `<small>${esc(sub)}</small>` : ''}${title}</${h}></div>
+${undo ? undoLine(month, undo) : ''}
 </header>`;
 
 // 月のないページの見出し（法改正・資格）。カレンダーと同じ紙で、帯にコーナーの名前

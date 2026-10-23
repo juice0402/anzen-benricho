@@ -10,7 +10,8 @@
 export const YOUTSU = {
   slug: 'youtsu',
   month: 2,
-  title: '腰痛を防ぐ',
+  title: '腰痛予防',
+  related: [{ t: '高年齢労働者の労災防止（法改正・努力義務）', href: '/hourei/koureisha/' }],
   undo: null,
   checked: '2026-10-23',
   common: [

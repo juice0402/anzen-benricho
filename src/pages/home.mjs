@@ -3,17 +3,20 @@
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE, CORNERS } from '../site.mjs';
 import { themePath, entrancePath, fuda } from '../parts.mjs';
-import { houreiPath, fmtDate } from '../data/hourei.mjs';
+import { houreiPath, fmtDate, todayJst } from '../data/hourei.mjs';
+import { KIHON } from '../data/kihon/index.mjs';
 
 export default function home({ month, themes, allThemes, kaisei }) {
+  const now = Number(todayJst().slice(5, 7));
   const groups = [
-    { corner: 'anzen', name: '今月の安全衛生', items: allThemes.map((t) => ({ name: `${t.month}月 ${t.title}`, href: themePath(t) })) },
+    { corner: 'anzen', name: '月ごとのテーマ', items: [...new Set(allThemes.map((t) => t.month))].map((m) => ({ name: `${m}月の安全衛生テーマ`, href: `/anzen/${m}/` })) },
+    { corner: 'kihon', name: '基本の決まり', items: KIHON.filter((p) => p.path.startsWith('/kihon/')).map((p) => ({ name: p.h1, href: p.path })) },
     { corner: 'kyotsu', name: CORNERS.kyotsu.name, items: [{ name: '法改正の一覧', href: '/hourei/' }, { name: '資格の更新の期限', href: '/shikaku/koushin/' }] },
     { corner: 'seisou', name: '清掃・ビルメン', items: [] },
   ].filter((g) => g.items.length);
   const body = `<section class="this-month" aria-labelledby="tm-h">
-<p class="cal-band">今月の安全衛生</p>
-<div class="th-month"><b class="mon">${month}<small>月</small></b><h2 class="tm-h" id="tm-h">今月のテーマ</h2></div>
+<p class="cal-band">${now === month ? '今月の安全衛生' : `${month}月の準備`}</p>
+<div class="th-month"><b class="mon">${month}<small>月</small></b><h2 class="tm-h" id="tm-h">${month}月のテーマ</h2></div>
 <ul class="tm-list">${themes.map((t) => `<li><a href="${themePath(t)}">${esc(t.title)}</a></li>`).join('')}</ul>
 <p class="tm-ask">業種をえらぶと掲示と朝礼が出ます</p>
 ${fuda(entrancePath)}
@@ -29,8 +32,8 @@ ${adSlot('home')}`;
   return {
     path: '/',
     html: page({
-      title: `${SITE.name}｜今月の安全衛生の掲示と朝礼・清掃の資料`,
-      description: '職場の安全衛生の担当者が毎月そのまま使える掲示と朝礼の文を、事務所・飲食店・製造業・清掃の業種ごとにまとめています。清掃・ビルメンの資料と、講習・資格の更新の目安も載せます。',
+      title: `${SITE.name}｜毎月の安全衛生テーマ 掲示と朝礼（業種別）・法改正`,
+      description: '職場の安全衛生の担当者が毎月そのまま使える掲示と朝礼の文を、事務所・飲食店・製造業・清掃の業種ごとにまとめています。安全衛生推進者の選び方や人数で変わる決まり、法改正の一覧、資格の更新の期限も出典つきで載せています。',
       path: '/',
       body,
       js: script('remember'),

@@ -5,7 +5,8 @@ import { SITE } from '../site.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { gyoshuPath, entrancePath, fuda, monthHead, titleHtml } from '../parts.mjs';
 
-function entrance(month, themes, g) {
+function entrance(month, themes, g, allThemes) {
+  const others = allThemes.filter((t) => t.month !== month);
   const path = entrancePath(g);
   const items = themes.map((t) => {
     const tg = t.gyoshu.find((x) => x.key === g.key);
@@ -18,6 +19,7 @@ function entrance(month, themes, g) {
   const body = `${monthHead(month, 'h1', esc(`${g.name}の安全衛生`))}
 ${fuda(entrancePath, g.key)}
 ${items.join('\n')}
+${others.length ? `<section class="sec paper" aria-labelledby="oth-h">\n<h2 class="sec-h" id="oth-h">ほかの月のテーマ</h2>\n<ul class="krel">${others.map((t) => `<li><a href="${gyoshuPath(t, g)}">${t.month}月 ${esc(t.title)}</a></li>`).join('')}</ul>\n</section>` : ''}
 ${adSlot('end')}`;
   return {
     path,
@@ -33,6 +35,6 @@ ${adSlot('end')}`;
   };
 }
 
-export default function gyoshuPages({ month, themes }) {
-  return GYOSHU.map((g) => entrance(month, themes, g));
+export default function gyoshuPages({ month, themes, allThemes }) {
+  return GYOSHU.map((g) => entrance(month, themes, g, allThemes));
 }

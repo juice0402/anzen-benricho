@@ -7,6 +7,8 @@ export const KANSEN = {
   slug: 'kansen',
   month: 12,
   title: '冬の感染症',
+  seoName: '冬の感染症（インフルエンザ・ノロウイルス）',
+  posterSrc: '出典：厚生労働省・自治体ほか',
   undo: null,
   checked: '2026-10-23',
   common: [
@@ -36,7 +38,6 @@ export const KANSEN = {
         '湿度計を置き、加湿器などで部屋の湿度を50〜60%にする',
       ],
       src: [
-        { t: '都道府県労働局 職場における新型コロナウイルス感染症対策 取組の5つのポイント（令和5年3月。体調が悪い人が気兼ねなく休めるルール）', u: 'https://www.mhlw.go.jp/content/001190073.pdf' },
         { t: '厚生労働省 みんなで予防インフルエンザ（手洗い・せきエチケット・換気）', u: 'https://www.mhlw.go.jp/content/001748615.pdf' },
       ],
     },
@@ -88,7 +89,6 @@ export const KANSEN = {
         '昼休みの前に休憩室の窓を開ける係を決める',
       ],
       src: [
-        { t: '都道府県労働局 職場における新型コロナウイルス感染症対策 取組の5つのポイント（令和5年3月。休憩室・更衣室に注意・みんながさわる所の消毒・休めるルール）', u: 'https://www.mhlw.go.jp/content/001190073.pdf' },
         { t: '世田谷区 感染性胃腸炎（ノロウイルス等）にご注意ください（うつり方・よく手がふれる所の消毒）', u: 'https://www.city.setagaya.lg.jp/02015/3139.html' },
         { t: '厚生労働省 みんなで予防インフルエンザ（手洗い・せきエチケット・換気）', u: 'https://www.mhlw.go.jp/content/001748615.pdf' },
       ],

@@ -15,7 +15,9 @@ const srcBlock = (list) => `<section class="sec sec-src" aria-labelledby="src-h"
 
 function list(today) {
   const path = '/hourei/';
-  const rows = HOUREI.map((h) => {
+  // これから（近い順）を先に、施行済み（新しい順）をあとに
+  const order = [...HOUREI.filter((h) => !inForce(h, today)), ...HOUREI.filter((h) => inForce(h, today)).reverse()];
+  const rows = order.map((h) => {
     const done = inForce(h, today);
     return `<li${h.cond ? ` data-cond="${h.cond}"` : ''}><a href="${houreiPath(h)}"><span class="hr-date${done ? '' : ' soon'}">${fmtDate(h.date)}<span class="hr-st">${done ? '施行済み' : 'これから'}</span></span><b class="hr-t">${esc(h.title)}</b><span class="hr-k">${h.kind}　${esc(h.whoShort)}</span></a></li>`;
   }).join('');
@@ -35,7 +37,7 @@ ${adSlot('end')}`;
   return {
     path,
     html: page({
-      title: `安全衛生の法改正の一覧（2025〜2028年）施行日と義務・努力義務｜${SITE.name}`,
+      title: `労働安全衛生法などの改正 2026・2027 一覧｜施行日と義務・努力義務｜${SITE.name}`,
       description: '熱中症の報告体制、カスハラ防止の義務化、50人未満のストレスチェック義務化など、安全衛生にかかわる法改正を施行日の順にまとめ、義務か努力義務か、どの職場が対象かを出典つきで示しています。',
       path,
       corner: 'kyotsu',
@@ -43,6 +45,7 @@ ${adSlot('end')}`;
       js: script('hourei'),
       crumbs: [{ name: '法改正の一覧' }],
     }),
+    lastmod: HOUREI_CHECKED,
   };
 }
 
@@ -63,6 +66,7 @@ function detail(h, today) {
 <h2 class="sec-h" id="todo-h">職場ですること</h2>
 <ul class="todo">${h.todo.map((s, j) => `<li><label for="c-${j}"><input type="checkbox" id="c-${j}"><span>${esc(s)}</span></label></li>`).join('')}</ul>
 </section>
+${h.related && h.related.length ? `<section class="sec paper" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel">${h.related.map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('')}</ul>\n</section>` : ''}
 ${adSlot('mid')}
 ${srcBlock(h.src)}
 <p class="back"><a href="/hourei/">法改正の一覧</a></p>`;
@@ -70,13 +74,14 @@ ${srcBlock(h.src)}
   return {
     path,
     html: page({
-      title: `${h.title}（${d}施行・${h.kind}）｜${SITE.name}`,
-      description: `${d}${done ? 'から' : 'に施行。'}${h.who.replace(/（.*$/, '')}の${h.kind}${done ? 'になった' : 'になる'}「${h.title}」。何が変わるかと、職場ですること3つを出典つきでまとめています。`,
+      title: `${h.seoTitle || `${h.title}（${d}施行・${h.kind}）`}｜${SITE.name}`,
+      description: `${d}${done ? 'から' : 'から施行。'}${h.whoShort}の${h.kind}${done ? 'になった' : 'になる'}「${h.title}」。何が変わるかと、職場ですること3つを出典つきでまとめています。`,
       path,
       corner: 'kyotsu',
       body,
       crumbs: [{ name: '法改正の一覧', href: '/hourei/' }, { name: h.title }],
     }),
+    lastmod: HOUREI_CHECKED,
   };
 }
 

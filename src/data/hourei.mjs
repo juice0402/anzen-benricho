@@ -17,6 +17,7 @@ const POINTS = { t: '厚生労働省 労働安全衛生法及び作業環境測�
 export const HOUREI = [
   {
     slug: 'necchusho',
+    seoTitle: '職場の熱中症対策の義務化（2025年6月1日から）報告体制と手順',
     date: '2025-06-01',
     title: '熱中症の報告の体制と手順',
     kind: '義務',
@@ -36,6 +37,8 @@ export const HOUREI = [
   },
   {
     slug: 'koureisha',
+    seoTitle: '高年齢労働者の労災防止が努力義務に（2026年4月1日から）',
+    related: [{ t: '1月のテーマ 冬の転倒', href: '/anzen/theme/tentou/' }, { t: '2月のテーマ 腰痛予防', href: '/anzen/theme/youtsu/' }],
     date: '2026-04-01',
     title: '高年齢の人の労働災害を防ぐ',
     kind: '努力義務',
@@ -55,6 +58,8 @@ export const HOUREI = [
   },
   {
     slug: 'ryouritsu',
+    seoTitle: '治療と仕事の両立支援が努力義務に（2026年4月1日から）',
+    related: [{ t: '12月のテーマ 冬の感染症', href: '/anzen/theme/kansen/' }],
     date: '2026-04-01',
     title: '治療と仕事の両立支援',
     kind: '努力義務',
@@ -77,6 +82,8 @@ export const HOUREI = [
   },
   {
     slug: 'kasuhara',
+    seoTitle: 'カスハラ対策の義務化（2026年10月1日から）事業主がすること',
+    related: [{ t: '12月のテーマ ハラスメントとカスハラ（業種ごとの掲示と朝礼）', href: '/anzen/theme/harassment/' }],
     date: '2026-10-01',
     title: 'カスハラと求職者へのセクハラの防止',
     kind: '義務',
@@ -99,6 +106,7 @@ export const HOUREI = [
   },
   {
     slug: 'kojin-houkoku',
+    seoTitle: '個人事業者等の業務上災害の報告（2027年1月1日から）',
     date: '2027-01-01',
     title: '個人事業者等の業務上災害の報告',
     kind: '義務',
@@ -122,6 +130,7 @@ export const HOUREI = [
   },
   {
     slug: 'kojin-sochi',
+    seoTitle: '個人事業者等と中小の役員の安全衛生の義務（2027年4月1日から）',
     date: '2027-04-01',
     title: '個人事業者等の安全衛生の義務',
     kind: '義務',
@@ -141,6 +150,7 @@ export const HOUREI = [
   },
   {
     slug: 'stress-check',
+    seoTitle: '50人未満のストレスチェック義務化はいつから（2028年4月1日）',
     date: '2028-04-01',
     title: '50人未満の職場もストレスチェックが義務',
     kind: '義務',
@@ -159,7 +169,8 @@ export const HOUREI = [
     src: [
       { t: '厚生労働省 労働者数50人未満の事業者もストレスチェックが義務になります！（リーフレット）', u: 'https://www.mhlw.go.jp/content/11300000/001679776.pdf' },
       { t: '徳島労働局 ストレスチェック', u: 'https://jsite.mhlw.go.jp/tokushima-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/newpage_02102.html' },
-      { t: '厚生労働省 「小規模事業場ストレスチェック実施マニュアル」作成に係る論点等について（令和7年10月10日 ワーキンググループ資料）', u: 'https://www.mhlw.go.jp/content/11303000/001576425.pdf' },
+      { t: '厚生労働省 「小規模事業場ストレスチェック制度実施マニュアル」スタートガイド（令和8年3月）', u: 'https://www.mhlw.go.jp/content/11300000/001678875.pdf' },
+      { t: 'e-Gov 労働安全衛生規則（52条の10 実施の事務に従事できない人）', u: 'https://laws.e-gov.go.jp/law/347M50002000032' },
     ],
   },
 ];

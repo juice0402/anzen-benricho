@@ -19,12 +19,13 @@ button { font: inherit; color: inherit; }
 .bar-in { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 10px; padding-bottom: 10px; }
 .logo { font-weight: 700; font-size: 17px; text-decoration: none; letter-spacing: .02em; }
 .logo-h { font-size: inherit; line-height: inherit; }
-.bar-corner { font-size: 13px; white-space: nowrap; }
+.bar-corner { font-size: 13px; white-space: nowrap; text-decoration: none; padding: 6px 0; }
 .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; padding-top: 14px; padding-bottom: 40px; }
 .foot-in { padding-top: 14px; padding-bottom: 28px; font-size: 13px; display: grid; gap: 8px; }
 .crumbs ol { display: flex; flex-wrap: wrap; gap: 4px 0; }
 .crumbs li + li::before { content: "/"; margin: 0 8px; opacity: .6; }
-.foot-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.foot-links, .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.foot-nav a { padding: 6px 0; font-weight: 700; }
 .foot-links a { padding: 6px 0; }
 
 /* 業種ごとに多いけが */
@@ -192,3 +193,11 @@ li[hidden], .ktbl div[hidden] { display: none; }
 .pg-t { width: 100%; border-collapse: collapse; font-size: 2.8cqw; }
 .pg-t th, .pg-t td { border: .25cqw solid #9aa3a8; padding: .8cqw 1.2cqw; text-align: left; vertical-align: top; height: 5.4cqw; }
 .pg-t th { font-weight: 700; background: #eef1f3; }
+
+/* 月のページ：業種ごとの入口 */
+.mt-g li + li { border-top: 1px solid var(--thin); }
+.mt-g a { display: grid; gap: 1px; padding: 10px 0; text-decoration: none; }
+.mt-g b { font-size: 16px; }
+.mt-g span { font-size: 14px; }
+.doc-ul { list-style: disc; padding-left: 1.4em; font-size: 15px; }
+.mu li { display: grid; gap: 1px; padding: 8px 0; }

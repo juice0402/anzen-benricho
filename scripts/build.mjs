@@ -11,6 +11,7 @@ import infoPages from '../src/pages/info.mjs';
 import houreiPages from '../src/pages/hourei.mjs';
 import shikakuPages from '../src/pages/shikaku.mjs';
 import kihonPages from '../src/pages/kihon.mjs';
+import monthPages from '../src/pages/months.mjs';
 import { SITE } from '../src/site.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -25,7 +26,7 @@ const write = (path, html, name) => {
 };
 
 const ctx = { month: MONTH, themes: THEMES, allThemes: themesInOrder(), kaisei: nextKaisei() };
-const pages = [home(ctx), ...gyoshuPages(ctx), ...ALL_THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...kihonPages(), ...infoPages()];
+const pages = [home(ctx), ...gyoshuPages(ctx), ...monthPages(ALL_THEMES, MONTH), ...ALL_THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...kihonPages(), ...infoPages()];
 
 for (const p of pages) write(p.path, p.html, p.file);
 // AdSense の運営者IDを入れたら ads.txt を置く（Google の決まった書き方）
@@ -34,7 +35,8 @@ if (existsSync(join(ROOT, 'public'))) cpSync(join(ROOT, 'public'), DIST, { recur
 // 公開したら sitemap.xml（404 はのぞく）。lastmod は作り直した日
 if (SITE.launched) {
   const day = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
-  const urls = pages.filter((p) => !p.file).map((p) => `<url><loc>${SITE.url}${p.path}</loc><lastmod>${day}</lastmod></url>`);
+  // lastmod は中身を確かめた日（データの checked）。ないページは作り直した日
+  const urls = pages.filter((p) => !p.file).map((p) => `<url><loc>${SITE.url}${p.path}</loc><lastmod>${p.lastmod || day}</lastmod></url>`);
   writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
 }
 
