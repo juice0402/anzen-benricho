@@ -1,0 +1,173 @@
+// 知識のページ：1ページで1つの問い。答え1行 → うちの職場（業種・人数）→ 道具 → 表 → チェック → A4の紙 → よくある質問 → 出典
+// 印刷は A4 の紙（.psheet）だけ。ほかの部分には np をつけて印刷に出さない
+import { page, esc, script, adSlot, fudaLabel } from '../layout.mjs';
+import { SITE } from '../site.mjs';
+import { bandHead } from '../parts.mjs';
+import { GYOSHU } from '../data/gyoshu.mjs';
+import { KIHON, BANDS } from '../data/kihon/index.mjs';
+import { fmtDate } from '../data/hourei.mjs';
+import { tool } from './kihon-tools.mjs';
+
+const whenAttr = (w) => (w ? `${w.g ? ` data-g="${w.g.join(' ')}"` : ''}${w.n ? ` data-n="${w.n.join(' ')}"` : ''}` : '');
+const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
+const host = SITE.url.replace('https://', '');
+
+const choice = (dim, items, label) =>
+  `<div class="fuda kp-row" role="group" aria-label="${label}">${items
+    .map(([k, t]) => `<button type="button" class="fuda-b" data-${dim}="${k}" aria-pressed="false">${t}</button>`)
+    .join('')}</div>`;
+
+const pickBlock = (p) => {
+  if (!p.pick) return '';
+  const fallback = p.pick.g && p.pick.n ? '業種と人数をえらぶと、答えが出ます' : p.pick.g ? '業種をえらぶと、答えが出ます' : '人数をえらぶと、答えが出ます';
+  return `<section class="sec paper kp np" aria-labelledby="kp-h" data-need="${[p.pick.g ? 'g' : '', p.pick.n ? 'n' : ''].join(' ').trim()}">
+<h2 class="sec-h" id="kp-h">うちの職場</h2>
+${p.pick.g ? choice('g', GYOSHU.map((g) => [g.key, fudaLabel(g.label)]), '業種') : ''}
+${p.pick.n ? choice('n', BANDS.map((b) => [b.key, esc(b.label)]), '人数') : ''}
+<p class="kres" aria-live="polite" data-empty="${fallback}">${fallback}</p>
+${p.result ? `<script type="application/json" class="kres-d">${json(p.result)}</script>` : ''}
+</section>`;
+};
+
+const tableBlock = (p, i) => {
+  if (!p.table) return '';
+  return `<section class="sec paper np" aria-labelledby="kt-h">
+<h2 class="sec-h" id="kt-h">${esc(p.table.h)}</h2>
+<dl class="ktbl">${p.table.rows
+    .map((r) => `<div${whenAttr(r.when)}><dt>${esc(r.k)}</dt><dd>${esc(r.v)}${r.law ? `<span class="law">${esc(r.law)}</span>` : ''}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">事例を見る</a>` : ''}</dd></div>`)
+    .join('')}</dl>
+</section>`;
+};
+
+const checkBlock = (p) =>
+  (p.check || [])
+    .map(
+      (c, i) => `<section class="sec sec-todo np" aria-labelledby="kc-h${i}">
+<h2 class="sec-h" id="kc-h${i}">${esc(c.h)}</h2>
+<ul class="todo">${c.items.map((s, j) => `<li><label for="k-${i}-${j}"><input type="checkbox" id="k-${i}-${j}"><span>${esc(s)}</span></label></li>`).join('')}</ul>
+</section>`,
+    )
+    .join('\n');
+
+const foot = `<p class="ps-foot"><span>${esc(SITE.name)}</span><span>${host}</span></p>`;
+
+const sheetBlock = (p) => {
+  const s = p.sheet;
+  if (!s) return '';
+  let ctl = '';
+  let paper = '';
+  if (s.kind === 'keiji') {
+    const r0 = s.roles[0];
+    ctl = `<div class="ks-ctl np">
+<label for="kk-role">役目<select id="kk-role">${s.roles.map((r, i) => `<option value="${i}">${esc(r.name)}</option>`).join('')}</select></label>
+<label for="kk-name">名前<input id="kk-name" type="text" maxlength="20" autocomplete="off" placeholder="名前を入れる"></label>
+<p class="ks-hint">入れた名前はこの端末の中だけで使い、送りません</p>
+</div>
+<script type="application/json" class="kk-d">${json(s.roles)}</script>`;
+    paper = `<div class="psheet pk"><div class="tora" aria-hidden="true"></div><div class="ps-in">
+<p class="pk-role" data-kk="role">${esc(r0.name)}</p>
+<p class="pk-name" data-kk="name">　</p>
+<p class="pk-sub">おもな職務</p>
+<ol class="pk-duties" data-kk="duties">${r0.duties.map((d) => `<li>${esc(d)}</li>`).join('')}</ol>
+<p class="pk-date">選任した日　　　　年　　月　　日</p>
+${foot}
+</div></div>`;
+  } else if (s.kind === 'form') {
+    paper = `<div class="psheet pf"><div class="ps-in">
+<p class="ps-title">${esc(s.title)}</p>
+${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
+<dl class="pf-rows">${s.rows.map((r) => `<div><dt>${esc(r.k)}</dt><dd style="--l:${r.lines || 1}"></dd></div>`).join('')}</dl>
+${foot}
+</div></div>`;
+  } else if (s.kind === 'grid') {
+    const first = s.first || [];
+    paper = `<div class="psheet pg"><div class="ps-in">
+<p class="ps-title">${esc(s.title)}</p>
+${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
+<table class="pg-t"><thead><tr>${s.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${Array.from({ length: s.rows }, (_, i) => `<tr>${s.cols.map((_, j) => `<td>${j === 0 && first[i] ? esc(first[i]) : ''}</td>`).join('')}</tr>`).join('')}</tbody></table>
+${foot}
+</div></div>`;
+  }
+  return `<section class="sec sec-poster sec-sheet" aria-labelledby="ks-h">
+<h2 class="sec-h" id="ks-h">${s.kind === 'keiji' ? '掲示' : '用紙'}</h2>
+${ctl}
+${paper}
+<button class="btn print-btn" type="button">A4で印刷</button>
+</section>`;
+};
+
+const faqBlock = (p) =>
+  p.faq && p.faq.length
+    ? `<section class="sec paper np" aria-labelledby="kf-h">
+<h2 class="sec-h" id="kf-h">よくある質問</h2>
+<dl class="faq">${p.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${esc(f.a)}</dd>`).join('')}</dl>
+</section>`
+    : '';
+
+const relatedBlock = (p) =>
+  p.related && p.related.length
+    ? `<section class="sec paper np" aria-labelledby="kr-h">
+<h2 class="sec-h" id="kr-h">あわせて見る</h2>
+<ul class="krel">${p.related.map((r) => `<li><a href="${esc(r.href)}">${esc(r.t)}</a></li>`).join('')}</ul>
+</section>`
+    : '';
+
+const srcBlock = (p) => `<section class="sec sec-src np" aria-labelledby="src-h">
+<h2 class="sec-h" id="src-h">出典</h2>
+<ol class="src">${p.src.map((s) => `<li><a href="${esc(s.u)}" rel="noopener">${esc(s.t)}</a></li>`).join('')}</ol>
+<p class="src-note">確認日 ${fmtDate(p.checked)}。法令は改正されることがあります。最新の内容は e-Gov 法令検索と厚生労働省の公式ページで確認してください。</p>
+</section>`;
+
+const crumbsFor = (p) => (p.path.startsWith('/kihon/') ? [{ name: '基本の決まり', href: '/kihon/' }, { name: p.h1 }] : [{ name: p.h1 }]);
+const cornerFor = (p) => (p.path.startsWith('/anzen/') ? 'anzen' : p.path.startsWith('/kihon/') ? 'kihon' : 'kyotsu');
+
+function one(p) {
+  const body = `${bandHead(p.band || '基本の決まり', p.h1, `<p class="k-ans">${esc(p.answer)}</p>`)}
+${pickBlock(p)}
+${tool(p)}
+${tableBlock(p)}
+${checkBlock(p)}
+${sheetBlock(p)}
+${faqBlock(p)}
+${relatedBlock(p)}
+${adSlot('end')}
+${srcBlock(p)}`;
+  return {
+    path: p.path,
+    html: page({
+      title: `${p.title}｜${SITE.name}`.replace('｜｜', '｜'),
+      description: p.description,
+      path: p.path,
+      corner: cornerFor(p),
+      body,
+      js: script('kihon'),
+      crumbs: crumbsFor(p),
+    }),
+  };
+}
+
+// 目次 /kihon/
+function hub() {
+  const path = '/kihon/';
+  const body = `${bandHead('基本の決まり', '安全衛生の基本の決まり', '<p class="pg-lead">人数・選任・記録の決まりを1ページずつ</p>')}
+<section class="sec paper" aria-labelledby="kh-h">
+<h2 class="sec-h" id="kh-h">ページ</h2>
+<ul class="khub">${KIHON.map((p) => `<li><a href="${p.path}"><b>${esc(p.h1)}</b><span>${esc(p.answer)}</span></a></li>`).join('')}</ul>
+</section>
+${adSlot('end')}`;
+  return {
+    path,
+    html: page({
+      title: `安全衛生の基本の決まり 早見と用紙（推進者・人数・記録・掲示）｜${SITE.name}`,
+      description: '10〜49人の職場の安全衛生の担当者向けに、推進者の選び方、人数で変わる決まり、雇い入れのときの教育と健康診断、記録の保存期間などを、早見表と印刷できる用紙で出典つきでまとめています。',
+      path,
+      corner: 'kihon',
+      body,
+      crumbs: [{ name: '基本の決まり' }],
+    }),
+  };
+}
+
+export default function kihonPages() {
+  return KIHON.length ? [hub(), ...KIHON.map(one)] : [];
+}

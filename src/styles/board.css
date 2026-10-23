@@ -89,3 +89,14 @@
 .ks-date input { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
 .ks-out { border-top: 2px solid var(--ink); }
 .back a { color: #fff; }
+
+/* 知識のページ */
+.kp .fuda { box-shadow: none; padding: 2px 0; margin: 0 -8px; }
+.fuda-b[aria-pressed="true"]::after { content: ""; position: absolute; inset: 3px -1px; border: 2.5px solid var(--red); border-radius: 50%; transform: rotate(-4deg); }
+.kres { color: var(--muted); }
+.kres.on { color: var(--red); }
+.ktbl .law, .ks-hint, .khub span { color: var(--muted); }
+.ks-ctl { background: var(--paper); box-shadow: 0 2px 0 var(--edge); }
+.ks-ctl select, .ks-ctl input { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
+.krel a, .khub a { color: var(--ink); }
+.psheet { box-shadow: 0 2px 0 var(--edge); margin-top: 4px; }

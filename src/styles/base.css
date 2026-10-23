@@ -147,3 +147,48 @@ button { font: inherit; color: inherit; }
 .ks-rules dd + dt { border-top: 1px solid var(--thin); margin-top: 8px; }
 .u-cond { border-top: 1px solid var(--thin); padding-top: 8px; }
 .u-cond .todo label { padding: 6px 0; }
+
+/* 知識のページ */
+.k-ans { font-size: 17px; font-weight: 700; line-height: 1.5; border-top: 1px solid var(--thin); padding-top: 8px; }
+.kp-row + .kp-row { margin-top: 2px; }
+.kres { font-size: 17px; font-weight: 700; line-height: 1.5; padding: 10px 0 2px; }
+.ktbl { margin: 0; display: grid; }
+.ktbl > div { display: grid; grid-template-columns: 7.5em 1fr; gap: 10px; padding: 9px 0; }
+.ktbl > div + div { border-top: 1px solid var(--thin); }
+.ktbl > div[hidden] { display: none; }
+.ktbl dt { font-weight: 700; font-size: 14px; }
+.ktbl dd { margin: 0; font-size: 15px; }
+.ktbl .law { display: block; font-size: 12px; margin-top: 2px; }
+.faq { margin: 0; display: grid; gap: 4px; }
+.faq dt { font-weight: 700; padding-top: 8px; }
+.faq dt + dd { font-size: 15px; margin: 0; padding-bottom: 8px; }
+.faq dd + dt { border-top: 1px solid var(--thin); }
+.krel li + li { border-top: 1px solid var(--thin); }
+.krel a { display: block; padding: 10px 0; font-weight: 700; text-decoration: none; }
+.khub li + li { border-top: 1px solid var(--thin); }
+.khub a { display: grid; gap: 2px; padding: 12px 0; text-decoration: none; }
+.khub b { font-size: 17px; line-height: 1.4; }
+.khub span { font-size: 14px; }
+.ks-ctl { display: grid; gap: 8px; padding: 12px 14px; }
+.ks-ctl label { display: grid; gap: 4px; font-size: 13px; }
+.ks-ctl select, .ks-ctl input { font: inherit; font-size: 17px; min-height: 46px; padding: 6px 10px; border-radius: 0; width: 100%; }
+.ks-hint { font-size: 12px; }
+li[hidden], .ktbl div[hidden] { display: none; }
+
+/* A4 の紙（掲示・用紙・表）。文字は紙の幅に合わせる */
+.psheet { container-type: inline-size; background: #fff; color: #1b1f22; aspect-ratio: 210 / 297; width: 100%; display: flex; flex-direction: column; position: relative; }
+.ps-in { flex: 1; display: flex; flex-direction: column; gap: 3cqw; padding: 6cqw 7cqw 4.5cqw; }
+.ps-title { font-size: 7cqw; font-weight: 700; line-height: 1.2; }
+.ps-note { font-size: 3cqw; }
+.ps-foot { margin-top: auto; font-size: max(2.5cqw, 9px); display: flex; justify-content: space-between; gap: 3cqw; }
+.pk-role { font-size: 10cqw; font-weight: 700; line-height: 1.15; }
+.pk-name { font-size: 9cqw; font-weight: 700; border-bottom: .4cqw solid currentColor; min-height: 13cqw; overflow-wrap: anywhere; }
+.pk-sub { font-size: 3.4cqw; font-weight: 700; margin-top: 2cqw; }
+.pk-duties { list-style: decimal; padding-left: 1.3em; font-size: 4.2cqw; line-height: 1.6; display: grid; gap: 1cqw; }
+.pk-date { font-size: 3.6cqw; margin-top: auto; }
+.pf-rows { margin: 0; display: grid; gap: 2.4cqw; }
+.pf-rows dt { font-size: 3.2cqw; font-weight: 700; }
+.pf-rows dd { margin: 0; height: calc(var(--l) * 7cqw); background: repeating-linear-gradient(transparent 0 calc(7cqw - .25cqw), #9aa3a8 calc(7cqw - .25cqw) 7cqw); }
+.pg-t { width: 100%; border-collapse: collapse; font-size: 2.8cqw; }
+.pg-t th, .pg-t td { border: .25cqw solid #9aa3a8; padding: .8cqw 1.2cqw; text-align: left; vertical-align: top; height: 5.4cqw; }
+.pg-t th { font-weight: 700; background: #eef1f3; }

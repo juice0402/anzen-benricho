@@ -19,4 +19,5 @@ export const CORNERS = {
   anzen: { name: '今月の安全衛生', path: '/anzen/' },
   seisou: { name: '清掃・ビルメン', path: '/seisou/' },
   kyotsu: { name: '講習・法令', path: '/' },
+  kihon: { name: '基本の決まり', path: '/kihon/' },
 };
