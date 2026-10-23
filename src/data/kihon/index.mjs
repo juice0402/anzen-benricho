@@ -7,8 +7,11 @@ export const BANDS = [
 ];
 import suishinsha from './suishinsha.mjs';
 import ninzu from './ninzu.mjs';
+import setsubi from './setsubi.mjs';
+import hozon from './hozon.mjs';
+import shishobyo from './shishobyo.mjs';
 import nenkan from './nenkan.mjs';
 import hiyari from './hiyari.mjs';
 import ky from './ky.mjs';
 
-export const KIHON = [suishinsha, ninzu, nenkan, hiyari, ky];
+export const KIHON = [suishinsha, ninzu, setsubi, hozon, shishobyo, nenkan, hiyari, ky];

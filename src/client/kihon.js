@@ -57,5 +57,55 @@
 
   var pb = document.querySelector('.print-btn');
   if (pb) pb.addEventListener('click', function () { window.print(); });
-  if (window.kihonTool) window.kihonTool();
+  // 計算の道具
+  var tb = document.querySelector('.ktool');
+  if (tb) {
+    var td = JSON.parse(tb.querySelector('.kt-d').textContent);
+    var ko = tb.querySelector('.kt-out');
+    var val = function (id) { var e = document.getElementById(id); return e ? e.value : ''; };
+    var line = function (a, b) { return '<p><b>' + a + '</b>' + (b ? '<span>' + b + '</span>' : '') + '</p>'; };
+    var esc = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+    var calc = {
+      toilet: function () {
+        var m = +val('kt-m') || 0, f = +val('kt-f') || 0, k = +val('kt-k') || 0;
+        if (!m && !f) return '';
+        var law = td.law[sel.g === 'jimusho' ? 'jimusho' : 'other'];
+        var h = '';
+        if (m + f <= td.small.max) h += line(esc(td.small.text), law.small) + '<p class="kt-law">男女別にするときの数</p>';
+        td.rows.forEach(function (r) {
+          var n = r.who === 'm' ? m : f;
+          if (!n) return;
+          var c = Math.max(td.kojitsu.min, Math.ceil((n - k * td.kojitsu.minus) / r.per));
+          h += line(esc(r.label) + '　' + c + 'つ以上', '1つを' + r.per + '人以内ごとに' + (k ? '（独立個室型' + k + 'つぶん、' + (k * td.kojitsu.minus) + '人を引いて数える）' : ''));
+        });
+        return h + '<p class="kt-law">' + esc(law.base) + (k ? '・' + esc(law.kojitsu) : '') + '</p>';
+      },
+      shishobyo: function () {
+        var a = val('kt-a'), b = val('kt-b'), dead = document.getElementById('kt-x').checked;
+        if (!a || (!b && !dead)) return '';
+        var r;
+        if (dead) r = td.rules[0];
+        else {
+          var days = Math.round((Date.parse(b) - Date.parse(a)) / 864e5) - 1;
+          if (days < 0) return line('もどった日が、けがの日より前になっています', '');
+          r = td.rules.filter(function (x) { var w = x.when; return w !== 'death' && (w.minDays === undefined || days >= w.minDays) && (w.maxDays === undefined || days <= w.maxDays); })[0];
+          var head = '休んだ日数　' + days + '日';
+        }
+        if (!r.form) return line(head, '') + line(esc(r.text), '');
+        var due = r.due;
+        if (r.quarters) { var mo = +a.slice(5, 7), y = +a.slice(0, 4); var q = r.quarters.filter(function (x) { return mo >= x.from && mo <= x.to; })[0]; due = (q.due.indexOf('翌年') === 0 ? (y + 1) + '年' + q.due.slice(2) : y + '年' + q.due) + 'まで（' + q.from + '〜' + q.to + '月分をまとめて）'; }
+        return (head ? line(head, '') : '') + line(esc(r.form), '期限：' + esc(due));
+      },
+      part: function () {
+        var qs = td.questions || [], picks = [];
+        for (var i = 0; i < qs.length; i++) { var c = tb.querySelector('input[name="kt-q' + i + '"]:checked'); if (!c) return ''; picks.push(qs[i].options[+c.value]); }
+        for (var j = 0; j < picks.length; j++) if (picks[j].result) return line(esc(picks[j].result), picks[j].note ? esc(picks[j].note) : '');
+        return line(esc(td.yes || ''), td.yesNote ? esc(td.yesNote) : '');
+      },
+    }[tb.getAttribute('data-tool')];
+    var run = function () { var h = calc(); ko.innerHTML = h; ko.hidden = !h; };
+    tb.addEventListener('input', run);
+    tb.addEventListener('change', run);
+    if (box) box.addEventListener('click', function () { setTimeout(run, 0); });
+  }
 })();

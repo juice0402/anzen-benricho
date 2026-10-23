@@ -103,3 +103,8 @@
 .psheet { box-shadow: 0 2px 0 var(--edge); margin-top: 4px; }
 .mt-g span { color: var(--muted); }
 .mu span { color: var(--muted); font-size: 14px; }
+.kt-in input[type="number"], .kt-in input[type="date"] { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
+.kt-out { border-top: 2px solid var(--ink); }
+.kt-out b { color: var(--red); }
+.kt-out span, .kt-law, .kt-def, .kt-notes { color: var(--muted); }
+.kt-chk input, .kt-q input { accent-color: var(--blue); }
