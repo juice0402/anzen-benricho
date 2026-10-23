@@ -5,8 +5,10 @@ export const BANDS = [
   { key: 'm', label: '10〜49人' },
   { key: 'l', label: '50人以上' },
 ];
+import suishinsha from './suishinsha.mjs';
+import ninzu from './ninzu.mjs';
 import nenkan from './nenkan.mjs';
 import hiyari from './hiyari.mjs';
 import ky from './ky.mjs';
 
-export const KIHON = [nenkan, hiyari, ky];
+export const KIHON = [suishinsha, ninzu, nenkan, hiyari, ky];
