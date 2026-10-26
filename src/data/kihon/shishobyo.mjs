@@ -1,4 +1,5 @@
 // 労働者死傷病報告 いつまで・どの様式（2026-10-23 に厚労省・労働局・監督署の資料で確かめた）
+// 2026-10-26 出典の点検：小諸署の資料（2025年6月）が消えた（返事 404）ので、和歌山署の遅延理由書の資料に差しかえた。「遅くとも1か月以内」は和歌山署の令和7年11月の資料と一致
 // 令和7年1月1日から報告事項が変わり、電子申請が原則になった（当分のあいだ書面も可）
 export default {
   slug: 'shishobyo',
@@ -106,7 +107,7 @@ export default {
     { t: '甲府労働基準監督署 労働者死傷病報告の報告はお済みですか（期限・休業なし・派遣・休業日数。令和6年12月）', u: 'https://jsite.mhlw.go.jp/yamanashi-roudoukyoku/content/contents/002068790.pdf' },
     { t: '和歌山労働基準監督署 労働者死傷病報告を遅滞なく提出していますか（休業日数の数え方・期限。令和7年11月）', u: 'https://jsite.mhlw.go.jp/wakayama-roudoukyoku/content/contents/002475730.pdf' },
     { t: '厚生労働省 労働安全衛生規則の一部を改正する省令の施行について（令和6年3月28日 基発0328第15号。報告の様式を廃止）', u: 'https://www.mhlw.go.jp/content/11200000/001344869.pdf' },
-    { t: '小諸労働基準監督署 労働者死傷病報告の提出（遅滞なく＝おおむね1〜2週間、1か月をこえると遅延理由書。2025年6月）', u: 'https://jsite.mhlw.go.jp/nagano-roudoukyoku/content/contents/aneihou-houkoku20250602-komorosyo.pdf' },
+    { t: '和歌山労働基準監督署 労働者死傷病報告に係る文書の送付について（けがの日から1か月以上たって出すと、遅延理由書を求める）', u: 'https://jsite.mhlw.go.jp/wakayama-roudoukyoku/content/contents/002742706.pdf' },
     { t: '秋田労働局 「労働者死傷病報告」の電子申請が義務化されました（入力のコード・休業見込み4日以上）', u: 'https://jsite.mhlw.go.jp/akita-roudoukyoku/newpage_02300.html' },
     { t: '職場のあんぜんサイト 労働者死傷病報告（様式第23号・第24号・派遣）', u: 'https://anzeninfo.mhlw.go.jp/yougo/yougo29_1.html' },
   ],

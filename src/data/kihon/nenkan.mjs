@@ -1,4 +1,5 @@
 // 安全衛生の1年：全国の運動と週間の時期（令和8年度）
+// 2026-10-26 出典の点検：苫小牧署の令和8年6月末の資料が消えた（返事 404）ので外した。クールワークキャンペーンの期間は山形局と宮城局のページで一致
 // 日付は令和8年度の発表で確かめたもの。まだ発表のないもの（年末年始無災害運動・ハラスメント撲滅月間）は、確かめた年度を書く
 // 確かめ直し：年末年始無災害運動（中災防・例年10〜11月に発表）、化学物質管理強調月間（11月ごろ）、来年度の安全週間（3月ごろ）・衛生週間（7月ごろ）
 // トップの予定表に出す、月ごとの全国の運動の短い名前（年で変わる日付は書かない）
@@ -101,7 +102,6 @@ export default {
     { t: '岡山労働局 令和7年度 年末年始無災害運動（12月1日〜1月15日・主唱 中災防・後援 厚生労働省）', u: 'https://jsite.mhlw.go.jp/okayama-roudoukyoku/content/contents/002481112.pdf' },
     { t: '山形労働局 令和8年「STOP!熱中症 クールワークキャンペーン」（準備期間4月・5〜9月・7月は重点取組期間）', u: 'https://jsite.mhlw.go.jp/yamagata-roudoukyoku/nettyuusyouyobou-20260528.html' },
     { t: '宮城労働局 令和8年「STOP!熱中症 クールワークキャンペーン」を実施します（5〜9月・準備期間4月）', u: 'https://jsite.mhlw.go.jp/miyagi-roudoukyoku/2/226/nettyuusyoucampaign_00003.html' },
-    { t: '苫小牧労働基準監督署 令和8年 労働災害発生状況（クールワークキャンペーン 5月1日〜9月30日・重点取組期間7月。令和8年6月末現在）', u: 'https://jsite.mhlw.go.jp/hokkaido-roudoukyoku/content/contents/002720981.pdf' },
     { t: '厚生労働省 第2回「化学物質管理強調月間」を2月に実施（2025年11月発表）', u: 'https://www.mhlw.go.jp/stf/newpage_65341.html' },
     { t: '徳島労働局 毎年2月は化学物質管理強調月間です（令和8年2月・第2回）', u: 'https://jsite.mhlw.go.jp/tokushima-roudoukyoku/0802kagakubusshitsuweek_080203.html' },
     { t: '富山労働局 9月は「職場の健康診断実施強化月間」です（令和8年度・毎年9月）', u: 'https://jsite.mhlw.go.jp/toyama-roudoukyoku/news_topics/houdou/R08_kenshinkyoukagekkan.html' },
