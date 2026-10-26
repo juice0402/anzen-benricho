@@ -24,6 +24,8 @@ test('法改正：必須の項目がそろっている', () => {
     assert.equal(h.todo.length, 3, `${h.slug} 職場ですることは3つ`);
     assert.ok(h.src.length >= 1, `${h.slug} 出典`);
     for (const s of h.src) assert.match(s.u, /^https:\/\//, s.t);
+    // 罰則・届出の1行は、確かめたものだけ書く（ないときは行を出さない）。スマホで2行まで
+    for (const k of ['bassoku', 'todokede']) if (h[k] !== undefined) assert.ok(typeof h[k] === 'string' && h[k].length > 0 && [...h[k]].length <= 40, `${h.slug} ${k}`);
   }
 });
 
