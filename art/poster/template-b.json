@@ -1,0 +1,11 @@
+{
+  "note": "案B（月めくりの1枚）の Canva の型。12月 大掃除の本番 DAHZG1vSiIU を copy-design で写すと、ページと要素の ID はそのまま。並びは 事務所・飲食・製造・清掃",
+  "source": "DAHZG1vSiIU",
+  "geometry": { "num": { "top": 58, "left": 44 }, "title": { "top": 92, "left": 168, "width": 360 }, "label": { "top": 100, "left": 438, "width": 300 }, "rule": [700, 46, 32, 32], "sub": [630, 27, 26, 26] },
+  "pages": [
+    { "page": "PBLys470nj6SKsVD", "num": "LBvj1Sd3rrRzjTkK", "title": "LBr32TS9TPVg3sn3", "label": "LBXlWgsZ6y2hBH7N", "img": "LBQ6VfnNlXcQwTPB", "r": ["LBbKlRSPstXshfvk", "LBTG7x3GbrkK7mV7", "LBYNbq649B8GxMLy"], "s": ["LBrZ5Xt1hr0kpcdw", "LBgrMBGWYSb3ZN25", "LBDVd1TMtthVPfs6"], "undo": "LB1K3kRGQlp5ZrY2" },
+    { "page": "PBLQXH1LCX4d2nHd", "num": "LBLry9RJrb9ydYcv", "title": "LBrYVPzLjPwHpxkj", "label": "LB6HXXHrXlsJgDvT", "img": "LBZJ01s4dn4bDKm7", "r": ["LBM0FZMLVH9QLTM9", "LBph8MNYV6zfQcf5", "LB1SCW3d8vjS96RK"], "s": ["LBg7WwdXjncjy8TN", "LBvRjywz6fmG74Nd", "LBhJw4hcXQCDlfxT"], "undo": "LBR6vhqyh94wvR6L" },
+    { "page": "PBx2z9b0ZcxsRPGp", "num": "LBzQkXhZvTJ7drYk", "title": "LBf6sJj3Cl56gzNW", "label": "LBDLMB6c36BWpsNv", "img": "LB8KPFZH5m94W34y", "r": ["LBcFXJYZw51cmP82", "LB43j8xLX68PqBlf", "LBMKjnjwfmJp92fT"], "s": ["LBY7ptRLjWxDZSPx", "LBtScRMwWbdfGbtW", "LBWx9wHFNXcN2nZF"], "undo": "LBvNTC44wr3HJgMw" },
+    { "page": "PBHPK61JK7sgrLhc", "num": "LBl6VZjg9Yblh3L4", "title": "LBFbR6HtC5JxGl2R", "label": "LBVP2ZVCRP5JWWhw", "img": "LBCCdKLd7RVRVJZX", "r": ["LBdjVql9p3r2M6zx", "LB9zpjNDTSp3yMt4", "LBKWRvwZW4N4nf8W"], "s": ["LBLZJTPR0DxHflxB", "LBDgz7H2WkJ5Mz14", "LBFbPpygLFRkSV0b"], "undo": "LBRm7gplMnX7sfwZ" }
+  ]
+}
