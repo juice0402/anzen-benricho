@@ -3,6 +3,7 @@
 import { ALL_THEMES as THEMES } from '../src/data/themes.mjs';
 import { HOUREI, HOUREI_CHECKED } from '../src/data/hourei.mjs';
 import { SHIKAKU, SHIKAKU_CHECKED } from '../src/data/shikaku.mjs';
+import { KIHON } from '../src/data/kihon/index.mjs';
 
 const list = new Map();
 const add = (s, where) => list.set(s.u, list.get(s.u) || { ...s, where });
@@ -12,6 +13,8 @@ for (const t of THEMES) {
 }
 for (const h of HOUREI) for (const s of h.src) add(s, `法改正・${h.title}`);
 for (const k of SHIKAKU) for (const s of k.src) add(s, `資格・${k.name}`);
+// 知識のページ（2026-10-26 から点検に入れた）
+for (const p of KIHON) for (const s of p.src) add(s, `知識・${p.h1}`);
 
 const UA = 'Mozilla/5.0 (compatible; anzen-benricho-linkcheck; +https://anzen-benricho.com/about/)';
 const open = async (u) => {
@@ -38,6 +41,7 @@ const old = [
   ...THEMES.map((t) => [t.title, t.checked]),
   ['法改正', HOUREI_CHECKED],
   ['資格の更新の期限', SHIKAKU_CHECKED],
+  ...KIHON.map((p) => [`知識・${p.h1}`, p.checked]),
 ].filter(([, d]) => days(d) >= 76).map(([n, d]) => `- ${n}：確認日 ${d} から ${days(d)} 日（90日でテストが止まり、公開できなくなる）`);
 
 console.log(`出典 ${list.size} 件を点検しました。`);
