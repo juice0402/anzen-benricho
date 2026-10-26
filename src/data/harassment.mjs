@@ -4,6 +4,7 @@
 // 業種ごとの数字：令和5年度 職場のハラスメントに関する実態調査（過去3年に受けた割合）と、令和7年度 過労死等の労災補償状況（精神障害）
 // 製造・清掃の業種別のハラスメントの割合は、概要にも報告書の本文にも出ていない（図表だけ）ので、全業種の数字にした
 // 2026-10-26 出典の点検（Issue #8）：製造のあかるい職場応援団の裁判例のページが GitHub から2回とも返事 523 で開けないので外した。「危ない作業をした人を、ある程度強く注意するのは指導」はパワハラ防止指針と、テーマ全体の出典の厚労省パンフレットの2つで一致
+// 2026-10-27：ポスター（Canva・案B）を4業種ぶん public/poster/2026-12/ に置いた。決まりの文字はこのデータから
 
 export const HARASSMENT = {
   slug: 'harassment',
@@ -24,6 +25,7 @@ export const HARASSMENT = {
   gyoshu: [
     {
       key: 'jimusho',
+      poster: '/poster/2026-12/harassment-jimusho.pdf',
       label: '事務所・店舗',
       name: '事務所・店舗',
       memo: '過去3年にパワハラを受けた人は全体で19.3%。お客さんからのカスハラは、卸売業・小売業で16.0%（令和5年度の国の調査）',
@@ -51,6 +53,7 @@ export const HARASSMENT = {
     },
     {
       key: 'inshoku',
+      poster: '/poster/2026-12/harassment-inshoku.pdf',
       label: '飲食',
       name: '飲食店',
       memo: '過去3年にカスハラを受けた人は16.0%、セクハラは10.5%で、どちらも多い業種（宿泊業・飲食サービス業、令和5年度の国の調査）',
@@ -79,6 +82,7 @@ export const HARASSMENT = {
     },
     {
       key: 'seizo',
+      poster: '/poster/2026-12/harassment-seizo.pdf',
       label: '製造',
       name: '製造業',
       memo: '心の病気で労災と認められたのは製造業が158件で2番目に多い。原因でいちばん多いのは上司などからのパワハラ（全業種で222件、令和7年度）',
@@ -106,6 +110,7 @@ export const HARASSMENT = {
     },
     {
       key: 'seisou',
+      poster: '/poster/2026-12/harassment-seisou.pdf',
       label: '清掃・ビルメン',
       name: '清掃・ビルメン',
       memo: 'カスハラの相手には、施設の利用者や取引先も入る。お客さんなどからのひどい迷惑行為による心の病気の労災は127件（全業種、令和7年度）',

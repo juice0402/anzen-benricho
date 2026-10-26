@@ -1,6 +1,7 @@
 // 12月「年末の交通安全」（4業種）。2026-10-22 に公的な資料で調べて書いたもの
 // 年末の交通安全運動は都道府県ごと（期間・重点がちがう）。2026年の期間は公開後に各県で出るので、ページでは決めつけない
 // 2026-10-26 出典の点検（Issue #8）：製造の北海道労働局の死亡災害速報（令和7年9月把握分）が消えたので、花巻署のフォークリフトのページ（HTML）と彦根署の資料に差しかえ、memo と朝礼の言い方を合わせた
+// 2026-10-27：ポスター（Canva・案B）を4業種ぶん public/poster/2026-12/ に置いた。決まりの文字はこのデータから
 
 export const KOUTSU = {
   slug: 'koutsu',
@@ -18,6 +19,7 @@ export const KOUTSU = {
   gyoshu: [
     {
       key: 'jimusho',
+      poster: '/poster/2026-12/koutsu-jimusho.pdf',
       label: '事務所・店舗',
       name: '事務所・店舗',
       memo: '社用車の運転と、車や自転車での通勤が中心。12月は夕方の早い時間から暗くなり、歩く人の事故が増える',
@@ -45,6 +47,7 @@ export const KOUTSU = {
     },
     {
       key: 'inshoku',
+      poster: '/poster/2026-12/koutsu-inshoku.pdf',
       label: '飲食',
       name: '飲食店',
       memo: '出前やデリバリーでバイクや自転車に乗る人が多い。暗くなる夕方からの配達と、忘年会の時期の飲酒運転に気をつける',
@@ -71,6 +74,7 @@ export const KOUTSU = {
     },
     {
       key: 'seizo',
+      poster: '/poster/2026-12/koutsu-seizo.pdf',
       label: '製造',
       name: '製造業',
       memo: '工場の中では、フォークリフトやトラックと歩く人の接触が起きやすい。フォークリフトの災害の約4割はバックで走るときに起きている（花巻労働基準監督署）',
@@ -98,6 +102,7 @@ export const KOUTSU = {
     },
     {
       key: 'seisou',
+      poster: '/poster/2026-12/koutsu-seisou.pdf',
       label: '清掃・ビルメン',
       name: '清掃・ビルメン',
       memo: '車で現場を回る人や、資材を積んで運ぶ人がいる。仕事中の交通事故で亡くなった人は令和7年に126人で、墜落・転落に次いで多い（全業種）',
