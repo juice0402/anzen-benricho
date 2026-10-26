@@ -81,6 +81,7 @@
 .idx-group[data-corner="seisou"] { --c: var(--seisou); }
 .idx-group[data-corner="kyotsu"] { --c: var(--kyotsu); }
 .idx-group[data-corner="kihon"] { --c: var(--blue); }
+.idx-group[data-corner="kagaku"] { --c: var(--yellow); }
 .idx-group li { padding-left: 20px; border-top: 1px solid var(--thin); }
 .idx-group li a { font-weight: 700; text-decoration: none; }
 
@@ -109,7 +110,7 @@
 .psheet { box-shadow: 0 2px 0 var(--edge); margin-top: 4px; }
 .mt-g span { color: var(--muted); }
 .mu span { color: var(--muted); font-size: 14px; }
-.kt-in input[type="number"], .kt-in input[type="date"] { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
+.kt-in input[type="number"], .kt-in input[type="date"], .kt-in select { border: 1.5px solid var(--ink); background: #fff; color: var(--ink); }
 .kt-out { border-top: 2px solid var(--ink); }
 .kt-out b { color: var(--red); }
 .kt-out span, .kt-law, .kt-def, .kt-notes { color: var(--muted); }

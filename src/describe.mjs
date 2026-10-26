@@ -111,6 +111,19 @@ export const kihonHubDesc = (list) => {
   ]);
 };
 
+// 化学物質の目次：/kagaku/
+export const kagakuHubDesc = (list) => {
+  const sheets = list.filter((p) => p.sheet).length;
+  const src = new Set(list.flatMap((p) => p.src.map((s) => s.u))).size;
+  return fit(
+    [
+      `化学物質と洗剤の安全を${list.length}ページに。まぜると危ない洗剤の判定、SDSの見る所、化学物質管理者が要るかの判定、リスクアセスメントの入口。`,
+      `A4の掲示と用紙${sheets}種類、公的な出典${src}件。`,
+    ],
+    [`化学物質と洗剤の安全を${list.length}ページに。まぜると危ない洗剤の判定、SDSの見る所、化学物質管理者が要るかの判定など。`, `A4の掲示と用紙${sheets}種類。`],
+  );
+};
+
 // 資格の更新の期限：/shikaku/koushin/
 export const koushinDesc = (list) =>
   fit([

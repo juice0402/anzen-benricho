@@ -11,6 +11,7 @@ export const KANSEN = {
   seoName: '冬の感染症（インフルエンザ・ノロウイルス）',
   posterSrc: '出典：厚生労働省・自治体ほか',
   undo: null,
+  related: [{ t: 'この2つの洗剤、まぜると危ない？（判定と置き場の掲示）', href: '/kagaku/mazenai/' }],
   checked: '2026-10-23',
   common: [
     { t: '厚生労働省 ノロウイルスに関するQ&A（12月〜1月に多い・うつり方・手洗い・おう吐物の処理）', u: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/kanren/yobou/040204-1.html' },
