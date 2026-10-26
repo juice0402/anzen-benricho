@@ -1,9 +1,57 @@
 {
   "note": "絵の Canva の ID（upload-asset-from-url で raw.githubusercontent.com の PNG を取りこんだもの）",
-  "oosouji": { "jimusho": "MAHZGzErLMM", "inshoku": "MAHZGwoUf2Q", "seizo": "MAHZG30gi44", "seisou": "MAHZG0ZMfDI" },
-  "koutsu": { "jimusho": "MAHZJOksnyo", "inshoku": "MAHZJC59mcs", "seizo": "MAHZJDNdLyY", "seisou": "MAHZJCQcFnU" },
-  "harassment": { "jimusho": "MAHZJIi54GY", "inshoku": "MAHZJL5RdL8", "seizo": "MAHZJBOPbIs", "seisou": "MAHZJCDQzys" },
-  "kansen": { "jimusho": "MAHZJOIes4g", "inshoku": "MAHZJOkgzWI", "seizo": "MAHZJHvx7y8", "seisou": "MAHZJFPyIUo" },
-  "tentou": { "jimusho": "MAHZJKxXp9A", "inshoku": "MAHZJFGSDBI", "seizo": "MAHZJKE_QYs", "seisou": "MAHZJKNSRvc" },
-  "youtsu": { "jimusho": "MAHZJAfVrts", "inshoku": "MAHZJIZb444", "seizo": "MAHZJGxotyw", "seisou": "MAHZJNDTEuA" }
+  "oosouji": {
+    "jimusho": "MAHZGzErLMM",
+    "inshoku": "MAHZGwoUf2Q",
+    "seizo": "MAHZG30gi44",
+    "seisou": "MAHZG0ZMfDI"
+  },
+  "koutsu": {
+    "jimusho": "MAHZJOksnyo",
+    "inshoku": "MAHZJC59mcs",
+    "seizo": "MAHZJDNdLyY",
+    "seisou": "MAHZJCQcFnU"
+  },
+  "harassment": {
+    "jimusho": "MAHZJIi54GY",
+    "inshoku": "MAHZJL5RdL8",
+    "seizo": "MAHZJBOPbIs",
+    "seisou": "MAHZJCDQzys"
+  },
+  "kansen": {
+    "jimusho": "MAHZJOIes4g",
+    "inshoku": "MAHZJOkgzWI",
+    "seizo": "MAHZJHvx7y8",
+    "seisou": "MAHZJFPyIUo"
+  },
+  "tentou": {
+    "jimusho": "MAHZJKxXp9A",
+    "inshoku": "MAHZJFGSDBI",
+    "seizo": "MAHZJH222os",
+    "seisou": "MAHZJKNSRvc"
+  },
+  "youtsu": {
+    "jimusho": "MAHZJAfVrts",
+    "inshoku": "MAHZJIZb444",
+    "seizo": "MAHZJGxotyw",
+    "seisou": "MAHZJNDTEuA"
+  },
+  "kokoro": {
+    "jimusho": "MAHZJb4WYiE",
+    "inshoku": "MAHZJXEfDlk",
+    "seizo": "MAHZJWOHu0o",
+    "seisou": "MAHZJU3xu1c"
+  },
+  "shinjin": {
+    "jimusho": "MAHZJbSm39k",
+    "inshoku": "MAHZJZDk_Xs",
+    "seizo": "MAHZJWxAwro",
+    "seisou": "MAHZJaZo1X8"
+  },
+  "kourei": {
+    "jimusho": "MAHZJXlpci4",
+    "inshoku": "MAHZJU_E45k",
+    "seizo": "MAHZJTqR0aQ",
+    "seisou": "MAHZJVitMmE"
+  }
 }
