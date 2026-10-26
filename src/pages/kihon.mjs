@@ -1,6 +1,7 @@
 // 知識のページ：1ページで1つの問い。答え1行 → うちの職場（業種・人数）→ 道具 → 表 → チェック → A4の紙 → よくある質問 → 出典
 // 印刷は A4 の紙（.psheet）だけ。ほかの部分には np をつけて印刷に出さない
 import { page, esc, script, adSlot, fudaLabel } from '../layout.mjs';
+import { kihonHubDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
@@ -161,7 +162,7 @@ ${adSlot('end')}`;
     path,
     html: page({
       title: `安全衛生の基本の決まり 早見と用紙（推進者・人数・記録・掲示）｜${SITE.name}`,
-      description: '10〜49人の職場の安全衛生の担当者向けに、推進者の選び方、人数で変わる決まり、雇い入れのときの教育と健康診断、記録の保存期間などを、早見表と印刷できる用紙で出典つきでまとめています。',
+      description: kihonHubDesc(KIHON),
       path,
       corner: 'kihon',
       body,

@@ -24,6 +24,7 @@
   - 問い合わせ・訂正の連絡先は `SITE.contact`（入れると about とプライバシーポリシーに出る）
 - 2026-10-22 公開（https://anzen-benricho.com、`SITE.launched: true`）。AdSense に通ったら、画面で自動広告がオフか確かめる（掲示やボタンのそばに入るため）。同じ日に AdSense の審査をリクエスト（運営者ID ca-pub-7891863499821813、審査待ち）、Search Console にドメインで登録してサイトマップを送った。通ったら広告ユニット3つの番号を `SITE.adSlots` に入れる
 - 検索エンジンへのお知らせ：sitemap.xml（ビルドで作る）と、本番の公開のたびに変わったページを IndexNow で知らせる（`scripts/indexnow.mjs`。Bing など。鍵は `public/<鍵>.txt`、前に知らせた記録は Actions の cache）。Google は Search Console とサイトマップ
+- 検索結果での見え方（10/26 司令塔の連絡 C-003）：説明文はページのデータから `src/describe.mjs` で作る（けがの人数・割合、テーマの本数、施行日、出典の件数、確かめた月。全角80〜120文字・半角は0.5、長いときはうしろの文から外す）。知識のページはデータの description をそのまま使う。全ページに og:site_name など、トップは WebSite の構造化データと title「安全衛生の便利帳｜…」。`verify-dist.mjs` が長さ・同じ説明文・使わない言葉・og:site_name・WebSite・pages.dev の残りを見張る
 - 自動：毎月1日と15日 9:10 に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`）
 
 ## サイト作りの方針（しょーくんの方針・10/17）：迷ったら上から順に優先する

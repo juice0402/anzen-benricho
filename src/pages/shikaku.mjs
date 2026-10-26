@@ -1,5 +1,6 @@
 // 資格の更新の期限 /shikaku/koushin/：資格と修了した日をえらぶと、次の期限と再講習の時期が出る（計算はブラウザの中だけ）
 import { page, esc, script, adSlot } from '../layout.mjs';
+import { koushinDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead } from '../parts.mjs';
 import { SHIKAKU, SHIKAKU_CHECKED } from '../data/shikaku.mjs';
@@ -43,7 +44,7 @@ ${adSlot('end')}`;
       path,
       html: page({
         title: `清掃作業監督者・病院清掃受託責任者の更新の期限と再講習の時期｜${SITE.name}`,
-        description: '清掃作業監督者（6年ごと）と病院清掃受託責任者（4年ごと）の修了した日を入れると、次の期限と、再講習を受ける時期が出ます。入れた日付はこの端末の中だけで計算し、送りません。',
+        description: koushinDesc(SHIKAKU),
         path,
         corner: 'kyotsu',
         body,

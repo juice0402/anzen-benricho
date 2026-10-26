@@ -5,6 +5,7 @@ import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { themePath, gyoshuPath, fuda, monthHead, titleHtml, undoLine } from '../parts.mjs';
 import { ALL_THEMES } from '../data/themes.mjs';
+import { themeDesc, themeGyoshuDesc } from '../describe.mjs';
 
 const seo = (t) => t.seoName || t.title;
 // 同じ月のほかのテーマと、関係するページ（法改正・基本の決まり）
@@ -57,7 +58,7 @@ ${adSlot('end')}`;
     path,
     html: page({
       title: `${t.month}月の安全衛生テーマ「${seo(t)}」朝礼ネタと掲示物（業種別）｜${SITE.name}`,
-      description: `${t.month}月の安全衛生のテーマ「${seo(t)}」。事務所・店舗、飲食店、製造業、清掃・ビルメンの業種ごとに、印刷して貼れる掲示と1分で話せる朝礼の文を出典つきでまとめています。`,
+      description: themeDesc(t),
       path,
       corner: 'anzen',
       body,
@@ -99,7 +100,7 @@ ${links(t, g)}`;
     path,
     html: page({
       title: `${g.name}の${seo(t)}｜${t.month}月の朝礼（1分の例文）と掲示｜${SITE.name}`,
-      description: `${g.name}向けの${t.month}月の安全衛生テーマ「${seo(t)}」。「${g.rules[0][0]}」「${g.rules[1][0]}」などをA4の掲示にして、1分で話せる朝礼の文と出典もつけています。`,
+      description: themeGyoshuDesc(t, g),
       path,
       corner: 'anzen',
       body,

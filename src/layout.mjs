@@ -50,7 +50,7 @@ const FOOT_LINKS = [
   ['/disclaimer/', '免責事項'],
 ];
 
-export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false, noAds = false, noindex: forceNoindex = false }) {
+export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false, noAds = false, noindex: forceNoindex = false, ogTitle = '' }) {
   const base = '';
   const url = SITE.url + path;
   const noindex = !SITE.launched || forceNoindex;
@@ -82,7 +82,12 @@ export function page({ title, description, path, corner, body, js = '', crumbs =
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
+<meta property="og:site_name" content="${esc(SITE.name)}">
+<meta property="og:type" content="${isHome ? 'website' : 'article'}">
+<meta property="og:title" content="${esc(ogTitle || title)}">
+<meta property="og:description" content="${esc(description)}">
+<meta property="og:locale" content="ja_JP">
+${noindex ? '' : `<meta property="og:url" content="${url}">\n`}${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
 <meta name="theme-color" content="#2b3238">
 <link rel="icon" href="/favicon.ico?v=${ICON_V.ico}" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=${ICON_V.svg}" type="image/svg+xml">
