@@ -1,3 +1,4 @@
+// 2026-10-26 出典の点検：奈良局（2019年8月）と静岡局の業務一覧の資料が消えた（返事 404）ので外した。業務の境目は e-Gov の安衛令20条・安衛則36条と東京局のページで確かめたもの
 export default {
   slug: 'tokubetsu',
   path: '/shikaku/tokubetsu/',
@@ -85,11 +86,9 @@ export default {
     { t: '職場のあんぜんサイト 特別教育（講師の資格の決まりはない・記録は3年・科目の省略）', u: 'https://anzeninfo.mhlw.go.jp/yougo/yougo50_1.html' },
     { t: '厚労省 労働安全衛生関係の免許・資格・技能講習・特別教育など（特別教育は事業者が行う・外部の機関は登録不要・講師）', u: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/roudoukijun/anzeneisei10/qualificaton_education.html' },
     { t: '東京労働局 安全衛生教育（特別教育の業務の一覧と境目。年の表示なし）', u: 'https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/a-kyoiku.html' },
-    { t: '奈良労働局 作業主任者・就業制限・特別教育の対象業務（安衛則36条の号ごと。2019年8月）', u: 'https://jsite.mhlw.go.jp/nara-roudoukyoku/content/contents/000629335.pdf' },
     { t: '厚労省 基発0328第5号（2023年3月28日。テールゲートリフターは安衛則36条5号の4、2024年2月1日から）', u: 'https://www.mhlw.go.jp/web/t_doc?dataId=00tc7608&dataType=1&pageNo=1' },
     { t: '厚労省 トラックでの荷役作業時における安全対策が強化されます（2023年6月。テールゲートリフターの特別教育）', u: 'https://www.mhlw.go.jp/content/001108427.pdf' },
     { t: '秋田労働局 フルハーネスの質問（2022年8月。安衛則36条41号・40号）', u: 'https://jsite.mhlw.go.jp/akita-roudoukyoku/content/contents/001769853.pdf' },
-    { t: '静岡労働局 資格が必要な業務一覧（安衛令20条の技能講習・免許の境目。年の表示なし）', u: 'https://jsite.mhlw.go.jp/shizuoka-roudoukyoku/content/contents/002240377.pdf' },
     { t: '厚労省 危険又は有害な業務に現に就いている者に対する安全衛生教育に関する指針（定期教育は一定期間ごと・努力義務）', u: 'https://www.mhlw.go.jp/web/t_doc?dataId=00tb2082&dataType=1&pageNo=1' },
   ],
   checked: '2026-10-23',

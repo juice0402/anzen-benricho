@@ -11,9 +11,9 @@
 - 第1弾（12月の年末の大掃除・年末の交通安全ほか）は、準備ができ次第公開してよい。締め切りは遅くとも11/10ごろ（10/22 司令塔から。12月の準備をする人に間に合わせる）。Claude の使用量が苦しいときは、無理せずしょーくんに知らせる
 - トップ（10/23 しょーくん「いきなり12月でびっくり」→ 3案から「予定表」に決めた）：サイトの1行と、今日から5か月の安全衛生の予定表（全国の運動は nenkan.mjs の `YOTEI`、その月のテーマ）。今日に赤い線、掲示を用意する月に赤ペンの丸。今日の線と日付はブラウザで今日の月に動かす（`src/client/today.js`）
 - テーマは `src/data/themes.mjs` の `ALL_THEMES`（月は各テーマの `month`）。トップと業種の入口の「今月」は作り直した日で決まる（15日からは翌月、テーマのない月はとばす）。業種は `src/data/gyoshu.mjs`（どのテーマもこの4つ・この順。テストが見る）
-- 法改正 `/hourei/`（施行日の順。うちの職場の印で絞る）と `/hourei/<改正>/`。データは `src/data/hourei.mjs`（義務か努力義務か・対象・出典が必須）。トップの「次の改正」は作り直しの日に、まだ施行されていないいちばん近いものを出す
+- 法改正 `/hourei/`（施行日の順。うちの職場の印で絞る）と `/hourei/<改正>/`。データは `src/data/hourei.mjs`（義務か努力義務か・対象・出典が必須。罰則 `bassoku`・届出 `todokede` は2つ以上の公的な資料で確かめたものだけ）。トップの「次の改正」は作り直しの日に、まだ施行されていないいちばん近いものを出す
 - 資格の更新の期限 `/shikaku/koushin/`（`src/data/shikaku.mjs`、計算は `src/client/koushin.js`。端末の中だけ）。いまは清掃作業監督者・病院清掃受託責任者
-- 知識のページ（10/23。討論はプロジェクトの claude/anzen-chishiki-debate-2026-10-23.md）：`src/data/kihon/*.mjs`（1ページ1ファイル、並びは index.mjs）、部品は `src/pages/kihon.mjs`・道具は `kihon-tools.mjs` と `src/client/kihon.js`。目次 `/kihon/`。1ページ1つの問い、答えは40字まで、判定・道具・チェック・印刷のどれかが必ずある、条文を書くなら e-Gov を出典に（`tests/kihon.test.mjs`）。「法令の区分では」と書き、区分に迷う業種は「労働基準監督署に確認」。いまは推進者・人数・入社・特別教育・資格の期限・設備・保存期間・死傷病報告・1年・ヒヤリハット・KY
+- 知識のページ（10/23。討論はプロジェクトの claude/anzen-chishiki-debate-2026-10-23.md）：`src/data/kihon/*.mjs`（1ページ1ファイル、並びは index.mjs）、部品は `src/pages/kihon.mjs`・道具は `kihon-tools.mjs` と `src/client/kihon.js`。目次 `/kihon/`。1ページ1つの問い、答えは40字まで、判定・道具・チェック・印刷のどれかが必ずある、条文を書くなら e-Gov を出典に（`tests/kihon.test.mjs`）。「法令の区分では」と書き、区分に迷う業種は「労働基準監督署に確認」。いまは推進者・人数・入社・特別教育・資格の期限・設備・保存期間・死傷病報告・1年・ヒヤリハット・KY・巡視
 - 月ごとのテーマ `/anzen/`（一覧）と `/anzen/<月>/`（運動・テーマごとの業種の入口・その月の法改正）
 - 印刷は A4 1枚。知識のページは紙（.psheet）だけ、ほかは np で印刷に出さない。印刷が1枚に収まるかは Playwright で PDF にして数える（長い掲示は print.css ですき間をつめている）
 - 業種の入口 `/anzen/gyoshu/<業種>/`（トップの業種の名前から）：その業種の今月のテーマと掲示の決まり
@@ -25,7 +25,7 @@
 - 2026-10-22 公開（https://anzen-benricho.com、`SITE.launched: true`）。AdSense に通ったら、画面で自動広告がオフか確かめる（掲示やボタンのそばに入るため）。同じ日に AdSense の審査をリクエスト（運営者ID ca-pub-7891863499821813、審査待ち）、Search Console にドメインで登録してサイトマップを送った。通ったら広告ユニット3つの番号を `SITE.adSlots` に入れる
 - 検索エンジンへのお知らせ：sitemap.xml（ビルドで作る）と、本番の公開のたびに変わったページを IndexNow で知らせる（`scripts/indexnow.mjs`。Bing など。鍵は `public/<鍵>.txt`、前に知らせた記録は Actions の cache）。Google は Search Console とサイトマップ
 - 検索結果での見え方（10/26 司令塔の連絡 C-003）：説明文はページのデータから `src/describe.mjs` で作る（けがの人数・割合、テーマの本数、施行日、出典の件数、確かめた月。全角80〜120文字・半角は0.5、長いときはうしろの文から外す）。知識のページはデータの description をそのまま使う。全ページに og:site_name など、トップは WebSite の構造化データと title「安全衛生の便利帳｜…」。`verify-dist.mjs` が長さ・同じ説明文・使わない言葉・og:site_name・WebSite・pages.dev の残りを見張る
-- 自動：毎月1日と15日 9:10 に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`）
+- 自動：毎月1日と15日 9:10 に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`。テーマ・法改正・資格・知識のページ）。`src/data` を変える PR でも同じ点検が動き、結果は check-run の注記に出る。WebFetch で開けても GitHub からは 404 の出典があるので、出典を足したら PR の注記で確かめる
 
 ## サイト作りの方針（しょーくんの方針・10/17）：迷ったら上から順に優先する
 - 前提：中身が正しい・軽くて速い・利用者のデータを送らない・むだな通信をしない・SEO。公開前に高速化・デバッグ・SEO の点検

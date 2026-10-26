@@ -57,6 +57,8 @@ function detail(h, today) {
 <div><dt>施行日</dt><dd class="hr-day${done ? '' : ' soon'}">${fmtDate(h.date)}<span class="hr-st">${done ? '施行済み' : 'これから'}</span></dd></div>
 <div><dt>区分</dt><dd><b>${h.kind}</b></dd></div>
 <div><dt>対象</dt><dd>${esc(h.who)}</dd></div>
+${h.bassoku ? `<div><dt>罰則</dt><dd>${esc(h.bassoku)}</dd></div>` : ''}
+${h.todokede ? `<div><dt>届出</dt><dd>${esc(h.todokede)}</dd></div>` : ''}
 </dl>`;
   const body = `${bandHead('法改正', h.title, facts)}
 <section class="sec paper" aria-labelledby="ch-h">

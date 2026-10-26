@@ -16,5 +16,6 @@ import shishobyo from './shishobyo.mjs';
 import nenkan from './nenkan.mjs';
 import hiyari from './hiyari.mjs';
 import ky from './ky.mjs';
+import junshi from './junshi.mjs';
 
-export const KIHON = [suishinsha, ninzu, nyusha, tokubetsu, kigen, setsubi, hozon, shishobyo, nenkan, hiyari, ky];
+export const KIHON = [suishinsha, ninzu, nyusha, tokubetsu, kigen, setsubi, hozon, shishobyo, nenkan, hiyari, ky, junshi];
