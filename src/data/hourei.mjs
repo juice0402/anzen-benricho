@@ -38,7 +38,7 @@ export const HOUREI = [
   {
     slug: 'koureisha',
     seoTitle: '高年齢労働者の労災防止が努力義務に（2026年4月1日から）',
-    related: [{ t: '1月のテーマ 冬の転倒', href: '/anzen/theme/tentou/' }, { t: '2月のテーマ 腰痛予防', href: '/anzen/theme/youtsu/' }],
+    related: [{ t: '4月のテーマ 高年齢の人の安全', href: '/anzen/theme/kourei/' }, { t: '1月のテーマ 冬の転倒', href: '/anzen/theme/tentou/' }, { t: '2月のテーマ 腰痛予防', href: '/anzen/theme/youtsu/' }],
     date: '2026-04-01',
     title: '高年齢の人の労働災害を防ぐ',
     kind: '努力義務',
@@ -151,7 +151,7 @@ export const HOUREI = [
   {
     slug: 'stress-check',
     seoTitle: '50人未満のストレスチェック義務化はいつから（2028年4月1日）',
-    related: [{ t: '10人・50人で変わる安全衛生の決まり', href: '/kihon/ninzu/' }],
+    related: [{ t: '10人・50人で変わる安全衛生の決まり', href: '/kihon/ninzu/' }, { t: '3月のテーマ 心の健康', href: '/anzen/theme/kokoro/' }],
     date: '2028-04-01',
     title: '50人未満の職場もストレスチェックが義務',
     kind: '義務',

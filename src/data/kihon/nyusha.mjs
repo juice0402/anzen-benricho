@@ -115,6 +115,7 @@ export default {
     { q: 'アルバイトも雇入れ時健康診断の対象？', a: '常時使用する労働者にあたれば対象。契約の期間と週の所定労働時間で決まる。' },
   ],
   related: [
+    { t: '4月のテーマ 新しく入った人の安全（掲示と朝礼）', href: '/anzen/theme/shinjin/' },
     { t: '特別教育がいる業務', href: '/shikaku/tokubetsu/' },
     { t: '期限のある資格・ない資格', href: '/shikaku/kigen/' },
     { t: '安全衛生推進者と衛生推進者', href: '/kihon/suishinsha/' },
