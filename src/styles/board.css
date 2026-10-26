@@ -40,7 +40,7 @@
 .talk p + p { margin-top: 0; }
 /* 出典は紙にせず、板に白い字で */
 .sec-src { color: #e8efe9; }
-.sec-src a { color: #fff; }
+.sec-src a, .poster-pdf a { color: #fff; }
 .sec-src .chk, .sec-src .src-note { color: #cfdcd4; }
 
 /* 今月：月めくりのカレンダー（上にとじ具、大きな月） */

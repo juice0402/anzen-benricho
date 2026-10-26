@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ALL_THEMES as THEMES, monthFor } from '../src/data/themes.mjs';
 import { GYOSHU } from '../src/data/gyoshu.mjs';
+import { existsSync, statSync, readFileSync } from 'node:fs';
 
 for (const t of THEMES) {
   test(`${t.title}：4業種そろっている`, () => {
@@ -51,3 +52,16 @@ test('今月：15日からは翌月。テーマがなければ2か月先まで�
   assert.equal(monthFor('2027-02-03', ts), 1);
   assert.equal(monthFor('2026-11-30', [{ month: 12 }]), 12);
 });
+
+// ポスター（Canva で作った A4 の PDF）。public/poster/ にあり、PDF で、重すぎない
+for (const t of THEMES) {
+  for (const g of t.gyoshu.filter((x) => x.poster)) {
+    test(`${t.title}：${g.label} のポスター`, () => {
+      assert.match(g.poster, /^\/poster\/\d{4}-\d{2}\/[a-z0-9-]+\.pdf$/);
+      const f = new URL(`../public${g.poster}`, import.meta.url);
+      assert.ok(existsSync(f), `${g.poster} がない`);
+      assert.ok(statSync(f).size < 3_000_000, '3MB まで');
+      assert.equal(readFileSync(f).subarray(0, 5).toString(), '%PDF-');
+    });
+  }
+}

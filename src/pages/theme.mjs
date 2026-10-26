@@ -78,6 +78,7 @@ ${fuda((x) => gyoshuPath(t, x), g.key)}
 <h2 class="sec-h" id="poster-h">掲示</h2>
 ${sheet(t, g)}
 <button class="btn print-btn" type="button">A4で印刷</button>
+${g.poster ? `<p class="poster-pdf np"><a href="${g.poster}">ポスター（A4・PDF）</a></p>` : ''}
 </section>
 <section class="sec sec-talk" aria-labelledby="talk-h">
 <h2 class="sec-h" id="talk-h">朝礼</h2>

@@ -1,0 +1,44 @@
+# ポスターの取りこみ：Canva で書き出した PDF を、作業ブランチの public/poster/ に入れる
+# Claude の環境からは Canva の書き出しを取れないので、Actions が取ってくる。
+# 使い方：claude/ のブランチに art/poster/import.json（[{"url": Canva の書き出しURL, "path": "2026-12/oosouji-jimusho.pdf"}]）を push する。
+# 取りこんだら import.json を消してコミットする（GITHUB_TOKEN のコミットでは CI は動かないので、次の push で点検する）
+name: poster-import
+
+on:
+  push:
+    branches: ['claude/**']
+    paths: ['art/poster/import.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poster-import-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: 取りこむ
+        run: |
+          set -eu
+          f=art/poster/import.json
+          [ -f "$f" ] || { echo "::notice::import.json がないので何もしない"; exit 0; }
+          n=$(jq 'length' "$f")
+          for i in $(seq 0 $((n - 1))); do
+            url=$(jq -r ".[$i].url" "$f")
+            dest=$(jq -r ".[$i].path" "$f")
+            case "$url" in https://export-download.canva.com/*) ;; *) echo "::error::Canva の書き出しURLだけを取りこむ（$i 番目）"; exit 1 ;; esac
+            echo "$dest" | grep -Eq '^[0-9]{4}-[0-9]{2}/[a-z0-9-]+\.pdf$' || { echo "::error::置き場所は YYYY-MM/名前.pdf（$dest）"; exit 1; }
+            mkdir -p "public/poster/$(dirname "$dest")"
+            curl -fsSL --max-time 60 --max-filesize 8000000 -o "public/poster/$dest" "$url"
+            head -c 5 "public/poster/$dest" | grep -q '%PDF-' || { echo "::error::PDF ではない（$dest）"; exit 1; }
+            echo "::notice::$dest $(stat -c %s "public/poster/$dest") バイト"
+          done
+          git rm -q "$f"
+          git add public/poster
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -qm "ポスターの PDF を取りこむ（$n 件）"
+          git push -q origin "HEAD:${GITHUB_REF_NAME}"
