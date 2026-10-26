@@ -3,6 +3,7 @@
 // 消毒液の濃さは資料でちがう（厚労省Q&Aは床を約200ppm、大分県は0.2%）。ここでは川崎市・大阪府・世田谷区・都の保健所で一致する「おう吐物は0.1%、ふだんの消毒は0.02%」にそろえた
 // インフルエンザの「発症後5日・解熱後2日」は学校保健安全法施行規則の出席停止。会社に同じ決まりがあるとは書かない
 // 全国の「月間」は見つからなかったので undo は null
+// 2026-10-27：ポスター（Canva・案B）を4業種ぶん public/poster/2026-12/ に置いた。決まりの文字はこのデータから
 
 export const KANSEN = {
   slug: 'kansen',
@@ -21,6 +22,7 @@ export const KANSEN = {
   gyoshu: [
     {
       key: 'jimusho',
+      poster: '/poster/2026-12/kansen-jimusho.pdf',
       label: '事務所・店舗',
       name: '事務所・店舗',
       memo: '窓を閉めた部屋に人が集まりやすい。インフルエンザは例年12月〜3月にはやり、具合が悪くなる前の日から人にうつすことがある',
@@ -45,6 +47,7 @@ export const KANSEN = {
     },
     {
       key: 'inshoku',
+      poster: '/poster/2026-12/kansen-inshoku.pdf',
       label: '飲食',
       name: '飲食店',
       memo: '令和7年の食中毒の患者24,727人のうち75.1%がノロウイルス。調理する人の手を通して料理が汚れる例が多い',
@@ -72,6 +75,7 @@ export const KANSEN = {
     },
     {
       key: 'seizo',
+      poster: '/poster/2026-12/kansen-seizo.pdf',
       label: '製造',
       name: '製造業',
       memo: '休憩室・食堂・更衣室・トイレを大勢が交代で使う。ドアノブやテーブルなど、みんながさわる所から手を通してうつる',
@@ -97,6 +101,7 @@ export const KANSEN = {
     },
     {
       key: 'seisou',
+      poster: '/poster/2026-12/kansen-seisou.pdf',
       label: '清掃・ビルメン',
       name: '清掃・ビルメン',
       memo: 'トイレや共用部で、おう吐物やふん便を処理することがある。ノロウイルスは乾くと舞い上がり、12日以上前に汚れたカーペットからうつった例もある',
