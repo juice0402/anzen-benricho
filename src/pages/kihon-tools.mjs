@@ -4,6 +4,8 @@ import { esc } from '../layout.mjs';
 const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
 const num = (id, label) => `<label for="${id}">${esc(label)}<input id="${id}" type="number" min="0" max="9999" inputmode="numeric"></label>`;
 const date = (id, label) => `<label for="${id}">${esc(label)}<input id="${id}" type="date" min="2000-01-01" max="2099-12-31"></label>`;
+const pick = (id, label, items) =>
+  `<label for="${id}">${esc(label)}<select id="${id}"><option value="">えらぶ</option>${items.map((t) => `<option value="${esc(t.k)}">${esc(t.t)}</option>`).join('')}</select></label>`;
 const notes = (list) => (list && list.length ? `<ul class="kt-notes">${list.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : '');
 
 const TOOLS = {
@@ -22,6 +24,18 @@ const TOOLS = {
 <label class="kt-chk" for="kt-s"><input id="kt-s" type="checkbox">${esc(d.tokuteiLabel)}</label>
 ${num('kt-hr', 'この人の週の所定労働時間（時間）')}${num('kt-nr', '同じ仕事をする通常の労働者の週の所定労働時間（時間）')}</div>
 <p class="kt-def">${esc(d.note)}</p>`,
+  }),
+  // 洗剤を「まぜない」：2つの種類をえらぶと、まぜると危ないかが出る
+  mazenai: (d) => ({
+    h: '2つの洗剤の種類をえらぶ',
+    body: `<div class="kt-in">${pick('kt-a', d.input.a, d.types)}${pick('kt-b', d.input.b, d.types)}</div>`,
+  }),
+  // 化学物質管理者・保護具着用管理責任者が要るか
+  kanrisha: (d) => ({
+    h: 'うちに要るかを確かめる',
+    body: `<div class="kt-in"><fieldset class="kt-q"><legend>${esc(d.q)}</legend>${d.kinds.map((t, i) => `<label for="kt-k${i}"><input type="radio" name="kt-k" id="kt-k${i}" value="${i}">${esc(t.label)}</label>`).join('')}</fieldset>
+<label class="kt-chk" for="kt-mk"><input id="kt-mk" type="checkbox">${esc(d.makeLabel)}</label>
+<label class="kt-chk" for="kt-pp"><input id="kt-pp" type="checkbox">${esc(d.ppeLabel)}</label></div>`,
   }),
 };
 

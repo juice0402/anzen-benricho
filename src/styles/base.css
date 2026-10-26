@@ -216,7 +216,7 @@ li[hidden], .ktbl div[hidden] { display: none; }
 /* 知識のページの道具 */
 .kt-in { display: grid; gap: 8px; }
 .kt-in label { display: grid; gap: 4px; font-size: 13px; }
-.kt-in input[type="number"], .kt-in input[type="date"] { font: inherit; font-size: 17px; min-height: 46px; padding: 6px 10px; border-radius: 0; width: 100%; max-width: 15em; }
+.kt-in input[type="number"], .kt-in input[type="date"], .kt-in select { font: inherit; font-size: 17px; min-height: 46px; padding: 6px 10px; border-radius: 0; width: 100%; max-width: 15em; }
 .kt-in .kt-chk, .kt-q label { display: flex; align-items: center; gap: 10px; font-size: 15px; min-height: 40px; }
 .kt-chk input, .kt-q input { width: 20px; height: 20px; margin: 0; }
 .kt-q { border: 0; padding: 0; margin: 0; min-width: 0; }

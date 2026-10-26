@@ -1,7 +1,7 @@
 // 知識のページ：1ページで1つの問い。答え1行 → うちの職場（業種・人数）→ 道具 → 表 → チェック → A4の紙 → よくある質問 → 出典
 // 印刷は A4 の紙（.psheet）だけ。ほかの部分には np をつけて印刷に出さない
 import { page, esc, script, adSlot, fudaLabel } from '../layout.mjs';
-import { kihonHubDesc } from '../describe.mjs';
+import { kihonHubDesc, kagakuHubDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
@@ -30,15 +30,19 @@ ${p.result ? `<script type="application/json" class="kres-d">${json(p.result)}</
 </section>`;
 };
 
-const tableBlock = (p, i) => {
-  if (!p.table) return '';
-  return `<section class="sec paper np" aria-labelledby="kt-h">
-<h2 class="sec-h" id="kt-h">${esc(p.table.h)}</h2>
-<dl class="ktbl">${p.table.rows
-    .map((r) => `<div${whenAttr(r.when)}><dt>${esc(r.k)}</dt><dd>${esc(r.v)}${r.law ? `<span class="law">${esc(r.law)}</span>` : ''}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">事例を見る</a>` : ''}</dd></div>`)
+// 表は1つ（table）か、いくつか（table を配列に）。2つめからは id に番号をつける
+const tableBlock = (p) =>
+  [].concat(p.table || [])
+    .map((t, i) => {
+      const id = i ? `kt-h${i}` : 'kt-h';
+      return `<section class="sec paper np" aria-labelledby="${id}">
+<h2 class="sec-h" id="${id}">${esc(t.h)}</h2>
+<dl class="ktbl">${t.rows
+    .map((r) => `<div${whenAttr(r.when)}><dt>${esc(r.k)}</dt><dd>${esc(r.v)}${r.law ? `<span class="law">${esc(r.law)}</span>` : ''}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">${esc(r.srcT || '事例を見る')}</a>` : ''}</dd></div>`)
     .join('')}</dl>
 </section>`;
-};
+    })
+    .join('\n');
 
 const checkBlock = (p) =>
   (p.check || [])
@@ -81,6 +85,15 @@ ${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
 <dl class="pf-rows">${s.rows.map((r) => `<div><dt>${esc(r.k)}</dt><dd style="--l:${r.lines || 1}"></dd></div>`).join('')}</dl>
 ${foot}
 </div></div>`;
+  } else if (s.kind === 'poster') {
+    // 毎月のテーマの掲示と同じ形（決まり・確認欄・出典の1行）
+    paper = `<div class="sheet"><div class="tora" aria-hidden="true"></div><div class="sheet-in">
+<p class="s-kicker"><span>${esc(s.kicker[0])}</span><span>${esc(s.kicker[1])}</span></p>
+<p class="s-title">${esc(s.title)}</p>
+<ol class="rules">${s.rules.map(([a, b]) => `<li><div>${esc(a)}<span>${esc(b)}</span></div></li>`).join('')}</ol>
+<table class="kakunin" aria-label="確認欄"><thead><tr><th>確認した日</th><th>名前</th><th>確認した日</th><th>名前</th></tr></thead><tbody>${'<tr><td></td><td></td><td></td><td></td></tr>'.repeat(5)}</tbody></table>
+<p class="s-foot"><span>${esc(s.foot)}</span><span>${esc(SITE.name)}　${host}</span></p>
+</div></div>`;
   } else if (s.kind === 'grid') {
     const first = s.first || [];
     paper = `<div class="psheet pg"><div class="ps-in">
@@ -92,7 +105,7 @@ ${foot}
 </div></div>`;
   }
   return `<section class="sec sec-poster sec-sheet" aria-labelledby="ks-h">
-<h2 class="sec-h" id="ks-h">${s.kind === 'keiji' ? '掲示' : '用紙'}</h2>
+<h2 class="sec-h" id="ks-h">${s.kind === 'keiji' || s.kind === 'poster' ? '掲示' : '用紙'}</h2>
 ${ctl}
 ${paper}
 <button class="btn print-btn" type="button">A4で印刷</button>
@@ -121,8 +134,11 @@ const srcBlock = (p) => `<section class="sec sec-src np" aria-labelledby="src-h"
 <p class="src-note">確認日 ${fmtDate(p.checked)}。法令は改正されることがあります。最新の内容は e-Gov 法令検索と厚生労働省の公式ページで確認してください。</p>
 </section>`;
 
-const crumbsFor = (p) => (p.path.startsWith('/kihon/') ? [{ name: '基本の決まり', href: '/kihon/' }, { name: p.h1 }] : [{ name: p.h1 }]);
-const cornerFor = (p) => (p.path.startsWith('/anzen/') ? 'anzen' : p.path.startsWith('/kihon/') ? 'kihon' : 'kyotsu');
+// 目次のあるコーナー（/kihon/・/kagaku/）は、パンくずに目次をはさむ
+const HUBS = { '/kihon/': '基本の決まり', '/kagaku/': '化学物質' };
+const hubOf = (p) => Object.keys(HUBS).find((h) => p.path.startsWith(h));
+const crumbsFor = (p) => (hubOf(p) ? [{ name: HUBS[hubOf(p)], href: hubOf(p) }, { name: p.h1 }] : [{ name: p.h1 }]);
+const cornerFor = (p) => (p.path.startsWith('/anzen/') ? 'anzen' : p.path.startsWith('/kihon/') ? 'kihon' : p.path.startsWith('/kagaku/') ? 'kagaku' : 'kyotsu');
 
 function one(p) {
   const body = `${bandHead(p.band || '基本の決まり', p.h1, `<p class="k-ans">${esc(p.answer)}</p>`)}
@@ -149,28 +165,24 @@ ${srcBlock(p)}`;
   };
 }
 
-// 目次 /kihon/
-function hub() {
-  const path = '/kihon/';
-  const body = `${bandHead('基本の決まり', '安全衛生の基本の決まり', '<p class="pg-lead">人数・選任・記録の決まりを1ページずつ</p>')}
+// 目次（/kihon/・/kagaku/）。できたページだけを並べる
+function hub({ path, corner, band, h1, lead, title, description, list }) {
+  const body = `${bandHead(band, h1, `<p class="pg-lead">${esc(lead)}</p>`)}
 <section class="sec paper" aria-labelledby="kh-h">
 <h2 class="sec-h" id="kh-h">ページ</h2>
-<ul class="khub">${KIHON.map((p) => `<li><a href="${p.path}"><b>${esc(p.h1)}</b><span>${esc(p.answer)}</span></a></li>`).join('')}</ul>
+<ul class="khub">${list.map((p) => `<li><a href="${p.path}"><b>${esc(p.h1)}</b><span>${esc(p.answer)}</span></a></li>`).join('')}</ul>
 </section>
 ${adSlot('end')}`;
-  return {
-    path,
-    html: page({
-      title: `安全衛生の基本の決まり 早見と用紙（推進者・人数・記録・掲示）｜${SITE.name}`,
-      description: kihonHubDesc(KIHON),
-      path,
-      corner: 'kihon',
-      body,
-      crumbs: [{ name: '基本の決まり' }],
-    }),
-  };
+  return { path, html: page({ title, description, path, corner, body, crumbs: [{ name: band }] }) };
 }
 
 export default function kihonPages() {
-  return KIHON.length ? [hub(), ...KIHON.map(one)] : [];
+  const kihon = KIHON.filter((p) => !p.path.startsWith('/kagaku/'));
+  const kagaku = KIHON.filter((p) => p.path.startsWith('/kagaku/'));
+  const hubs = [];
+  if (kihon.length)
+    hubs.push(hub({ path: '/kihon/', corner: 'kihon', band: '基本の決まり', h1: '安全衛生の基本の決まり', lead: '人数・選任・記録の決まりを1ページずつ', title: `安全衛生の基本の決まり 早見と用紙（推進者・人数・記録・掲示）｜${SITE.name}`, description: kihonHubDesc(kihon), list: kihon }));
+  if (kagaku.length)
+    hubs.push(hub({ path: '/kagaku/', corner: 'kagaku', band: '化学物質', h1: '化学物質と洗剤の安全', lead: 'まぜない・SDS・管理者を1ページずつ', title: `化学物質の管理 まぜるな危険・SDSの見方・化学物質管理者｜${SITE.name}`, description: kagakuHubDesc(kagaku), list: kagaku }));
+  return [...hubs, ...KIHON.map(one)];
 }

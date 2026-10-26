@@ -8,6 +8,7 @@ const G = GYOSHU.map((g) => g.key);
 const N = BANDS.map((b) => b.key);
 const len = (s) => [...s].length;
 const within90 = (iso) => (Date.now() - Date.parse(iso + 'T00:00:00+09:00')) / 86400000 <= 90;
+const rowsOf = (p) => [].concat(p.table || []).flatMap((t) => t.rows);
 const okWhen = (w, where) => {
   if (!w) return;
   for (const g of w.g || []) assert.ok(G.includes(g), `${where} 業種 ${g}`);
@@ -37,9 +38,10 @@ for (const p of KIHON) {
 
   test(`${p.slug}：業種・人数の切りかえの書き方`, () => {
     for (const r of p.result || []) { okWhen(r.when, '答え'); assert.ok(r.text && len(r.text) <= 60, `答えの行は60字まで：${r.text}`); }
-    for (const r of p.table?.rows || []) okWhen(r.when, `表 ${r.k}`);
+    for (const r of rowsOf(p)) okWhen(r.when, `表 ${r.k}`);
     if (p.sheet) {
-      assert.ok(['keiji', 'form', 'grid'].includes(p.sheet.kind));
+      assert.ok(['keiji', 'form', 'grid', 'poster'].includes(p.sheet.kind));
+      if (p.sheet.kind === 'poster') assert.ok(p.sheet.rules.length >= 3 && p.sheet.rules.length <= 4, '掲示の決まりは3〜4つ');
       if (p.sheet.kind === 'keiji') for (const r of p.sheet.roles) assert.ok(r.name && r.duties.length >= 1 && r.duties.length <= 6, r.name);
     }
     assert.ok(!p.faq || p.faq.length <= 6, 'よくある質問は6つまで');
@@ -48,7 +50,7 @@ for (const p of KIHON) {
   test(`${p.slug}：出典（法令の答えは e-Gov を入れる）・確認日`, () => {
     assert.ok(p.src && p.src.length >= 1);
     for (const s of p.src) assert.match(s.u, /^https:\/\//, s.t);
-    if ((p.table?.rows || []).some((r) => r.law)) assert.ok(p.src.some((s) => s.u.includes('laws.e-gov.go.jp')), '条文を書くなら e-Gov を出典に');
+    if (rowsOf(p).some((r) => r.law)) assert.ok(p.src.some((s) => s.u.includes('laws.e-gov.go.jp')), '条文を書くなら e-Gov を出典に');
     assert.ok(within90(p.checked), `確認日 ${p.checked} から90日をこえた`);
   });
 }

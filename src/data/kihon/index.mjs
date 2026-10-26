@@ -17,5 +17,10 @@ import nenkan from './nenkan.mjs';
 import hiyari from './hiyari.mjs';
 import ky from './ky.mjs';
 import junshi from './junshi.mjs';
+// 化学物質のコーナー /kagaku/（2026-10-26）
+import mazenai from './mazenai.mjs';
+import sds from './sds.mjs';
+import kanrisha from './kanrisha.mjs';
+import risk from './risk.mjs';
 
-export const KIHON = [suishinsha, ninzu, nyusha, tokubetsu, kigen, setsubi, hozon, shishobyo, nenkan, hiyari, ky, junshi];
+export const KIHON = [suishinsha, ninzu, nyusha, tokubetsu, kigen, setsubi, hozon, shishobyo, nenkan, hiyari, ky, junshi, mazenai, sds, kanrisha, risk];

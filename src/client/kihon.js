@@ -108,6 +108,26 @@
         var key = ok && r >= td.must ? 'must' : ok && r >= td.want ? 'want' : 'none';
         return line(esc(td.text[key]), '週の時間は通常の労働者の' + Math.round(r * 100) + '%');
       },
+      mazenai: function () {
+        var a = val('kt-a'), b = val('kt-b');
+        if (!a || !b) return '';
+        var r = td.rules.filter(function (x) {
+          if (x.any) return a === x.any || b === x.any;
+          if (x.pair) return (a === x.pair[0] && x.pair[1].indexOf(b) > -1) || (b === x.pair[0] && x.pair[1].indexOf(a) > -1);
+          if (x.same) return a === b;
+          return true;
+        })[0];
+        return line(esc(r.text), esc(r.sub || ''));
+      },
+      kanrisha: function () {
+        var c = tb.querySelector('input[name="kt-k"]:checked');
+        if (!c) return '';
+        var k = td.kinds[+c.value], mk = document.getElementById('kt-mk').checked, pp = document.getElementById('kt-pp').checked;
+        var h = line(esc(k.text), esc(k.need && mk ? td.make : k.sub));
+        if (k.need && pp) h += line(esc(td.ppe.text), esc(td.ppe.sub));
+        if (k.need && mk) h += '<p class="kt-law">' + esc(td.makeNote) + '</p>';
+        return h;
+      },
     }[tb.getAttribute('data-tool')];
     var run = function () { var h = calc(); ko.innerHTML = h; ko.hidden = !h; };
     tb.addEventListener('input', run);

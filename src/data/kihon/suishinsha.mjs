@@ -127,6 +127,7 @@ export default {
   ],
   related: [
     { t: '10人・50人で変わる安全衛生の決まり', href: '/kihon/ninzu/' },
+    { t: '化学物質管理者はうちに要る？', href: '/kagaku/kanrisha/' },
     { t: '資格の更新の期限', href: '/shikaku/koushin/' },
     { t: '法改正の一覧', href: '/hourei/' },
   ],

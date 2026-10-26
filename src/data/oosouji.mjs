@@ -9,6 +9,7 @@ export const OOSOUJI = {
   month: 12,
   title: '年末の大掃除',
   undo: { name: '年末年始無災害運動', span: '令和8年12月1日〜令和9年1月15日' },
+  related: [{ t: 'この2つの洗剤、まぜると危ない？（判定と置き場の掲示）', href: '/kagaku/mazenai/' }],
   checked: '2026-10-22',
   common: [
     { t: '中央労働災害防止協会 年末年始無災害運動実施要領（令和8年12月1日〜令和9年1月15日・56回目）', u: 'https://www.jisha.or.jp/info/campaign/musaigai/youryou.html' },

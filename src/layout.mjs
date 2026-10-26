@@ -41,6 +41,7 @@ const ADSENSE_TAG = () =>
 const FOOT_NAV = [
   ['/anzen/', '月ごとのテーマ'],
   ...(KIHON.length ? [['/kihon/', '基本の決まり']] : []),
+  ...(KIHON.some((p) => p.path.startsWith('/kagaku/')) ? [['/kagaku/', '化学物質']] : []),
   ['/hourei/', '法改正の一覧'],
   ['/shikaku/koushin/', '資格の更新の期限'],
 ];

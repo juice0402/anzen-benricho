@@ -83,6 +83,7 @@ export default {
     { t: '10人・50人で変わる決まり', href: '/kihon/ninzu/' },
     { t: '50人未満もストレスチェックが義務に（2028年4月）', href: '/hourei/stress-check/' },
     { t: '労働者死傷病報告 いつまで・どの様式', href: '/kihon/shishobyo/' },
+    { t: '化学物質のリスクアセスメント 小さな職場の手順と記録用紙', href: '/kagaku/risk/' },
   ],
   src: [
     { t: 'e-Gov法令検索 労働安全衛生規則（23条・34条の2の8・38条・51条・52条の6・52条の11・52条の13・52条の18）', u: 'https://laws.e-gov.go.jp/law/347M50002000032' },
