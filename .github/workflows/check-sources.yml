@@ -2,7 +2,7 @@ name: 出典の点検
 
 # 毎週月曜 7:23（日本時間）に、出典のURLが開けるか・確認日が90日に近づいていないかを見る
 # 問題があれば Issue「出典の点検」に書く（開いた Issue があればコメントを足す）。Claude の使用量は使わない
-# この点検を直す PR では、Issue は作らず結果だけ出す
+# 点検やデータ（src/data）を変える PR では、Issue は作らず結果だけ出す（WebFetch で開けても消えている出典があるので、GitHub から開けるかをここで確かめる）
 
 on:
   schedule:
@@ -12,6 +12,7 @@ on:
     paths:
       - 'scripts/check-sources.mjs'
       - '.github/workflows/check-sources.yml'
+      - 'src/data/**'
 
 permissions:
   contents: read
