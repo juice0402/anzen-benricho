@@ -7,6 +7,8 @@ import { themePath, entrancePath, fuda } from '../parts.mjs';
 import { houreiPath, fmtDate, todayJst } from '../data/hourei.mjs';
 import { KIHON } from '../data/kihon/index.mjs';
 import { YOTEI } from '../data/kihon/nenkan.mjs';
+import { HOUREI } from '../data/hourei.mjs';
+import { homeDesc } from '../describe.mjs';
 
 export default function home({ month, themes, allThemes, kaisei }) {
   const today = todayJst();
@@ -48,8 +50,11 @@ ${adSlot('home')}`;
   return {
     path: '/',
     html: page({
-      title: `${SITE.name}｜毎月の安全衛生テーマ 掲示と朝礼（業種別）・法改正`,
-      description: '職場の安全衛生の担当者が毎月そのまま使える掲示と朝礼の文を、事務所・飲食店・製造業・清掃の業種ごとにまとめています。安全衛生推進者の選び方や人数で変わる決まり、法改正の一覧、資格の更新の期限も出典つきで載せています。',
+      title: `${SITE.name}｜毎月の掲示と朝礼・安全衛生の決まり`,
+      ogTitle: SITE.name,
+      description: homeDesc({ allThemes, kihon: KIHON.length, hourei: HOUREI.length, kaisei, fmtDate }),
+      // Google の「サイト名」：トップの title・og:site_name とそろえる
+      ld: [{ '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, alternateName: ['安全衛生便利帳', 'anzen-benricho'], url: `${SITE.url}/`, inLanguage: 'ja' }],
       path: '/',
       body,
       js: script('remember') + script('today'),

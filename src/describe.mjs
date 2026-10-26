@@ -100,3 +100,27 @@ export const houreiDesc = (h, done, fmtDate) => {
   const tail = `職場ですること${h.todo.length}つと出典${h.src.length}件。`;
   return fit(...h.change.map((c) => [head, end(c.split('。')[0]), tail]), [head, tail]);
 };
+
+// 基本の決まりの目次：/kihon/
+export const kihonHubDesc = (list) => {
+  const sheets = list.filter((p) => p.sheet).length;
+  const tools = list.filter((p) => p.tool || p.pick).length;
+  return fit([
+    `10〜49人の職場の安全衛生の担当者向けに、決まりを1ページ1問で${list.length}ページ。`,
+    `推進者の選び方や記録の保存期間など、${tools}ページは業種・人数・日付を入れると答えが出て、A4の用紙${sheets}種類を印刷できます。`,
+  ]);
+};
+
+// 資格の更新の期限：/shikaku/koushin/
+export const koushinDesc = (list) =>
+  fit([
+    `${list.map((s) => `${s.name}（${s.years}年ごと）`).join('と')}の修了した日を入れると、次の期限と再講習を受ける時期が出ます。`,
+    '入れた日付はこの端末の中だけで計算し、送りません。',
+  ]);
+
+// このサイトについて
+export const aboutDesc = ({ themes, kihon, hourei }) =>
+  fit([
+    `職場の安全衛生の担当者向けのサイトです。いまは月ごとのテーマ${themes}本、安全衛生の決まり${kihon}ページ、法改正${hourei}件。`,
+    '厚生労働省・労働局・e-Govなど公的な資料だけを出典にし、確認日から90日で確かめ直します。広告の扱いも。',
+  ]);

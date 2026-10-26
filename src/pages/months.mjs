@@ -6,6 +6,7 @@ import { SITE } from '../site.mjs';
 import { bandHead, monthHead, themePath, gyoshuPath, titleHtml } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { HOUREI, houreiPath, fmtDate } from '../data/hourei.mjs';
+import { monthDesc, monthsDesc } from '../describe.mjs';
 
 const monthsOf = (themes, from) => [...new Set(themes.map((t) => t.month))].sort((a, b) => ((a - from + 12) % 12) - ((b - from + 12) % 12));
 
@@ -34,7 +35,7 @@ ${adSlot('end')}`;
     path,
     html: page({
       title: `${m}月の安全衛生テーマ｜朝礼ネタ・掲示物・安全衛生委員会の議題（業種別）｜${SITE.name}`,
-      description: `${m}月の安全衛生のテーマ（${names}）を、事務所・店舗、飲食店、製造業、清掃・ビルメンの業種ごとの掲示・朝礼・やることにまとめています。朝礼や安全衛生委員会の議題にも使えます。`,
+      description: monthDesc(m, ts, laws),
       path,
       corner: 'anzen',
       body,
@@ -57,7 +58,7 @@ ${adSlot('end')}`;
     path,
     html: page({
       title: `月ごとの安全衛生テーマ一覧｜朝礼ネタ・掲示物・委員会の議題｜${SITE.name}`,
-      description: '毎月の安全衛生のテーマを月ごとにまとめた一覧です。それぞれのテーマで、事務所・店舗、飲食店、製造業、清掃・ビルメンの業種ごとに、印刷できる掲示と1分の朝礼の文を出典つきで出しています。',
+      description: monthsDesc(monthsOf(themes, from), themes),
       path,
       corner: 'anzen',
       body,

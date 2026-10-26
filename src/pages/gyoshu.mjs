@@ -4,6 +4,7 @@ import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { gyoshuPath, entrancePath, fuda, monthHead, titleHtml } from '../parts.mjs';
+import { gyoshuDesc } from '../describe.mjs';
 
 function entrance(month, themes, g, allThemes) {
   const others = allThemes.filter((t) => t.month !== month);
@@ -25,7 +26,7 @@ ${adSlot('end')}`;
     path,
     html: page({
       title: `${g.name}の${month}月の安全衛生 掲示と朝礼のテーマ｜${SITE.name}`,
-      description: `${g.name}の職場向けに、${month}月の安全衛生のテーマ（${themes.map((t) => t.title).join('・')}）の掲示の決まりと朝礼の文をまとめています。A4で印刷して職場に貼れます。`,
+      description: gyoshuDesc(g, month, themes, others),
       path,
       corner: 'anzen',
       body,

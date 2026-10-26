@@ -4,6 +4,8 @@ import { join, resolve, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import { SITE } from '../src/site.mjs';
+import { descLen, DESC_MIN, DESC_MAX } from '../src/describe.mjs';
+const descs = new Map();
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
@@ -39,7 +41,24 @@ for (const file of htmlFiles) {
   const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
   if (!title.includes(SITE.name)) fail(rel, `title にサイト名がない: ${title}`);
   const desc = (html.match(/<meta name="description" content="([^"]*)">/) || [])[1] || '';
-  if (desc.length < 30 || desc.length > 160) fail(rel, `description の長さが ${desc.length} 文字（30〜160）`);
+  // 説明文はページのデータから作り、全角80〜120文字（半角は0.5）。同じ説明文のページを作らない（2026-10-26 検索結果での見え方）
+  if (!noindex) {
+    const n = descLen(desc.replace(/&[a-z]+;/g, '&'));
+    if (n < DESC_MIN || n > DESC_MAX) fail(rel, `description の長さが ${n} 文字（${DESC_MIN}〜${DESC_MAX}）: ${desc}`);
+    if (descs.has(desc)) fail(rel, `description が ${descs.get(desc)} と同じ`);
+    descs.set(desc, rel);
+    const NGD = ['しましょう', 'ぜひ', '便利', '簡単', '安心', 'おすすめ', 'お得', 'ポイント', 'コツ', '——'];
+    const hitD = NGD.filter((w) => desc.split(SITE.name).join(' ').includes(w));
+    if (hitD.length) fail(rel, `description に使わない言葉: ${hitD.join('・')}`);
+  }
+  // Google の「サイト名」：全ページに og:site_name、トップは WebSite の構造化データと title をサイト名にそろえる
+  if (!html.includes(`<meta property="og:site_name" content="${SITE.name}">`)) fail(rel, 'og:site_name がない');
+  if (rel === '/') {
+    const site = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1])).find((o) => o['@type'] === 'WebSite');
+    if (!site || site.name !== SITE.name || site.url !== `${SITE.url}/`) fail(rel, 'WebSite の構造化データがない・名前かURLがちがう');
+    if (!title.startsWith(SITE.name)) fail(rel, `トップの title がサイト名で始まっていない: ${title}`);
+  }
+  if (/pages\.dev/.test(html)) fail(rel, '古い pages.dev の URL が残っている');
   if (count(html, /<h1[ >]/g) !== 1) fail(rel, '<h1> が1つではない');
   if (!noindex) {
     const canon = (html.match(/<link rel="canonical" href="([^"]+)">/) || [])[1];

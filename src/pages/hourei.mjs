@@ -5,6 +5,7 @@ import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead } from '../parts.mjs';
 import { HOUREI, HOUREI_CHECKED, CONDS, houreiPath, fmtDate, inForce, todayJst } from '../data/hourei.mjs';
+import { houreiDesc, houreiListDesc } from '../describe.mjs';
 
 const NOTE = '施行日や中身は変わることがあります。厚生労働省や労働局の公式ページで確認してください。';
 const srcBlock = (list) => `<section class="sec sec-src" aria-labelledby="src-h">
@@ -38,7 +39,7 @@ ${adSlot('end')}`;
     path,
     html: page({
       title: `労働安全衛生法などの改正 2026・2027 一覧｜施行日と義務・努力義務｜${SITE.name}`,
-      description: '熱中症の報告体制、カスハラ防止の義務化、50人未満のストレスチェック義務化など、安全衛生にかかわる法改正を施行日の順にまとめ、義務か努力義務か、どの職場が対象かを出典つきで示しています。',
+      description: houreiListDesc(HOUREI, HOUREI.filter((h) => !inForce(h, today)).sort((a, b) => (a.date < b.date ? -1 : 1))[0], fmtDate),
       path,
       corner: 'kyotsu',
       body,
@@ -75,7 +76,7 @@ ${srcBlock(h.src)}
     path,
     html: page({
       title: `${h.seoTitle || `${h.title}（${d}施行・${h.kind}）`}｜${SITE.name}`,
-      description: `${d}${done ? 'から' : 'から施行。'}${h.whoShort}の${h.kind}${done ? 'になった' : 'になる'}「${h.title}」。何が変わるかと、職場ですること3つを出典つきでまとめています。`,
+      description: houreiDesc(h, done, fmtDate),
       path,
       corner: 'kyotsu',
       body,
