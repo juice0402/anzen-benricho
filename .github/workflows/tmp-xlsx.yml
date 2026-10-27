@@ -1,4 +1,4 @@
-# 一時的：厚労省の一覧の Excel から次亜塩素酸ナトリウムの行を取り出す（PR をマージする前に消す）
+# 一時的：労働安全衛生総合研究所の一覧から次亜塩素酸ナトリウムの行を取り出す（PR をマージする前に消す）
 name: tmp-xlsx
 on:
   push:
@@ -13,29 +13,34 @@ jobs:
     steps:
       - name: 取り出す
         run: |
-          set -eu
-          curl -fsSL -A 'Mozilla/5.0' -o list.xlsx https://www.mhlw.go.jp/content/11300000/001708896.xlsx
-          pip install -q openpyxl
+          set -u
+          mkdir w && cd w
+          B=https://cheminfo.johas.go.jp/step/
+          curl -fsSL -A 'Mozilla/5.0' -o list.html ${B}list.html || echo "::notice title=err::list.html"
           python3 - <<'PY'
-          import openpyxl
-          wb = openpyxl.load_workbook('list.xlsx', read_only=True, data_only=True)
-          def esc(s): return s.replace('%', '%25').replace('\r', '').replace('\n', ' / ')
-          print('::notice title=sheets::' + esc(' | '.join(wb.sheetnames)))
-          for ws in wb.worksheets:
-              rows = list(ws.iter_rows(values_only=True))
-              head = []
-              for r in rows[:7]:
-                  cells = [str(c).strip() for c in r if c not in (None, '')]
-                  if cells: head.append(' ; '.join(cells))
-              hits = []
-              for i, r in enumerate(rows):
-                  txt = [str(c).strip() if c is not None else '' for c in r]
-                  if any(('次亜塩素酸' in t) or ('7681-52-9' in t) for t in txt):
-                      hits.append(f'R{i+1}: ' + ' ; '.join(f'[{j}]{t}' for j, t in enumerate(txt) if t))
-              if ws.title.startswith('R9.4'):
-                  notes = [' ; '.join(str(c).strip() for c in r if c not in (None, '')) for r in rows if any(str(c).strip().startswith(('＊', '※', '注')) for c in r[:2] if c is not None)]
-                  print('::notice title=notes::' + esc(' || '.join(notes))[:30000])
-              if hits:
-                  msg = 'HEAD ' + ' // '.join(head) + ' ||| ' + ' || '.join(hits)
-                  print(f'::notice title={esc(ws.title)}::' + esc(msg)[:30000])
+          import re, subprocess, urllib.parse
+          html = open('list.html', encoding='utf-8', errors='replace').read()
+          refs = sorted(set(re.findall(r'''(?:src|href)=["']([^"'#]+\.(?:js|json|csv|txt|xlsx))["']''', html) + re.findall(r'''["']([^"'\s]+\.(?:json|csv))["']''', html)))
+          print('::notice title=refs::' + ' | '.join(refs)[:3000])
+          base = 'https://cheminfo.johas.go.jp/step/list.html'
+          seen = set()
+          def get(u):
+              n = 'f%d' % len(seen); seen.add(u)
+              subprocess.run(['curl', '-fsSL', '-A', 'Mozilla/5.0', '-o', n, u])
+              try: return open(n, encoding='utf-8', errors='replace').read()
+              except Exception: return ''
+          for r in refs:
+              u = urllib.parse.urljoin(base, r)
+              if 'cheminfo.johas.go.jp' not in u: continue
+              t = get(u)
+              for m in re.finditer(r'''["']([^"'\s]+\.(?:json|csv))["']''', t):
+                  u2 = urllib.parse.urljoin(u, m.group(1))
+                  if 'cheminfo.johas.go.jp' in u2 and u2 not in seen:
+                      t2 = get(u2)
+                      for k in [x.start() for x in re.finditer('7681-52-9', t2)][:3]:
+                          print('::notice title=' + u2.split('/')[-1] + '::' + t2[max(0,k-300):k+300].replace('\n',' / ').replace('%','%25'))
+              for k in [x.start() for x in re.finditer('7681-52-9', t)][:3]:
+                  print('::notice title=' + u.split('/')[-1] + '::' + t[max(0,k-300):k+300].replace('\n',' / ').replace('%','%25'))
+          for k in [x.start() for x in re.finditer('7681-52-9', html)][:3]:
+              print('::notice title=list.html::' + html[max(0,k-300):k+300].replace('\n',' / ').replace('%','%25'))
           PY
