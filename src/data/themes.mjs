@@ -16,9 +16,10 @@ import { NECCHU_TAIOU } from './necchu-taiou.mjs';
 import { KANDEN } from './kanden.mjs';
 import { KENSHIN } from './kenshin.mjs';
 import { KANKI } from './kanki.mjs';
+import { KAROU } from './karou.mjs';
 import { todayJst } from './hourei.mjs';
 
-export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, YOUTSU, KOKORO, SHINJIN, KOUREI, NECCHU, TE, NECCHU_TAIOU, KANDEN, KENSHIN, KANKI];
+export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, YOUTSU, KOKORO, SHINJIN, KOUREI, NECCHU, TE, NECCHU_TAIOU, KANDEN, KENSHIN, KANKI, KAROU];
 
 export const monthFor = (iso = todayJst(), themes = ALL_THEMES) => {
   const [, m, d] = iso.split('-').map(Number);
