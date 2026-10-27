@@ -17,9 +17,10 @@ import { KANDEN } from './kanden.mjs';
 import { KENSHIN } from './kenshin.mjs';
 import { KANKI } from './kanki.mjs';
 import { KAROU } from './karou.mjs';
+import { KASAI } from './kasai.mjs';
 import { todayJst } from './hourei.mjs';
 
-export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, YOUTSU, KOKORO, SHINJIN, KOUREI, NECCHU, TE, NECCHU_TAIOU, KANDEN, KENSHIN, KANKI, KAROU];
+export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, YOUTSU, KOKORO, SHINJIN, KOUREI, NECCHU, TE, NECCHU_TAIOU, KANDEN, KENSHIN, KANKI, KAROU, KASAI];
 
 export const monthFor = (iso = todayJst(), themes = ALL_THEMES) => {
   const [, m, d] = iso.split('-').map(Number);
