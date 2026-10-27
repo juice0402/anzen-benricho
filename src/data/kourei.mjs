@@ -93,7 +93,7 @@ export const KOUREI = {
         '夏の前に、厨房の近くに涼しく休める場所を用意し、水を飲む時間を決める',
       ],
       src: [
-        { t: '東京労働局 食品を取り扱う事業場向けのリーフレット（令和8年4月改定。飲食店のけがは転倒26%・階段や脚立からの墜落・高年齢の人への5つの対策）', u: 'https://jsite.mhlw.go.jp/tokyo-roudoukyoku/content/contents/002665294.pdf' },
+        { t: '東京労働局 食品を取り扱う事業場向けのリーフレット（飲食店のけがは転倒26%・階段や脚立からの墜落・高年齢の人への5つの対策）', u: 'https://jsite.mhlw.go.jp/tokyo-roudoukyoku/content/contents/002665294.pdf' },
         { t: '職場のあんぜんサイト ヒヤリ・ハット事例 エアコンフィルターの交換のため脚立に上ろうとしたところ、脚立が急に開き、転落しそうになった（飲食店。開き止めをかけていなかった）', u: 'https://anzeninfo.mhlw.go.jp/hiyari/hiy_0330.html' },
         { t: '神奈川労働局 相模原署の管内の飲食店への呼びかけ（令和8年7月。年齢や個人差に合わせて仕事の内容・強さ・時間を調整・転倒44件のうち18件が休業30日以上）', u: 'https://jsite.mhlw.go.jp/kanagawa-roudoukyoku/content/contents/002738556.pdf' },
         { t: '厚生労働省 高年齢労働者に配慮した職場改善事例（製造業）（冷凍食品の調理場で1cmの段差に三角のスロープ・連続作業を半分にして休憩を足す）', u: 'https://jsite.mhlw.go.jp/tokyo-roudoukyoku/content/contents/002118417.pdf' },
