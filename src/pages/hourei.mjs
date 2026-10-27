@@ -28,7 +28,7 @@ function list(today) {
 <p class="u-note" aria-live="polite">うちの職場に印をつけると、関係する改正だけ残ります</p>
 <ul class="todo">${CONDS.map((c) => `<li><label for="u-${c.key}"><input type="checkbox" id="u-${c.key}" value="${c.key}"><span>${esc(c.label)}</span></label></li>`).join('')}</ul>
 </div>`;
-  const body = `${bandHead('法改正', '法改正の一覧', cond)}
+  const body = `${bandHead('法改正', '法改正の一覧', cond, 'hourei')}
 <section class="sec paper hr-paper" aria-labelledby="hr-h">
 <h2 class="sec-h" id="hr-h">改正</h2>
 <ol class="hr-list">${rows}</ol>

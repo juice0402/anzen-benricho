@@ -19,7 +19,7 @@ const fmtDate = (iso) => {
   const [y, m, d] = iso.split('-').map(Number);
   return `${y}年${m}月${d}日`;
 };
-const head = (t, h) => monthHead(t.month, h, titleHtml(t), '', t.undo);
+const head = (t, h) => monthHead(t.month, h, titleHtml(t), '', t.undo, t.slug);
 
 const srcList = (list) =>
   `<ol class="src">${list
@@ -72,8 +72,9 @@ ${adSlot('end')}`;
 // 業種のページ
 function gyoshuPage(t, g) {
   const path = gyoshuPath(t, g);
-  const body = `${monthHead(t.month, 'h1', titleHtml(t), `${g.name}の`)}
+  const body = `${monthHead(t.month, 'h1', titleHtml(t), `${g.name}の`, null, t.slug)}
 ${fuda((x) => gyoshuPath(t, x), g.key)}
+<nav class="toc np" aria-label="このページの中"><p class="toc-h">このページの中</p><ol><li><a href="#poster-h">掲示（A4で印刷）</a></li><li><a href="#talk-h">朝礼（1分の文）</a></li><li><a href="#todo-h">担当者のやること</a></li><li><a href="#src-h">出典</a></li></ol></nav>
 <section class="sec sec-poster" aria-labelledby="poster-h">
 <h2 class="sec-h" id="poster-h">掲示</h2>
 ${sheet(t, g)}

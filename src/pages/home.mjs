@@ -1,51 +1,71 @@
-// 総合トップ：サイトの1行、安全衛生の予定表（今日から5か月。掲示を用意する月に赤ペンの丸）と業種、次の法改正を1行、目次
-// 「今日」の線と日付は、作り直しのあいだもずれないよう、ブラウザで今日の月に動かす（today.js）
-// 目次には、できたページだけを出す（中身のないコーナーや「準備中」の札は出さない）
+// 総合トップ（10/27 しょーくんが3案から「写真ふう」に決めた）：何のサイトかがわかる写真と1文、今月のテーマ、業種、これからの予定、法改正、調べるページ
+// 中身のないコーナーや「準備中」の札は出さない
 import { page, esc, script, adSlot } from '../layout.mjs';
-import { SITE, CORNERS } from '../site.mjs';
-import { themePath, entrancePath, fuda } from '../parts.mjs';
-import { houreiPath, fmtDate, todayJst } from '../data/hourei.mjs';
+import { SITE } from '../site.mjs';
+import { themePath, entrancePath, photo, hasPhoto } from '../parts.mjs';
+import { houreiPath, fmtDate, todayJst, HOUREI } from '../data/hourei.mjs';
 import { KIHON } from '../data/kihon/index.mjs';
 import { YOTEI } from '../data/kihon/nenkan.mjs';
-import { HOUREI } from '../data/hourei.mjs';
+import { GYOSHU } from '../data/gyoshu.mjs';
 import { homeDesc } from '../describe.mjs';
+
+// テーマの中身の短い説明（seoName のかっこの中）
+const sub = (t) => (t.seoName && t.seoName.includes('（') ? t.seoName.slice(t.seoName.indexOf('（') + 1, -1) : '');
+const G_SUB = { jimusho: '事務・販売・受付', inshoku: '調理・接客', seizo: '機械・材料・運搬', seisou: 'ビルや病院の清掃・設備' };
 
 export default function home({ month, themes, allThemes, kaisei }) {
   const today = todayJst();
-  const now = Number(today.slice(5, 7));
-  const day = Number(today.slice(8, 10));
-  const rows = [0, 1, 2, 3, 4]
-    .map((i) => ((now - 1 + i) % 12) + 1)
+  const next = [1, 2, 3, 4]
+    .map((i) => ((month - 1 + i) % 12) + 1)
     .map((m) => ({ m, ev: YOTEI[m] || '', th: allThemes.filter((t) => t.month === m) }))
-    .filter((r) => r.m === now || r.m === month || r.ev || r.th.length);
-  const groups = [
-    { corner: 'anzen', name: '月ごとのテーマ', items: [...[...new Set(allThemes.map((t) => t.month))].map((m) => ({ name: `${m}月の安全衛生テーマ`, href: `/anzen/${m}/` })), ...KIHON.filter((p) => p.path.startsWith('/anzen/')).map((p) => ({ name: p.h1, href: p.path }))] },
-    { corner: 'kihon', name: '基本の決まり', items: KIHON.filter((p) => p.path.startsWith('/kihon/')).map((p) => ({ name: p.h1, href: p.path })) },
-    { corner: 'kagaku', name: CORNERS.kagaku.name, items: KIHON.filter((p) => p.path.startsWith('/kagaku/')).map((p) => ({ name: p.h1, href: p.path })) },
-    { corner: 'kyotsu', name: CORNERS.kyotsu.name, items: [{ name: '法改正の一覧', href: '/hourei/' }, { name: '資格の更新の期限', href: '/shikaku/koushin/' }, ...KIHON.filter((p) => p.path.startsWith('/shikaku/')).map((p) => ({ name: p.h1, href: p.path }))] },
-    { corner: 'seisou', name: '清掃・ビルメン', items: [] },
-  ].filter((g) => g.items.length);
-  const body = `<p class="site-lead">安全衛生の担当者向け　毎月の掲示・朝礼と決まり</p>
-<section class="yotei" aria-labelledby="yt-h">
-<h2 class="cal-band" id="yt-h">安全衛生の予定</h2>
-<ol class="yt">${rows
+    .filter((r) => r.ev || r.th.length);
+  const laws = HOUREI.filter((h) => h.date > today).slice(0, 3);
+  const nKihon = KIHON.filter((p) => p.path.startsWith('/kihon/') || p.path.startsWith('/shikaku/')).length;
+  const nKagaku = KIHON.filter((p) => p.path.startsWith('/kagaku/')).length;
+  const corners = [
+    { k: 'kihon', href: '/kihon/', name: '基本の決まり', d: `人数で変わる決まり・記録の保存年数など${nKihon}ページ` },
+    nKagaku && { k: 'kagaku', href: '/kagaku/', name: '化学物質', d: `まぜると危ない洗剤・SDSの見方など${nKagaku}ページ` },
+    { k: 'hourei', href: '/hourei/', name: '法改正の一覧', d: `施行日の順に${HOUREI.length}件` },
+    { k: 'shikaku', href: '/shikaku/koushin/', name: '資格の更新の期限', d: '修了証書の日付から次の講習の時期' },
+  ].filter(Boolean);
+  const body = `<section class="hero" aria-labelledby="hero-h">
+${photo('hero', { first: true, sizes: '(min-width: 800px) 560px, 100vw' })}
+<div class="hero-tx">
+<h1 id="hero-h">毎月の安全衛生の<wbr>掲示と朝礼</h1>
+<p>事務所・店舗、飲食、製造、清掃・ビルメンの4業種ごとに、A4で印刷できる掲示と1分で読める朝礼の文をまとめています。</p>
+<a class="btn btn-go" href="/anzen/${month}/">${month}月の掲示を見る</a>
+</div>
+</section>
+<section class="hs" aria-labelledby="tm-h">
+<h2 class="hs-h" id="tm-h">${month}月のテーマ${YOTEI[month] ? `<small>${esc(YOTEI[month])}</small>` : ''}</h2>
+<div class="cards">${themes
     .map(
-      (r) => `<li${r.m === month ? ' class="yt-pick"' : ''} data-m="${r.m}"><span class="ym"><b>${r.m}</b>月</span><div>${
-        r.m === month ? `<p class="yt-mark">${r.m === now ? '今月の掲示と朝礼' : 'いま掲示を用意する月'}</p>` : ''
-      }${r.ev ? `<p class="yt-ev">${esc(r.ev)}</p>` : ''}${
+      (t) => `<article class="card"><a href="${themePath(t)}">${photo(t.slug, { sizes: '(min-width: 800px) 520px, 100vw' })}<p class="card-tag">${esc(t.undo ? t.undo.name : `${t.month}月`)}</p><h3>${esc(t.title)}</h3>${sub(t) ? `<p class="card-d">${esc(sub(t))}</p>` : ''}</a></article>`,
+    )
+    .join('')}</div>
+</section>
+<section class="hs" aria-labelledby="gy-h">
+<h2 class="hs-h" id="gy-h">業種からえらぶ<small>${month}月の掲示と朝礼へ</small></h2>
+<nav class="g-rows" aria-label="業種">${GYOSHU.map((g) => `<a class="fuda-b" href="${entrancePath(g)}" data-k="${g.key}"><b>${esc(g.label)}</b><span>${G_SUB[g.key] || ''}</span></a>`).join('')}</nav>
+</section>
+<section class="hs" aria-labelledby="yt-h">
+<h2 class="hs-h" id="yt-h">これからの予定</h2>
+<ol class="yt">${next
+    .map(
+      (r) => `<li><a class="ym" href="/anzen/${r.m}/"><b>${r.m}</b>月</a><div>${r.ev ? `<p class="yt-ev">${esc(r.ev)}</p>` : ''}${
         r.th.length ? `<ul class="yt-th">${r.th.map((t) => `<li><a href="${themePath(t)}">${esc(t.title)}</a></li>`).join('')}</ul>` : ''
-      }</div>${r.m === now ? `<span class="yt-today"><span>今日 ${now}月${day}日</span></span>` : ''}</li>`,
+      }</div></li>`,
     )
     .join('')}</ol>
-<p class="tm-ask">業種をえらぶと${month}月の掲示と朝礼が出ます</p>
-${fuda(entrancePath)}
 </section>
-<p class="kaisei"><span class="kaisei-tag">次の改正</span><span class="kaisei-body"><span class="kaisei-date">${fmtDate(kaisei.date)}</span><a href="${houreiPath(kaisei)}">${esc(kaisei.title)}</a></span></p>
-<section class="index" aria-labelledby="idx-h">
-<h2 class="sec-h" id="idx-h">目次</h2>
-${groups
-    .map((g) => `<div class="idx-group" data-corner="${g.corner}"><h3>${esc(g.name)}</h3><ul>${g.items.map((it) => `<li><a href="${it.href}">${esc(it.name)}</a></li>`).join('')}</ul></div>`)
-    .join('\n')}
+${laws.length ? `<section class="hs" aria-labelledby="kz-h">
+<h2 class="hs-h" id="kz-h">これからの法改正</h2>
+<ul class="hr-list">${laws.map((h) => `<li><a href="${houreiPath(h)}"><span class="hr-date">${fmtDate(h.date)}から</span><span class="hr-t">${esc(h.title)}</span></a></li>`).join('')}</ul>
+<p class="more"><a href="/hourei/">法改正の一覧</a></p>
+</section>` : ''}
+<section class="hs" aria-labelledby="sr-h">
+<h2 class="hs-h" id="sr-h">調べる</h2>
+<ul class="rows">${corners.map((c) => `<li><a href="${c.href}">${hasPhoto(c.k) ? photo(c.k, { sizes: '128px', cls: 'ph ph-s' }) : ''}<span><b>${esc(c.name)}</b><span>${esc(c.d)}</span></span></a></li>`).join('')}</ul>
 </section>
 ${adSlot('home')}`;
   return {
@@ -58,8 +78,9 @@ ${adSlot('home')}`;
       ld: [{ '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, alternateName: ['安全衛生便利帳', 'anzen-benricho'], url: `${SITE.url}/`, inLanguage: 'ja' }],
       path: '/',
       body,
-      js: script('remember') + script('today'),
+      js: script('remember'),
       isHome: true,
+      wide: true,
     }),
   };
 }
