@@ -11,9 +11,10 @@ import { KOKORO } from './kokoro.mjs';
 import { SHINJIN } from './shinjin.mjs';
 import { KOUREI } from './kourei.mjs';
 import { NECCHU } from './necchu.mjs';
+import { TE } from './te.mjs';
 import { todayJst } from './hourei.mjs';
 
-export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, YOUTSU, KOKORO, SHINJIN, KOUREI, NECCHU];
+export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, YOUTSU, KOKORO, SHINJIN, KOUREI, NECCHU, TE];
 
 export const monthFor = (iso = todayJst(), themes = ALL_THEMES) => {
   const [, m, d] = iso.split('-').map(Number);
