@@ -1,0 +1,18 @@
+[
+ {
+  "url": "https://export-download.canva.com/Ua2x0/DAHZJRUa2x0/-1/0-6265027325359458446.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261026%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261026T072914Z&X-Amz-Expires=66861&X-Amz-Signature=6f0e3dc604851f99bbc76b122f0112d92869e89c147366171ade97bc139e2801&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Tue%2C%2027%20Oct%202026%2002%3A03%3A35%20GMT",
+  "path": "2027-06/te-jimusho.pdf"
+ },
+ {
+  "url": "https://export-download.canva.com/Ua2x0/DAHZJRUa2x0/-1/0-7127466651973164988.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261026%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261026T160408Z&X-Amz-Expires=35559&X-Amz-Signature=990087104117bfd302d7cff94a47569e7055141fc3ca15b2e4168442c9a651e5&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Tue%2C%2027%20Oct%202026%2001%3A56%3A47%20GMT",
+  "path": "2027-06/te-inshoku.pdf"
+ },
+ {
+  "url": "https://export-download.canva.com/Ua2x0/DAHZJRUa2x0/-1/0-2765730415991839104.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261026%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261026T183840Z&X-Amz-Expires=28113&X-Amz-Signature=649fc1b078bf6b2ff98192823b4de85ea3b531fd2cc6644e21a0683872043f94&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Tue%2C%2027%20Oct%202026%2002%3A27%3A13%20GMT",
+  "path": "2027-06/te-seizo.pdf"
+ },
+ {
+  "url": "https://export-download.canva.com/Ua2x0/DAHZJRUa2x0/-1/0-7986528280057851102.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261026%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261026T014313Z&X-Amz-Expires=87356&X-Amz-Signature=545c354fddb59ca03f48d03755a5f528784af0988ab27d1ba576a0b1e5b5c73c&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Tue%2C%2027%20Oct%202026%2001%3A59%3A09%20GMT",
+  "path": "2027-06/te-seisou.pdf"
+ }
+]
