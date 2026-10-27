@@ -16,6 +16,16 @@ jobs:
           set -u
           mkdir w && cd w
           B=https://cheminfo.johas.go.jp/step/
-          curl -fsSL -A 'Mozilla/5.0' -o list.html ${B}list.html || echo "::notice title=err::list.html"
-          curl -fsSL -A 'Mozilla/5.0' -o search.js ${B}js/search.js
-          grep -noE "(ajax|fetch|getJSON|url|\.csv|\.json|\.txt|\.php|data)[^;]{0,120}" search.js | head -20 | tr '\n' '~' | sed 's/%/%25/g' | awk '{print "::notice title=js::" $0}'
+          curl -fsSL -A 'Mozilla/5.0' -o list.csv ${B}csv/list.csv
+          python3 - <<'PY'
+          b = open('list.csv','rb').read()
+          for enc in ('utf-8-sig','cp932'):
+              try: t = b.decode(enc); break
+              except Exception: pass
+          lines = t.splitlines()
+          hits = [l for l in lines if '7681-52-9' in l or '次亜塩素酸ナトリウム' in l]
+          def e(x): return x.replace('%','%25')
+          print('::notice title=csvhead::' + e(' // '.join(lines[:2]))[:4000])
+          print('::notice title=csvhit::' + e(' // '.join(hits))[:4000])
+          print('::notice title=csvlen::' + str(len(lines)))
+          PY
