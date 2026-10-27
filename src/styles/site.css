@@ -96,7 +96,8 @@ body { background: #fff; }
 .rows li { border-bottom: 1px solid var(--thin); }
 .rows a { display: grid; grid-template-columns: 128px 1fr; gap: 14px; align-items: center; padding: 12px 0; text-decoration: none; }
 .rows a > span { display: grid; gap: 2px; }
-.rows b { font-size: 17px; line-height: 1.45; color: var(--ink); }
+.rows b { font-size: 17px; line-height: 1.45; color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.rows small { font-size: 12.5px; color: var(--muted); }
 .rows a:hover b { text-decoration: underline; }
 .rows span span { font-size: 13px; color: var(--muted); }
 .ph-s { margin: 0; }
@@ -116,34 +117,40 @@ body { background: #fff; }
 .back a { color: var(--link); }
 
 /* トップ */
-.hero { display: grid; gap: 16px; }
+.hero { display: grid; gap: 14px; }
 .hero .ph { margin: 0; }
 .hero h1 { font-size: 27px; line-height: 1.38; word-break: keep-all; overflow-wrap: anywhere; }
-.hero p { color: var(--muted); font-size: 15px; margin: 8px 0 18px; }
+.hero-lead { color: var(--muted); font-size: 15px; margin-top: 6px; word-break: keep-all; overflow-wrap: anywhere; }
+.hg-h { font-size: 14px; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--thin); padding-bottom: 6px; }
+/* 写真（押すと今月のページ）。スマホは低く */
+.hb-ph { display: block; }
+.hb-ph img { aspect-ratio: 21 / 9; }
+/* 業種の行の小さな掲示の紙（パソコンだけ） */
+.g-rows.g-mini .fuda-b { align-items: center; gap: 14px; }
+.mini { display: none; width: 52px; height: 58px; overflow: hidden; border: 1px solid #c9ced3; flex: none; }
 .hs { display: grid; gap: 16px; }
 .hs-h { font-size: 22px; line-height: 1.4; border-bottom: 1px solid var(--thin); padding-bottom: 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
-.hs-h small { font-size: 13px; color: var(--brand); }
-.cards { display: grid; gap: 26px; }
-.card a { display: block; text-decoration: none; }
-.card .ph { margin: 0; }
-.card-tag { font-size: 13px; color: var(--muted); margin-top: 10px; }
-.card h3 { font-size: 20px; line-height: 1.45; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
-.card-d { font-size: 14px; color: var(--muted); margin-top: 4px; }
 .g-rows { display: grid; }
 .g-rows .fuda-b { display: flex; align-items: baseline; justify-content: flex-start; gap: 12px; padding: 13px 0; min-height: 0; border-bottom: 1px solid var(--thin); color: var(--ink); white-space: normal; text-align: left; }
 .g-rows .fuda-b b { font-size: 18px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
-.g-rows .fuda-b span { font-size: 13px; color: var(--muted); font-weight: 400; }
+.g-rows .gt { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
+.g-rows .gt > span { font-size: 13px; color: var(--muted); font-weight: 400; }
 .g-rows .fuda-b[aria-current] b { color: var(--brand); text-decoration-thickness: 3px; }
 .yt > li { grid-template-columns: 60px 1fr; padding: 12px 0; border-bottom: 1px solid var(--thin); }
-.yt .ym { justify-self: start; padding: 0; text-decoration: none; }
+.yt .ym { justify-self: start; padding: 4px 8px 8px 0; text-underline-offset: 5px; text-decoration-thickness: 1px; }
 .yt .ym b { font-size: 26px; }
 .yt-ev { color: var(--muted); }
-.yt-th a { color: var(--link); }
-.more a { color: var(--link); font-weight: 700; font-size: 15px; }
+.yt-th a { color: var(--link); display: inline-block; padding: 9px 0; }
 @media (min-width: 800px) {
-  .hero { grid-template-columns: 1.15fr 1fr; gap: 36px; align-items: center; padding-top: 8px; }
+  .hero { gap: 18px 40px; align-items: start; padding-top: 8px; }
+  .hero-g .g-rows { grid-template-columns: 1fr 1fr; }
+  .mini { display: block; }
+  .g-rows.g-mini .fuda-b { padding: 9px 0; }
+  .hero { grid-template-columns: 1fr 1fr; grid-template-areas: "t p" "g g"; align-items: center; }
+  .hero-tx { grid-area: t; } .hb-ph { grid-area: p; } .hero-g { grid-area: g; }
+  .wide .rows-t a { grid-template-columns: 200px 1fr; }
+  .wide .rows-t .ph-s img { width: 200px; height: 112px; }
   .hero h1 { font-size: 32px; }
-  .cards { grid-template-columns: 1fr 1fr; }
   .g-rows { grid-template-columns: 1fr 1fr; column-gap: 32px; }
   .wide .rows { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; }
 }

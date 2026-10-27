@@ -1,8 +1,10 @@
-// 総合トップ（10/27 しょーくんが3案から「写真ふう」に決めた）：何のサイトかがわかる写真と1文、今月のテーマ、業種、これからの予定、法改正、調べるページ
+// 総合トップ（10/27 写真ふう。同じ日に添削して作り直し）：今月の掲示と朝礼・業種、今月のテーマ、これからの予定、調べる（法改正はここにまとめた）
+// リンクは下線、リンクでない字は紺にしない
 // 中身のないコーナーや「準備中」の札は出さない
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { themePath, entrancePath, photo, hasPhoto } from '../parts.mjs';
+import { sheet } from './theme.mjs';
 import { houreiPath, fmtDate, todayJst, HOUREI } from '../data/hourei.mjs';
 import { KIHON } from '../data/kihon/index.mjs';
 import { YOTEI } from '../data/kihon/nenkan.mjs';
@@ -25,28 +27,29 @@ export default function home({ month, themes, allThemes, kaisei }) {
   const corners = [
     { k: 'kihon', href: '/kihon/', name: '基本の決まり', d: `人数で変わる決まり・記録の保存年数など${nKihon}ページ` },
     nKagaku && { k: 'kagaku', href: '/kagaku/', name: '化学物質', d: `まぜると危ない洗剤・SDSの見方など${nKagaku}ページ` },
-    { k: 'hourei', href: '/hourei/', name: '法改正の一覧', d: `施行日の順に${HOUREI.length}件` },
+    { k: 'hourei', href: '/hourei/', name: '法改正の一覧', d: laws.length ? `次は${fmtDate(laws[0].date)}から。全${HOUREI.length}件` : `施行日の順に${HOUREI.length}件` },
     { k: 'shikaku', href: '/shikaku/koushin/', name: '資格の更新の期限', d: '修了証書の日付から次の講習の時期' },
   ].filter(Boolean);
-  const body = `<section class="hero" aria-labelledby="hero-h">
-${photo('hero', { first: true, sizes: '(min-width: 800px) 560px, 100vw' })}
-<div class="hero-tx">
-<h1 id="hero-h">毎月の安全衛生の<wbr>掲示と朝礼</h1>
-<p>事務所・店舗、飲食、製造、清掃・ビルメンの4業種ごとに、A4で印刷できる掲示と1分で読める朝礼の文をまとめています。</p>
-<a class="btn btn-go" href="/anzen/${month}/">${month}月の掲示を見る</a>
-</div>
-</section>
+  // いちばん上（10/27 しょーくんが3案から、スマホは「写真・見出し・業種」、パソコンは「見出しの横に写真、業種の横に小さな掲示の紙」に決めた）
+  const first = themes[0];
+  const gOf = (t, k) => t.gyoshu.find((x) => x.key === k);
+  const hero = `<section class="hero" aria-labelledby="hero-h">
+<a class="hb-ph" href="/anzen/${month}/" aria-label="${month}月の掲示と朝礼">${photo('hero', { first: true, sizes: '(min-width: 800px) 520px, 100vw' })}</a>
+<div class="hero-tx"><h1 id="hero-h">${month}月の<wbr>掲示と朝礼</h1>
+<p class="hero-lead">毎月、業種ごとに<wbr>A4の掲示と<wbr>1分の朝礼の文</p></div>
+<div class="hero-g"><h2 class="hg-h" id="gy-h">業種をえらぶ</h2>
+<nav class="g-rows g-mini" aria-labelledby="gy-h">${GYOSHU.map(
+    (g) => `<a class="fuda-b" href="${entrancePath(g)}" data-k="${g.key}"><span class="mini" aria-hidden="true">${sheet(first, gOf(first, g.key))}</span><span class="gt"><b>${esc(g.label)}</b><span>${G_SUB[g.key] || ''}</span></span></a>`,
+  ).join('')}</nav></div>
+</section>`;
+  const body = `${hero}
 <section class="hs" aria-labelledby="tm-h">
-<h2 class="hs-h" id="tm-h">${month}月のテーマ${YOTEI[month] ? `<small>${esc(YOTEI[month])}</small>` : ''}</h2>
-<div class="cards">${themes
+<h2 class="hs-h" id="tm-h">${month}月のテーマ</h2>
+<ul class="rows rows-t">${themes
     .map(
-      (t) => `<article class="card"><a href="${themePath(t)}">${photo(t.slug, { sizes: '(min-width: 800px) 520px, 100vw' })}<p class="card-tag">${esc(t.undo ? t.undo.name : `${t.month}月`)}</p><h3>${esc(t.title)}</h3>${sub(t) ? `<p class="card-d">${esc(sub(t))}</p>` : ''}</a></article>`,
+      (t) => `<li><a href="${themePath(t)}">${photo(t.slug, { sizes: '(min-width: 800px) 200px, 128px', cls: 'ph ph-s' })}<span><small>${esc(t.undo ? t.undo.name : `${t.month}月`)}</small><b>${esc(t.title)}</b>${sub(t) ? `<span>${esc(sub(t))}</span>` : ''}</span></a></li>`,
     )
-    .join('')}</div>
-</section>
-<section class="hs" aria-labelledby="gy-h">
-<h2 class="hs-h" id="gy-h">業種からえらぶ<small>${month}月の掲示と朝礼へ</small></h2>
-<nav class="g-rows" aria-label="業種">${GYOSHU.map((g) => `<a class="fuda-b" href="${entrancePath(g)}" data-k="${g.key}"><b>${esc(g.label)}</b><span>${G_SUB[g.key] || ''}</span></a>`).join('')}</nav>
+    .join('')}</ul>
 </section>
 <section class="hs" aria-labelledby="yt-h">
 <h2 class="hs-h" id="yt-h">これからの予定</h2>
@@ -58,11 +61,6 @@ ${photo('hero', { first: true, sizes: '(min-width: 800px) 560px, 100vw' })}
     )
     .join('')}</ol>
 </section>
-${laws.length ? `<section class="hs" aria-labelledby="kz-h">
-<h2 class="hs-h" id="kz-h">これからの法改正</h2>
-<ul class="hr-list">${laws.map((h) => `<li><a href="${houreiPath(h)}"><span class="hr-date">${fmtDate(h.date)}から</span><span class="hr-t">${esc(h.title)}</span></a></li>`).join('')}</ul>
-<p class="more"><a href="/hourei/">法改正の一覧</a></p>
-</section>` : ''}
 <section class="hs" aria-labelledby="sr-h">
 <h2 class="hs-h" id="sr-h">調べる</h2>
 <ul class="rows">${corners.map((c) => `<li><a href="${c.href}">${hasPhoto(c.k) ? photo(c.k, { sizes: '128px', cls: 'ph ph-s' }) : ''}<span><b>${esc(c.name)}</b><span>${esc(c.d)}</span></span></a></li>`).join('')}</ul>
