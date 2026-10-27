@@ -32,6 +32,9 @@ jobs:
                   txt = [str(c).strip() if c is not None else '' for c in r]
                   if any(('次亜塩素酸' in t) or ('7681-52-9' in t) for t in txt):
                       hits.append(f'R{i+1}: ' + ' ; '.join(f'[{j}]{t}' for j, t in enumerate(txt) if t))
+              if ws.title.startswith('R9.4'):
+                  notes = [' ; '.join(str(c).strip() for c in r if c not in (None, '')) for r in rows if any(str(c).strip().startswith(('＊', '※', '注')) for c in r[:2] if c is not None)]
+                  print('::notice title=notes::' + esc(' || '.join(notes))[:30000])
               if hits:
                   msg = 'HEAD ' + ' // '.join(head) + ' ||| ' + ' || '.join(hits)
                   print(f'::notice title={esc(ws.title)}::' + esc(msg)[:30000])
