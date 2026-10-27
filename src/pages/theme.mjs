@@ -26,7 +26,7 @@ const srcList = (list) =>
     .map((s) => `<li><a href="${esc(s.u)}" rel="noopener">${esc(s.t)}</a>${s.chk ? `<span class="chk">${esc(s.chk)}</span>` : ''}</li>`)
     .join('')}</ol>`;
 
-const sheet = (t, g) => `<div class="sheet">
+export const sheet = (t, g) => `<div class="sheet">
 <div class="tora" aria-hidden="true"></div>
 <div class="sheet-in">
 <p class="s-kicker"><span>${t.month}月の安全</span><span>${esc(g.label)}</span></p>
