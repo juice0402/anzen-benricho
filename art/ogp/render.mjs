@@ -1,4 +1,5 @@
 // 共有されたときの画像（OGP・1200×630）の下地を3案つくる。文字は Canva で入れる（連絡 C-004）
+// 決まったのは案c（10/27 しょーくん）。Canva の DAHZLrgYG6E の3ページ目を JPG で書き出し、public/img/og.jpg に取りこんだ（1ページ目が案a、2ページ目が案b）
 // 案a 月めくりの1枚（ポスターの案Bと同じ帯）／案b 掲示板に貼った1枚／案c 掲示板にポスター4枚
 // 使い方：node art/ogp/render.mjs → art/ogp/bg-a.png・bg-b.png・bg-c.png（c はポスターの PDF を pdftoppm で絵にする）
 import { readFileSync, mkdtempSync } from 'node:fs';
