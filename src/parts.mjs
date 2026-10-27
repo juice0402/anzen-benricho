@@ -27,9 +27,8 @@ export const titleHtml = (t) => (t.titleParts ? t.titleParts.map((p) => `<span c
 
 export const undoLine = (month, undo) => `<p class="th-undo">${month}月の運動 <span>${esc(undo.name)}</span> <span class="nw">${esc(undo.span)}</span></p>`;
 
-// title はエスケープずみのHTML。記事の頭：上の小さな行（月のページへのリンク）、見出し、運動、写真
+// title はエスケープずみのHTML。記事の頭：見出し、運動、写真（月やコーナーの名前は上のパンくずに出る）
 export const monthHead = (month, h, title, sub = '', undo = null, img = '') => `<header class="th-head">
-<p class="kicker"><a href="/anzen/${month}/">${month}月の安全衛生</a></p>
 <${h} class="th-title">${sub ? `<small>${esc(sub)}</small>` : ''}${title}</${h}>
 ${undo ? undoLine(month, undo) : ''}
 ${img ? photo(img, { first: true }) : ''}
@@ -37,7 +36,6 @@ ${img ? photo(img, { first: true }) : ''}
 
 // 月のないページの見出し（法改正・資格・知識のページ）。上の小さな行にコーナーの名前
 export const bandHead = (band, title, extra = '', img = '') => `<header class="th-head">
-<p class="kicker">${esc(band)}</p>
 <h1 class="th-title pg-title">${esc(title)}</h1>
 ${img ? photo(img, { first: true }) : ''}
 ${extra}
