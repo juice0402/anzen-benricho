@@ -3,7 +3,7 @@
 //   /anzen/<月>/   その月の運動・テーマ（業種ごとの掲示と朝礼へ）・その月に施行される法改正
 import { page, esc, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
-import { bandHead, monthHead, themePath, gyoshuPath, titleHtml } from '../parts.mjs';
+import { bandHead, monthHead, themePath, gyoshuPath, titleHtml, photo } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { HOUREI, houreiPath, fmtDate } from '../data/hourei.mjs';
 import { monthDesc, monthsDesc } from '../describe.mjs';
@@ -20,6 +20,7 @@ ${undos ? `<section class="sec paper" aria-labelledby="mu-h"><h2 class="sec-h" i
 ${ts
     .map(
       (t) => `<section class="sec sec-pick" aria-labelledby="mt-${t.slug}">
+<a class="pick-ph" href="${themePath(t)}" tabindex="-1" aria-hidden="true">${photo(t.slug)}</a>
 <h2 class="sec-h" id="mt-${t.slug}"><a href="${themePath(t)}">${titleHtml(t)}</a></h2>
 <ul class="mt-g">${GYOSHU.map((g) => {
         const tg = t.gyoshu.find((x) => x.key === g.key);
@@ -51,7 +52,7 @@ function index(themes, from) {
   const body = `${bandHead('月ごとのテーマ', '月ごとの安全衛生テーマ', '<p class="pg-lead">月をえらぶと、業種ごとの掲示と朝礼へ</p>')}
 <section class="sec paper" aria-labelledby="am-h">
 <h2 class="sec-h" id="am-h">月</h2>
-<ul class="khub">${ms.map((m) => `<li><a href="/anzen/${m}/"><b>${m}月</b><span>${themes.filter((t) => t.month === m).map((t) => esc(t.title)).join('・')}</span></a></li>`).join('')}</ul>
+<ul class="rows">${ms.map((m) => { const ts = themes.filter((t) => t.month === m); return `<li><a href="/anzen/${m}/">${photo(ts[0].slug, { sizes: '128px', cls: 'ph ph-s' })}<span><b>${m}月</b><span>${ts.map((t) => esc(t.title)).join('・')}</span></span></a></li>`; }).join('')}</ul>
 </section>
 ${adSlot('end')}`;
   return {

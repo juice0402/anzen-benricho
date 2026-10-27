@@ -167,7 +167,7 @@ ${srcBlock(p)}`;
 
 // 目次（/kihon/・/kagaku/）。できたページだけを並べる
 function hub({ path, corner, band, h1, lead, title, description, list }) {
-  const body = `${bandHead(band, h1, `<p class="pg-lead">${esc(lead)}</p>`)}
+  const body = `${bandHead(band, h1, `<p class="pg-lead">${esc(lead)}</p>`, corner)}
 <section class="sec paper" aria-labelledby="kh-h">
 <h2 class="sec-h" id="kh-h">ページ</h2>
 <ul class="khub">${list.map((p) => `<li><a href="${p.path}"><b>${esc(p.h1)}</b><span>${esc(p.answer)}</span></a></li>`).join('')}</ul>

@@ -30,7 +30,7 @@ ${SHIKAKU.map((s, i) => `<label for="k-${s.key}"><input type="radio" name="k" id
 <ol class="src">${SHIKAKU.flatMap((s) => s.src).map((s) => `<li><a href="${esc(s.u)}" rel="noopener">${esc(s.t)}</a></li>`).join('')}</ol>
 <p class="src-note">確認日 ${fmtDate(SHIKAKU_CHECKED)}。講習の日程と申し込みは、協会の公式ページで確認してください。</p>
 </section>`;
-  const body = `${bandHead('講習・資格', '清掃作業監督者などの更新の期限', '<p class="pg-lead">修了証書の日付から、次の期限が出ます</p>')}
+  const body = `${bandHead('講習・資格', '清掃作業監督者などの更新の期限', '<p class="pg-lead">修了証書の日付から、次の期限が出ます</p>', 'shikaku')}
 ${form}
 ${table}
 <section class="sec paper" aria-labelledby="sr-h">
