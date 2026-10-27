@@ -11,6 +11,8 @@ const read = (p) => readFileSync(join(SRC, p), 'utf8');
 // アイコンの URL に中身から作った短い印をつける（?v=）。絵を変えると URL が変わるので、ブラウザは古いアイコンを使い続けずに読み直す
 const iconV = (f) => createHash('sha256').update(readFileSync(join(SRC, '..', 'public', f))).digest('hex').slice(0, 8);
 const ICON_V = { ico: iconV('favicon.ico'), svg: iconV('favicon.svg'), apple: iconV('apple-touch-icon.png') };
+// 共有されたときの画像（10/27 しょーくんが3案から「掲示板にポスター4枚」に決めた。Canva で作り public/img/og.jpg に取りこむ）
+const OG_IMAGE = `${SITE.url}/img/og.jpg?v=${iconV('img/og.jpg')}`;
 
 export const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -88,6 +90,11 @@ export function page({ title, description, path, corner, body, js = '', crumbs =
 <meta property="og:title" content="${esc(ogTitle || title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:locale" content="ja_JP">
+<meta property="og:image" content="${OG_IMAGE}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(SITE.name)}：緑の掲示板に、月ごとのポスター4枚">
+<meta name="twitter:card" content="summary_large_image">
 ${noindex ? '' : `<meta property="og:url" content="${url}">\n`}${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
 <meta name="theme-color" content="#2b3238">
 <link rel="icon" href="/favicon.ico?v=${ICON_V.ico}" sizes="32x32">
