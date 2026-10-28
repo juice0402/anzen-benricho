@@ -14,5 +14,13 @@
   .np, .ks-ctl { display: none !important; }
   .ps-in { padding: 5cqw 6.5cqw 4cqw !important; gap: 2.4cqw !important; }
   .psheet { width: 186mm !important; height: 272mm !important; aspect-ratio: auto !important; border: 1px solid #9aa3a8 !important; box-shadow: none !important; margin: 0 !important; break-inside: avoid; }
+  /* 紙のすみの QR：サイト名とドメインの右に。まわりの白い余白（4マス）は SVG の中にある */
+  .s-foot, .ps-foot { justify-content: flex-start !important; align-items: flex-end !important; flex-wrap: nowrap !important; }
+  .s-foot > span:last-of-type, .ps-foot > span:last-of-type { margin-left: auto; }
+  /* 一辺 14mm。上下の白い余白（約1.2mm）は上のすき間と下の余白に重ね、右は紙の余白に少し出して、紙が長く・窮屈にならないように */
+  .qr { display: block !important; width: 14mm; height: 14mm; flex: none; margin: -1.2mm -4mm -1.2mm 0; }
+  /* 出典が長い紙は、出典の行だけ折り返す */
+  .s-foot > span:first-child { white-space: normal; min-width: 0; word-break: auto-phrase; }
+  .sheet-in, .ps-in { padding-bottom: 2.6cqw !important; row-gap: 2.2cqw !important; }
   .pg-t th, .pf-rows dd, .tora, .kakunin th, .kakunin td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

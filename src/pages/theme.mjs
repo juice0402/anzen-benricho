@@ -5,6 +5,7 @@ import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { themePath, gyoshuPath, fuda, monthHead, titleHtml, undoLine } from '../parts.mjs';
 import { ALL_THEMES } from '../data/themes.mjs';
+import { qrSvg } from '../qr.mjs';
 import { themeDesc, themeGyoshuDesc } from '../describe.mjs';
 
 const seo = (t) => t.seoName || t.title;
@@ -26,14 +27,15 @@ const srcList = (list) =>
     .map((s) => `<li><a href="${esc(s.u)}" rel="noopener">${esc(s.t)}</a>${s.chk ? `<span class="chk">${esc(s.chk)}</span>` : ''}</li>`)
     .join('')}</ol>`;
 
-export const sheet = (t, g) => `<div class="sheet">
+// path を渡すと、すみにそのページの QR（印刷のときだけ出る）。トップの小さな紙には渡さない
+export const sheet = (t, g, path) => `<div class="sheet">
 <div class="tora" aria-hidden="true"></div>
 <div class="sheet-in">
 <p class="s-kicker"><span>${t.month}月の安全</span><span>${esc(g.label)}</span></p>
 <p class="s-title">${titleHtml(t)}</p>
 <ol class="rules">${g.rules.map(([a, b]) => `<li><div>${esc(a)}<span>${esc(b)}</span></div></li>`).join('')}</ol>
 <table class="kakunin" aria-label="確認欄"><thead><tr><th>確認した日</th><th>名前</th><th>確認した日</th><th>名前</th></tr></thead><tbody>${'<tr><td></td><td></td><td></td><td></td></tr>'.repeat(5)}</tbody></table>
-<p class="s-foot"><span>${esc(t.posterSrc || '出典：厚生労働省・労働局ほか')}</span><span>${esc(SITE.name)}　${SITE.url.replace('https://', '')}</span></p>
+<p class="s-foot"><span>${esc(t.posterSrc || '出典：厚生労働省・労働局ほか')}</span><span>${esc(SITE.name)}　${SITE.url.replace('https://', '')}</span>${path ? qrSvg(SITE.url + path) : ''}</p>
 </div>
 </div>`;
 
@@ -77,7 +79,7 @@ ${fuda((x) => gyoshuPath(t, x), g.key)}
 <nav class="toc np" aria-label="このページの中"><p class="toc-h">このページの中</p><ol><li><a href="#poster-h">掲示（A4で印刷）</a></li><li><a href="#talk-h">朝礼（1分の文）</a></li><li><a href="#todo-h">担当者のやること</a></li><li><a href="#src-h">出典</a></li></ol></nav>
 <section class="sec sec-poster" aria-labelledby="poster-h">
 <h2 class="sec-h" id="poster-h">掲示</h2>
-${sheet(t, g)}
+${sheet(t, g, path)}
 <button class="btn print-btn" type="button">A4で印刷</button>
 ${g.poster ? `<p class="poster-pdf np"><a href="${g.poster}">ポスター（A4・PDF）</a></p>` : ''}
 </section>

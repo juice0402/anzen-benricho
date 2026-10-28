@@ -122,6 +122,8 @@ button { font: inherit; color: inherit; }
 .kakunin th, .kakunin td { border: .25cqw solid #9aa3a8; height: 5.6cqw; padding: 0 1.5cqw; text-align: left; font-weight: 400; }
 .s-foot { font-size: max(2.5cqw, 9px); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 3cqw; }
 .s-foot span { white-space: nowrap; }
+/* 紙のすみの QR（そのページの URL）。印刷のときだけ出す（print.css） */
+.qr { display: none; }
 
 /* 法改正 */
 .pg-title { padding-top: 10px; }

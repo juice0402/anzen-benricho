@@ -8,6 +8,7 @@ import { GYOSHU } from '../data/gyoshu.mjs';
 import { KIHON, BANDS } from '../data/kihon/index.mjs';
 import { fmtDate } from '../data/hourei.mjs';
 import { tool } from './kihon-tools.mjs';
+import { qrSvg } from '../qr.mjs';
 
 const whenAttr = (w) => (w ? `${w.g ? ` data-g="${w.g.join(' ')}"` : ''}${w.n ? ` data-n="${w.n.join(' ')}"` : ''}` : '');
 const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
@@ -54,7 +55,9 @@ const checkBlock = (p) =>
     )
     .join('\n');
 
-const foot = `<p class="ps-foot"><span>${esc(SITE.name)}</span><span>${host}</span></p>`;
+// 紙のすみにサイト名と、そのページの QR（印刷のときだけ出る）
+const qr = (p) => qrSvg(SITE.url + p.path);
+const foot = (p) => `<p class="ps-foot"><span>${esc(SITE.name)}</span><span>${host}</span>${qr(p)}</p>`;
 
 const sheetBlock = (p) => {
   const s = p.sheet;
@@ -76,14 +79,14 @@ ${s.note ? `<p class="ks-hint">${esc(s.note)}</p>` : ''}
 <p class="pk-sub">おもな職務</p>
 <ol class="pk-duties" data-kk="duties">${r0.duties.map((d) => `<li>${esc(d)}</li>`).join('')}</ol>
 <p class="pk-date">選任した日　　　　年　　月　　日</p>
-${foot}
+${foot(p)}
 </div></div>`;
   } else if (s.kind === 'form') {
     paper = `<div class="psheet pf"><div class="ps-in">
 <p class="ps-title">${esc(s.title)}</p>
 ${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
 <dl class="pf-rows">${s.rows.map((r) => `<div><dt>${esc(r.k)}</dt><dd style="--l:${r.lines || 1}"></dd></div>`).join('')}</dl>
-${foot}
+${foot(p)}
 </div></div>`;
   } else if (s.kind === 'poster') {
     // 毎月のテーマの掲示と同じ形（決まり・確認欄・出典の1行）
@@ -92,7 +95,7 @@ ${foot}
 <p class="s-title">${esc(s.title)}</p>
 <ol class="rules">${s.rules.map(([a, b]) => `<li><div>${esc(a)}<span>${esc(b)}</span></div></li>`).join('')}</ol>
 <table class="kakunin" aria-label="確認欄"><thead><tr><th>確認した日</th><th>名前</th><th>確認した日</th><th>名前</th></tr></thead><tbody>${'<tr><td></td><td></td><td></td><td></td></tr>'.repeat(5)}</tbody></table>
-<p class="s-foot"><span>${esc(s.foot)}</span><span>${esc(SITE.name)}　${host}</span></p>
+<p class="s-foot"><span>${esc(s.foot)}</span><span>${esc(SITE.name)}　${host}</span>${qr(p)}</p>
 </div></div>`;
   } else if (s.kind === 'grid') {
     const first = s.first || [];
@@ -101,7 +104,7 @@ ${foot}
 ${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
 ${s.fields ? `<dl class="pg-f">${s.fields.map((f) => `<div><dt>${esc(f)}</dt><dd></dd></div>`).join('')}</dl>` : ''}
 <table class="pg-t"><thead><tr>${s.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${Array.from({ length: s.rows }, (_, i) => `<tr>${s.cols.map((_, j) => `<td>${j === 0 && first[i] ? esc(first[i]) : ''}</td>`).join('')}</tr>`).join('')}</tbody></table>
-${foot}
+${foot(p)}
 </div></div>`;
   }
   return `<section class="sec sec-poster sec-sheet" aria-labelledby="ks-h">

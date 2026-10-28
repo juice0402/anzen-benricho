@@ -58,6 +58,10 @@ for (const file of htmlFiles) {
     if (!site || site.name !== SITE.name || site.url !== `${SITE.url}/`) fail(rel, 'WebSite の構造化データがない・名前かURLがちがう');
     if (!title.startsWith(SITE.name)) fail(rel, `トップの title がサイト名で始まっていない: ${title}`);
   }
+  // ホーム画面に追加（manifest と theme-color）
+  if (!/<link rel="manifest" href="\/manifest\.webmanifest[?"]/.test(html) || !html.includes('<meta name="theme-color"')) fail(rel, 'manifest か theme-color がない');
+  // 紙の QR は、そのページの正規の URL
+  for (const m of html.matchAll(/<svg class="qr" data-url="([^"]*)"/g)) if (m[1] !== SITE.url + rel) fail(rel, `紙の QR の URL がちがう: ${m[1]}`);
   if (/pages\.dev/.test(html)) fail(rel, '古い pages.dev の URL が残っている');
   if (count(html, /<h1[ >]/g) !== 1) fail(rel, '<h1> が1つではない');
   if (!noindex) {
@@ -126,6 +130,20 @@ for (const file of htmlFiles) {
   }
   // 外のリンクは https だけ
   for (const m of html.matchAll(/<a\b[^>]*href="(http:[^"]*)"/g)) fail(rel, `http のリンク: ${m[1]}`);
+}
+
+// ホーム画面に追加：manifest とアイコン
+{
+  const f = join(DIST, 'manifest.webmanifest');
+  let mf = null;
+  try { mf = JSON.parse(readFileSync(f, 'utf8')); } catch { fail('/manifest.webmanifest', 'ないか JSON が壊れている'); }
+  if (mf) {
+    if (mf.name !== SITE.name || mf.start_url !== '/' || mf.display === 'standalone') fail('/manifest.webmanifest', '名前・start_url・display がちがう');
+    for (const n of ['192', '512']) {
+      const ic = (mf.icons || []).find((i) => i.sizes === `${n}x${n}`);
+      if (!ic || !resolves(ic.src)) fail('/manifest.webmanifest', `${n}px のアイコンがない`);
+    }
+  }
 }
 
 // 公開したら sitemap.xml の URL がすべてページになっているか

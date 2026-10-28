@@ -10,7 +10,7 @@ const SRC = dirname(fileURLToPath(import.meta.url));
 const read = (p) => readFileSync(join(SRC, p), 'utf8');
 // アイコンの URL に中身から作った短い印をつける（?v=）。絵を変えると URL が変わるので、ブラウザは古いアイコンを使い続けずに読み直す
 const iconV = (f) => createHash('sha256').update(readFileSync(join(SRC, '..', 'public', f))).digest('hex').slice(0, 8);
-const ICON_V = { ico: iconV('favicon.ico'), svg: iconV('favicon.svg'), apple: iconV('apple-touch-icon.png') };
+const ICON_V = { ico: iconV('favicon.ico'), svg: iconV('favicon.svg'), apple: iconV('apple-touch-icon.png'), manifest: iconV('manifest.webmanifest') };
 // 共有されたときの画像（10/27 しょーくんが3案から「掲示板にポスター4枚」に決めた。Canva で作り public/img/og.jpg に取りこむ）
 const OG_IMAGE = `${SITE.url}/img/og.jpg?v=${iconV('img/og.jpg')}`;
 
@@ -103,6 +103,7 @@ ${noindex ? '' : `<meta property="og:url" content="${url}">\n`}${noindex ? '<met
 <link rel="icon" href="/favicon.ico?v=${ICON_V.ico}" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=${ICON_V.svg}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=${ICON_V.apple}">
+<link rel="manifest" href="/manifest.webmanifest?v=${ICON_V.manifest}">
 ${ads ? ADSENSE_TAG() : ''}
 <style>${css()}</style>
 ${lds}
