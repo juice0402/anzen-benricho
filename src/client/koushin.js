@@ -2,21 +2,19 @@
   var radios = document.querySelectorAll('input[name="k"]');
   var day = document.getElementById('k-day');
   var out = document.querySelector('.ks-out');
+  var cal = document.getElementById('k-cal');
   if (!day || !out) return;
+  var last = null;
   function fmt(d) { return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'; }
-  // その月にない日（うるう日・月末）は月末にそろえる
-  function shift(d, y, m) {
-    var t = new Date(d.getFullYear() + y, d.getMonth() + m, 1);
-    t.setDate(Math.min(d.getDate(), new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate()));
-    return t;
-  }
+  // その月にない日（うるう日・月末）は月末にそろえる（icsShift は ics.mjs）
+  var shift = icsShift;
   function pick() { for (var i = 0; i < radios.length; i++) if (radios[i].checked) return radios[i]; return radios[0]; }
   function calc() {
     var r = pick();
     var v = day.value;
     try { localStorage.setItem('koushin', JSON.stringify({ k: r.value, d: v })); } catch (e) {}
     var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
-    if (!p) { out.hidden = true; return; }
+    if (!p) { out.hidden = true; last = null; return; }
     var done = new Date(+p[1], +p[2] - 1, +p[3]);
     var years = +r.getAttribute('data-years');
     var early = +r.getAttribute('data-early');
@@ -39,6 +37,9 @@
       else re = y + '年の再講習（毎年8〜9月ごろ）を受けて更新します。申し込みの時期は協会の案内で確かめてください。';
     }
     document.getElementById('k-re').textContent = re;
+    // 期限が切れていたら、カレンダーに入れるものがないので出さない
+    last = left < 0 ? null : { key: r.value, name: r.parentNode.textContent.trim(), lim: lim, today: today, memo6: r.getAttribute('data-memo') };
+    if (cal) cal.parentNode.hidden = !last;
     out.hidden = false;
   }
   var saved = null;
@@ -48,6 +49,19 @@
     if (!pick().checked) radios[0].checked = true;
     if (saved.d) day.value = saved.d;
   }
+  // .ics は端末の中で作ってダウンロードする（送らない）
+  if (cal) cal.addEventListener('click', function () {
+    if (!last) return;
+    var text = icsMake({ key: last.key, name: last.name, lim: last.lim, today: last.today, memo6: last.memo6, url: cal.getAttribute('data-url'), now: new Date() });
+    var u = URL.createObjectURL(new Blob([text], { type: 'text/calendar;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = u;
+    a.download = last.key + '-kigen.ics';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(u); }, 10000);
+  });
   for (var j = 0; j < radios.length; j++) radios[j].addEventListener('change', calc);
   day.addEventListener('input', calc);
   day.addEventListener('change', calc);

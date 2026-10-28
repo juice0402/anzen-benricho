@@ -1,5 +1,5 @@
 // 資格の更新の期限 /shikaku/koushin/：資格と修了した日をえらぶと、次の期限と再講習の時期が出る（計算はブラウザの中だけ）
-import { page, esc, script, adSlot } from '../layout.mjs';
+import { page, esc, script, clientLib, adSlot } from '../layout.mjs';
 import { koushinDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead } from '../parts.mjs';
@@ -11,7 +11,7 @@ export default function shikakuPages() {
   const form = `<section class="sec paper ks" aria-labelledby="ks-h">
 <h2 class="sec-h" id="ks-h">期限を出す</h2>
 <fieldset class="ks-pick"><legend>資格</legend>
-${SHIKAKU.map((s, i) => `<label for="k-${s.key}"><input type="radio" name="k" id="k-${s.key}" value="${s.key}" data-years="${s.years}" data-early="${s.early}"${i ? '' : ' checked'}><span>${esc(s.name)}</span></label>`).join('\n')}
+${SHIKAKU.map((s, i) => `<label for="k-${s.key}"><input type="radio" name="k" id="k-${s.key}" value="${s.key}" data-years="${s.years}" data-early="${s.early}" data-memo="${esc(`${s.rule.split('。')[0]}。再講習：${s.when}`)}"${i ? '' : ' checked'}><span>${esc(s.name)}</span></label>`).join('\n')}
 </fieldset>
 <label class="ks-date" for="k-day">修了証書の日付<input type="date" id="k-day" min="2000-01-01" max="2099-12-31"></label>
 <div class="ks-out" aria-live="polite" hidden>
@@ -19,6 +19,7 @@ ${SHIKAKU.map((s, i) => `<label for="k-${s.key}"><input type="radio" name="k" id
 <p class="ks-left" id="k-left"></p>
 <p class="ks-re" id="k-re"></p>
 <p class="ks-note">正確な期限は、修了証書の表示で確かめてください。</p>
+<p class="ks-cal"><button type="button" class="ks-cal-b" id="k-cal" data-url="${SITE.url}${path}">カレンダーに入れる</button><span class="ks-note">期限・6か月前・1か月前の予定が入ります</span></p>
 </div>
 </section>`;
   const table = `<section class="sec paper" aria-labelledby="rule-h">
@@ -48,7 +49,7 @@ ${adSlot('end')}`;
         path,
         corner: 'kyotsu',
         body,
-        js: script('koushin'),
+        js: `${clientLib('ics')}\n${script('koushin')}`,
         crumbs: [{ name: '資格の更新の期限' }],
       }),
       lastmod: SHIKAKU_CHECKED,
