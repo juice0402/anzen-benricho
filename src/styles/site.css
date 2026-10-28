@@ -61,7 +61,7 @@ body { background: #fff; }
 .toc { background: var(--soft); padding: 14px 16px; display: grid; gap: 6px; }
 .toc-h { font-size: 14px; font-weight: 700; }
 .toc ol { list-style: decimal; padding-left: 1.4em; display: grid; gap: 2px; }
-.toc a { color: var(--link); }
+.toc a, .ks-cal-b { color: var(--link); }
 
 /* 掲示（A4の紙）・ボタン */
 .sheet, .psheet { border: 1px solid #d3d8de; margin-top: 4px; }
