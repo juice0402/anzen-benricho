@@ -53,6 +53,7 @@ function index(themes, from) {
 <section class="sec paper" aria-labelledby="am-h">
 <h2 class="sec-h" id="am-h">月</h2>
 <ul class="rows">${ms.map((m) => { const ts = themes.filter((t) => t.month === m); return `<li><a href="/anzen/${m}/">${photo(ts[0].slug, { sizes: '128px', cls: 'ph ph-s' })}<span><b>${m}月</b><span>${ts.map((t) => esc(t.title)).join('・')}</span></span></a></li>`; }).join('')}</ul>
+<p class="u-note"><a href="/anzen/nenkan/">1年の計画は、安全衛生の年間計画の表（A4）へ</a></p>
 </section>
 ${adSlot('end')}`;
   return {

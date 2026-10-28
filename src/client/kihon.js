@@ -55,6 +55,25 @@
     name.addEventListener('input', draw);
   }
 
+  // 年間計画の紙：えらんだ業種の表だけ見せる（表はページに4つ入っている。えらばないときは空欄の表）
+  var pn = document.querySelector('.pn-pick');
+  if (pn) {
+    var pnShow = function () {
+      var bodies = document.querySelectorAll('tbody[data-pg]'), hit = false;
+      Array.prototype.forEach.call(bodies, function (b) { if (sel.g && b.getAttribute('data-pg') === sel.g) hit = true; });
+      Array.prototype.forEach.call(bodies, function (b) { b.hidden = b.getAttribute('data-pg') !== (hit ? sel.g : ''); });
+      Array.prototype.forEach.call(pn.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', hit && b.getAttribute('data-pg') === sel.g ? 'true' : 'false'); });
+    };
+    pn.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b) return;
+      sel.g = b.getAttribute('data-pg');
+      try { localStorage.setItem('gyoshu', sel.g); } catch (e3) {}
+      pnShow();
+    });
+    pnShow();
+  }
+
   var pb = document.querySelector('.print-btn');
   if (pb) pb.addEventListener('click', function () { window.print(); });
   // 計算の道具

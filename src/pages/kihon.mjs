@@ -3,10 +3,12 @@
 import { page, esc, script, adSlot, fudaLabel } from '../layout.mjs';
 import { kihonHubDesc, kagakuHubDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
-import { bandHead } from '../parts.mjs';
+import { bandHead, gyoshuPath } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { KIHON, BANDS } from '../data/kihon/index.mjs';
-import { fmtDate } from '../data/hourei.mjs';
+import { fmtDate, HOUREI, todayJst } from '../data/hourei.mjs';
+import { ALL_THEMES } from '../data/themes.mjs';
+import { YOTEI } from '../data/kihon/nenkan.mjs';
 import { tool } from './kihon-tools.mjs';
 import { qrSvg } from '../qr.mjs';
 
@@ -59,6 +61,39 @@ const checkBlock = (p) =>
 const qr = (p) => qrSvg(SITE.url + p.path);
 const foot = (p) => `<p class="ps-foot"><span>${esc(SITE.name)}</span><span>${host}</span>${qr(p)}</p>`;
 
+// 年間計画の紙（/anzen/nenkan/）：列は 月・全国の運動・うちの職場のテーマ・担当・済。
+// 全国の運動は YOTEI でいつも埋める。業種ごとの表（テーマ名・掲示の決まりの1つ目・その月に施行の法改正）は
+// ビルドのときに4つ作って入れておき、えらんだ業種のものだけ見せる（kihon.js）。えらばないとき・JavaScript なしは空欄の表
+// 法改正は、作り直した日をふくむ年度（4月〜3月）の施行日のものだけ
+export const fiscalYear = (iso = todayJst()) => {
+  const [y, m] = iso.split('-').map(Number);
+  return m >= 4 ? y : y - 1;
+};
+const monthNo = (label) => parseInt(label, 10);
+export const nenkanLaws = (m, fy = fiscalYear()) =>
+  HOUREI.filter((h) => {
+    const [y, mm] = h.date.split('-').map(Number);
+    return mm === m && y === (m >= 4 ? fy : fy + 1);
+  });
+export const nenkanCell = (m, g, fy = fiscalYear()) => {
+  const ts = ALL_THEMES.filter((t) => t.month === m);
+  const laws = nenkanLaws(m, fy);
+  if (!ts.length && !laws.length) return '';
+  const rule = ts.length ? ts[0].gyoshu.find((x) => x.key === g.key).rules[0][0] : '';
+  return `${ts.length ? `<span class="pn-t">${ts.map((t) => `<a href="${gyoshuPath(t, g)}">${esc(t.title)}</a>`).join('・')}</span>` : ''}${rule ? `<span class="pn-r">${esc(rule)}</span>` : ''}${laws.map((h) => `<span class="pn-h">${Number(h.date.slice(5, 7))}/${Number(h.date.slice(8, 10))}施行 ${esc(h.title)}</span>`).join('')}`;
+};
+const nenkanBodies = (s) => {
+  const fy = fiscalYear();
+  const body = (g) =>
+    `<tbody data-pg="${g ? g.key : ''}"${g ? ' hidden' : ''}>${s.first
+      .map((f) => {
+        const m = monthNo(f);
+        return `<tr><td>${esc(f)}</td><td class="pn-u">${esc(YOTEI[m] || '')}</td><td>${g ? nenkanCell(m, g, fy) : ''}</td>${'<td></td>'.repeat(s.cols.length - 3)}</tr>`;
+      })
+      .join('')}</tbody>`;
+  return [null, ...GYOSHU].map(body).join('');
+};
+
 const sheetBlock = (p) => {
   const s = p.sheet;
   if (!s) return '';
@@ -99,11 +134,13 @@ ${foot(p)}
 </div></div>`;
   } else if (s.kind === 'grid') {
     const first = s.first || [];
+    if (s.fill === 'nenkan')
+      ctl = `<div class="fuda pn-pick np" role="group" aria-label="業種">${GYOSHU.map((g) => `<button type="button" class="fuda-b" data-pg="${g.key}" aria-pressed="false">${fudaLabel(g.label)}</button>`).join('')}</div>`;
     paper = `<div class="psheet pg"><div class="ps-in">
 <p class="ps-title">${esc(s.title)}</p>
 ${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
 ${s.fields ? `<dl class="pg-f">${s.fields.map((f) => `<div><dt>${esc(f)}</dt><dd></dd></div>`).join('')}</dl>` : ''}
-<table class="pg-t"><thead><tr>${s.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${Array.from({ length: s.rows }, (_, i) => `<tr>${s.cols.map((_, j) => `<td>${j === 0 && first[i] ? esc(first[i]) : ''}</td>`).join('')}</tr>`).join('')}</tbody></table>
+<table class="pg-t${s.fill === 'nenkan' ? ' pg-n' : ''}"><thead><tr>${s.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead>${s.fill === 'nenkan' ? nenkanBodies(s) : `<tbody>${Array.from({ length: s.rows }, (_, i) => `<tr>${s.cols.map((_, j) => `<td>${j === 0 && first[i] ? esc(first[i]) : ''}</td>`).join('')}</tr>`).join('')}</tbody>`}</table>
 ${foot(p)}
 </div></div>`;
   }

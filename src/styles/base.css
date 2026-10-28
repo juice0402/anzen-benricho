@@ -237,3 +237,13 @@ li[hidden], .ktbl div[hidden] { display: none; }
 .pg-f dt { font-size: 2.8cqw; font-weight: 700; padding-bottom: .6cqw; }
 .pg-f dd { margin: 0; }
 .pg-t td:first-child { width: 36%; }
+/* 年間計画の紙（/anzen/nenkan/）：業種をえらぶと「うちの職場のテーマ」が埋まる */
+.pg-n td:first-child { width: 7%; white-space: nowrap; }
+.pg-n th:nth-child(2) { width: 30%; }
+.pg-n th:nth-child(4) { width: 11%; }
+.pg-n th:nth-child(5) { width: 5%; }
+.pg-n th, .pg-n td { padding: .6cqw 1cqw; }
+.pn-u { font-size: 2.1cqw; line-height: 1.3; }
+.pn-t { display: block; font-size: 2.3cqw; font-weight: 700; line-height: 1.3; }
+.pn-r, .pn-h { display: block; font-size: 1.85cqw; line-height: 1.3; }
+.pn-pick { margin-bottom: 4px; }
