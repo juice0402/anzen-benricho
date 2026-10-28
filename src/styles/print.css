@@ -22,5 +22,6 @@
   /* 出典が長い紙は、出典の行だけ折り返す */
   .s-foot > span:first-child { white-space: normal; min-width: 0; word-break: auto-phrase; }
   .sheet-in, .ps-in { padding-bottom: 2.6cqw !important; row-gap: 2.2cqw !important; }
+  .pg-t a { color: inherit !important; text-decoration: none !important; }
   .pg-t th, .pf-rows dd, .tora, .kakunin th, .kakunin td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
