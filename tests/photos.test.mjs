@@ -1,10 +1,12 @@
 // 写真：決めた名前のファイルが2つ（640・1200）ともあるか、どのテーマ・業種にも写真があるか
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, statSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { PHOTO, photoBase } from '../src/data/photos.mjs';
 import { ALL_THEMES } from '../src/data/themes.mjs';
 import { GYOSHU } from '../src/data/gyoshu.mjs';
+import { NAYAMI } from '../src/data/nayami.mjs';
 
 const file = (k, w) => new URL(`../public${photoBase(k)}-${w}.webp`, import.meta.url);
 
@@ -25,5 +27,19 @@ test('写真：説明（alt）は人がいない前提の短い文で、使わ�
   for (const [k, alt] of Object.entries(PHOTO)) {
     assert.ok(alt.length >= 6 && alt.length <= 50, `${k} の説明の長さ`);
     for (const w of ['しましょう', 'ぜひ', '便利', '簡単', '安心', 'おすすめ', 'ポイント', 'コツ']) assert.ok(!alt.includes(w), `${k} に「${w}」`);
+  }
+});
+
+test('写真：トップの「こんなときは」は ny- の8枚で、おたがいに別・ほかの写真とも別のファイル', () => {
+  const ks = NAYAMI.map((n) => n.ph);
+  assert.equal(ks.length, 8);
+  assert.equal(new Set(ks).size, 8, '同じ写真を2回使っている');
+  for (const k of ks) assert.match(k, /^ny-/, `${k} は ny- の写真にする`);
+  const seen = new Map();
+  for (const k of Object.keys(PHOTO)) {
+    if (!existsSync(file(k, 640))) continue;
+    const h = createHash('sha1').update(readFileSync(file(k, 640))).digest('hex');
+    assert.ok(!seen.has(h), `${k} と ${seen.get(h)} が同じ写真`);
+    seen.set(h, k);
   }
 });

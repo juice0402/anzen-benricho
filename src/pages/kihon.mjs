@@ -16,6 +16,26 @@ const whenAttr = (w) => (w ? `${w.g ? ` data-g="${w.g.join(' ')}"` : ''}${w.n ? 
 const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
 const host = SITE.url.replace('https://', '');
 
+// 義務の区別（10/29 しょーくん。案C）：表の行は根拠の前に区分、やることは区分ごとに小見出し
+// 区分は data の kb（g 法令の義務・d 努力義務・s 職場で決めること）。画面だけで、印刷には出さない（.np の節の中）
+export const KB_NAME = { g: '法令の義務', d: '努力義務', s: '職場で決めること' };
+const KB_ORDER = ['g', 'd', 's'];
+const lawSpan = (r) => {
+  const kb = KB_NAME[r.kb] ? `<b class="kb-${r.kb}">${KB_NAME[r.kb]}</b>` : '';
+  const lw = r.law ? esc(r.law) : '';
+  return kb || lw ? `<span class="law">${kb}${kb && lw ? '・' : ''}${lw}</span>` : '';
+};
+const todoLi = (it, i, j) =>
+  `<li><label for="k-${i}-${j}"><input type="checkbox" id="k-${i}-${j}"><span>${esc(it.t)}</span></label></li>`;
+const todoList = (c, i) => {
+  const items = c.items.map((it, j) => [it, j]);
+  // 区分を決められなかった項目（kb なし）は、小見出しの前にそのまま
+  const none = items.filter(([it]) => !KB_NAME[it.kb]);
+  return (none.length ? `<ul class="todo">${none.map(([it, j]) => todoLi(it, i, j)).join('')}</ul>` : '') + KB_ORDER.filter((k) => items.some(([it]) => it.kb === k))
+    .map((k) => `<h3 class="kb-h kb-${k}">${KB_NAME[k]}</h3><ul class="todo">${items.filter(([it]) => it.kb === k).map(([it, j]) => todoLi(it, i, j)).join('')}</ul>`)
+    .join('');
+};
+
 const choice = (dim, items, label) =>
   `<div class="fuda kp-row" role="group" aria-label="${label}">${items
     .map(([k, t]) => `<button type="button" class="fuda-b" data-${dim}="${k}" aria-pressed="false">${t}</button>`)
@@ -41,7 +61,7 @@ const tableBlock = (p) =>
       return `<section class="sec paper np" aria-labelledby="${id}">
 <h2 class="sec-h" id="${id}">${esc(t.h)}</h2>
 <dl class="ktbl">${t.rows
-    .map((r) => `<div${whenAttr(r.when)}><dt>${esc(r.k)}</dt><dd>${esc(r.v)}${r.law ? `<span class="law">${esc(r.law)}</span>` : ''}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">${esc(r.srcT || '事例を見る')}</a>` : ''}</dd></div>`)
+    .map((r) => `<div${whenAttr(r.when)}><dt>${esc(r.k)}</dt><dd>${esc(r.v)}${lawSpan(r)}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">${esc(r.srcT || '事例を見る')}</a>` : ''}</dd></div>`)
     .join('')}</dl>
 </section>`;
     })
@@ -50,9 +70,9 @@ const tableBlock = (p) =>
 const checkBlock = (p) =>
   (p.check || [])
     .map(
-      (c, i) => `<section class="sec sec-todo np" aria-labelledby="kc-h${i}">
+      (c, i) => `<section class="sec sec-todo np"${whenAttr(c.when)} aria-labelledby="kc-h${i}">
 <h2 class="sec-h" id="kc-h${i}">${esc(c.h)}</h2>
-<ul class="todo">${c.items.map((s, j) => `<li><label for="k-${i}-${j}"><input type="checkbox" id="k-${i}-${j}"><span>${esc(s)}</span></label></li>`).join('')}</ul>
+${todoList(c, i)}
 </section>`,
     )
     .join('\n');

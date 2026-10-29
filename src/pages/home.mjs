@@ -10,6 +10,7 @@ import { KIHON } from '../data/kihon/index.mjs';
 import { YOTEI } from '../data/kihon/nenkan.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { homeDesc } from '../describe.mjs';
+import { NAYAMI } from '../data/nayami.mjs';
 
 // テーマの中身の短い説明（seoName のかっこの中）
 const sub = (t) => (t.seoName && t.seoName.includes('（') ? t.seoName.slice(t.seoName.indexOf('（') + 1, -1) : '');
@@ -42,7 +43,15 @@ export default function home({ month, themes, allThemes, kaisei }) {
     (g) => `<a class="fuda-b" href="${entrancePath(g)}" data-k="${g.key}"><span class="mini" aria-hidden="true">${sheet(first, gOf(first, g.key))}</span><span class="gt"><b>${esc(g.label)}</b><span>${G_SUB[g.key] || ''}</span></span></a>`,
   ).join('')}</nav></div>
 </section>`;
+  // こんなときは（10/29 しょーくん。案B：写真つきの行）：困りごとから、答えのあるページへ
+  const nyTop = `<section class="hs" aria-labelledby="ny-h">
+<h2 class="hs-h" id="ny-h">こんなときは</h2>
+<ul class="ny">${NAYAMI.map(
+    (n) => `<li><a href="${n.href}">${photo(n.ph, { sizes: '96px', cls: 'ph ph-s' })}<span><b>${esc(n.t)}</b><span>${esc(n.d)}</span></span></a></li>`,
+  ).join('')}</ul>
+</section>`;
   const body = `${hero}
+${nyTop}
 <section class="hs" aria-labelledby="tm-h">
 <h2 class="hs-h" id="tm-h">${month}月のテーマ</h2>
 <ul class="rows rows-t">${themes

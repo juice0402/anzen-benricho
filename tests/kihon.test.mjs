@@ -54,3 +54,27 @@ for (const p of KIHON) {
     assert.ok(within90(p.checked), `確認日 ${p.checked} から90日をこえた`);
   });
 }
+
+// 義務の区別（2026-10-29 しょーくん）：kb は g 法令の義務・d 努力義務・s 職場で決めること。'-' は説明だけの行（付けない）
+// 根拠（law）のある表の行と、やることの項目には、すべて区分を書く。決められなかったものだけ下の KB_OPEN に書き、PR と issue に一覧で出す
+const KB_OPEN = new Set([
+  // 測る義務（事務所則7条）は中央管理方式の空調の部屋だけ、室温（5条3項）は努力義務。条件で分かれるので、しょーくんと決める
+  'setsubi:空調のある部屋の温度と湿度を測った',
+]);
+test('義務の区別：根拠のある表の行と、やることのすべてに区分がある', () => {
+  let open = 0;
+  for (const p of KIHON) {
+    for (const r of rowsOf(p)) {
+      if (r.kb !== undefined) assert.ok(['g', 'd', 's', '-'].includes(r.kb), `${p.slug} 表 ${r.k} の kb`);
+      if (r.law) assert.ok(r.kb, `${p.slug} 表「${r.k}」（${r.law}）に区分がない`);
+    }
+    for (const c of p.check || []) {
+      for (const it of c.items) {
+        assert.ok(it && typeof it === 'object' && typeof it.t === 'string', `${p.slug} やることは { t, kb } の形`);
+        if (KB_OPEN.has(`${p.slug}:${it.t}`)) { assert.ok(!it.kb, `${it.t} は決めたら KB_OPEN から外す`); open++; continue; }
+        assert.ok(['g', 'd', 's'].includes(it.kb), `${p.slug}「${it.t}」に区分がない`);
+      }
+    }
+  }
+  assert.equal(open, KB_OPEN.size, 'KB_OPEN に、もうない項目がある');
+});

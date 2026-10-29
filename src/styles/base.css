@@ -189,7 +189,7 @@ button { font: inherit; color: inherit; }
 .ks-ctl label { display: grid; gap: 4px; font-size: 13px; }
 .ks-ctl select, .ks-ctl input { font: inherit; font-size: 17px; min-height: 46px; padding: 6px 10px; border-radius: 0; width: 100%; }
 .ks-hint { font-size: 12px; }
-li[hidden], .ktbl div[hidden] { display: none; }
+li[hidden], .ktbl div[hidden], .sec[hidden] { display: none; }
 
 /* A4 の紙（掲示・用紙・表）。文字は紙の幅に合わせる */
 .psheet { container-type: inline-size; background: #fff; color: #1b1f22; aspect-ratio: 210 / 297; width: 100%; display: flex; flex-direction: column; position: relative; }
