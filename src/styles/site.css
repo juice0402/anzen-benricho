@@ -157,13 +157,11 @@ body { background: #fff; }
 
 /* こんなときは（困りごとから行き先へ） */
 .ny li { border-bottom: 1px solid var(--thin); }
-.ny a { display: grid; gap: 2px; padding: 11px 0; text-decoration: none; min-height: 44px; }
+.ny a { display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: center; padding: 9px 0; text-decoration: none; min-height: 44px; }
 .ny a > span { display: grid; gap: 2px; }
 .ny b { font-size: 17px; line-height: 1.45; color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .ny span span { font-size: 13px; color: var(--muted); }
-.ny-p a { grid-template-columns: 96px 1fr; gap: 12px; align-items: center; padding: 9px 0; }
-.ny-p .ph-s img { width: 96px; height: 54px; }
-.ny-h3 { font-size: 15px; color: var(--muted); font-weight: 700; margin-top: 4px; }
+.ny .ph-s img { width: 96px; height: 54px; }
 @media (min-width: 800px) {
   .ny { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; }
 }
@@ -176,11 +174,8 @@ body { background: #fff; }
 .foot-name { color: #a9adb1; }
 .foot-nav a, .foot-links a { white-space: nowrap; }
 
-/* 義務の区別（案） */
-.ktbl .law b.kb-g, .todo .kb-g { color: var(--ink); font-weight: 700; }
-.ktbl .law b { font-weight: 700; }
-.todo .kb { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
-.kb-m { font-weight: 700; margin-right: 6px; }
-.kb-leg { display: flex; flex-wrap: wrap; gap: 2px 16px; font-size: 13px; color: var(--muted); }
+/* 義務の区別（法令の義務・努力義務・職場で決めること）。画面だけ */
+.ktbl .law b { font-weight: 700; color: var(--ink); }
+.ktbl .law b.kb-d, .ktbl .law b.kb-s { color: var(--muted); }
 .kb-h { font-size: 15px; font-weight: 700; margin-top: 6px; padding-bottom: 4px; }
 .kb-h.kb-d, .kb-h.kb-s { color: var(--muted); }

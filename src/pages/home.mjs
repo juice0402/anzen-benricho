@@ -43,17 +43,13 @@ export default function home({ month, themes, allThemes, kaisei }) {
     (g) => `<a class="fuda-b" href="${entrancePath(g)}" data-k="${g.key}"><span class="mini" aria-hidden="true">${sheet(first, gOf(first, g.key))}</span><span class="gt"><b>${esc(g.label)}</b><span>${G_SUB[g.key] || ''}</span></span></a>`,
   ).join('')}</nav></div>
 </section>`;
-  // 「こんなときは」の案（MOCK_NAYAMI=a|b|c。えらんだら切りかえは消す）
-  const mock = process.env.MOCK_NAYAMI || '';
-  const nyList = (ph) =>
-    `<ul class="ny${ph ? ' ny-p' : ''}">${NAYAMI.map(
-      (n) => `<li><a href="${n.href}">${ph ? photo(n.ph, { sizes: '96px', cls: 'ph ph-s' }) : ''}<span><b>${esc(n.t)}</b><span>${esc(n.d)}</span></span></a></li>`,
-    ).join('')}</ul>`;
-  const nySec = (ph) => `<section class="hs" aria-labelledby="ny-h">
+  // こんなときは（10/29 しょーくん。案B：写真つきの行）：困りごとから、答えのあるページへ
+  const nyTop = `<section class="hs" aria-labelledby="ny-h">
 <h2 class="hs-h" id="ny-h">こんなときは</h2>
-${nyList(ph)}
+<ul class="ny">${NAYAMI.map(
+    (n) => `<li><a href="${n.href}">${photo(n.ph, { sizes: '96px', cls: 'ph ph-s' })}<span><b>${esc(n.t)}</b><span>${esc(n.d)}</span></span></a></li>`,
+  ).join('')}</ul>
 </section>`;
-  const nyTop = mock === 'a' ? nySec(false) : mock === 'b' ? nySec(true) : '';
   const body = `${hero}
 ${nyTop}
 <section class="hs" aria-labelledby="tm-h">
@@ -76,7 +72,6 @@ ${nyTop}
 </section>
 <section class="hs" aria-labelledby="sr-h">
 <h2 class="hs-h" id="sr-h">調べる</h2>
-${mock === 'c' ? `<h3 class="ny-h3">こんなときは</h3>${nyList(false)}<h3 class="ny-h3">コーナーから</h3>` : ''}
 <ul class="rows">${corners.map((c) => `<li><a href="${c.href}">${hasPhoto(c.k) ? photo(c.k, { sizes: '128px', cls: 'ph ph-s' }) : ''}<span><b>${esc(c.name)}</b><span>${esc(c.d)}</span></span></a></li>`).join('')}</ul>
 </section>
 ${adSlot('home')}`;

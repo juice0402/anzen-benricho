@@ -16,28 +16,24 @@ const whenAttr = (w) => (w ? `${w.g ? ` data-g="${w.g.join(' ')}"` : ''}${w.n ? 
 const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
 const host = SITE.url.replace('https://', '');
 
-// 義務の区別の案（MOCK_KUBUN=a|b|c。えらんだら切りかえは消し、区分はデータに持たせる）
-const MOCK = process.env.MOCK_KUBUN || '';
-const KB_NAME = { g: '法令の義務', d: '努力義務', s: '職場で決めること' };
-const KB_MARK = { g: '◎', d: '○', s: '△' };
-const KB_LEGEND = '<p class="kb-leg"><span>◎ 法令の義務</span><span>○ 努力義務</span><span>△ 職場で決めること</span></p>';
-const MOCK_KB = {
-  ninzu: {
-    rows: ['', '', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'd', 'g', 'd', 'g', 'g', ''],
-    check: [['g', 'g', 's', 'g'], ['g', 'g', 'g', 'g', 's', 's'], ['g', 'g', 'g', 'g'], ['g', 'g']],
-  },
+// 義務の区別（10/29 しょーくん。案C）：表の行は根拠の前に区分、やることは区分ごとに小見出し
+// 区分は data の kb（g 法令の義務・d 努力義務・s 職場で決めること）。画面だけで、印刷には出さない（.np の節の中）
+export const KB_NAME = { g: '法令の義務', d: '努力義務', s: '職場で決めること' };
+const KB_ORDER = ['g', 'd', 's'];
+const lawSpan = (r) => {
+  const kb = KB_NAME[r.kb] ? `<b class="kb-${r.kb}">${KB_NAME[r.kb]}</b>` : '';
+  const lw = r.law ? esc(r.law) : '';
+  return kb || lw ? `<span class="law">${kb}${kb && lw ? '・' : ''}${lw}</span>` : '';
 };
-const todoLi = (s, i, j, kb) =>
-  `<li><label for="k-${i}-${j}"><input type="checkbox" id="k-${i}-${j}"><span>${MOCK === 'b' && kb ? `<span class="kb-m">${KB_MARK[kb]}</span>` : ''}${esc(s)}${MOCK === 'a' && kb ? `<small class="kb kb-${kb}">${KB_NAME[kb]}</small>` : ''}</span></label></li>`;
-const todoMock = (p, c, i) => {
-  const kbs = MOCK ? ((MOCK_KB[p.slug] || {}).check || [])[i] || [] : [];
-  if (MOCK === 'c' && kbs.length) {
-    return ['g', 'd', 's']
-      .filter((k) => kbs.includes(k))
-      .map((k) => `<h3 class="kb-h kb-${k}">${KB_NAME[k]}</h3><ul class="todo">${c.items.map((s, j) => (kbs[j] === k ? todoLi(s, i, j, '') : '')).join('')}</ul>`)
-      .join('');
-  }
-  return `${MOCK === 'b' && i === 0 && kbs.length ? KB_LEGEND : ''}<ul class="todo">${c.items.map((s, j) => todoLi(s, i, j, kbs[j])).join('')}</ul>`;
+const todoLi = (it, i, j) =>
+  `<li><label for="k-${i}-${j}"><input type="checkbox" id="k-${i}-${j}"><span>${esc(it.t)}</span></label></li>`;
+const todoList = (c, i) => {
+  const items = c.items.map((it, j) => [it, j]);
+  // 区分を決められなかった項目（kb なし）は、小見出しの前にそのまま
+  const none = items.filter(([it]) => !KB_NAME[it.kb]);
+  return (none.length ? `<ul class="todo">${none.map(([it, j]) => todoLi(it, i, j)).join('')}</ul>` : '') + KB_ORDER.filter((k) => items.some(([it]) => it.kb === k))
+    .map((k) => `<h3 class="kb-h kb-${k}">${KB_NAME[k]}</h3><ul class="todo">${items.filter(([it]) => it.kb === k).map(([it, j]) => todoLi(it, i, j)).join('')}</ul>`)
+    .join('');
 };
 
 const choice = (dim, items, label) =>
@@ -64,8 +60,8 @@ const tableBlock = (p) =>
       const id = i ? `kt-h${i}` : 'kt-h';
       return `<section class="sec paper np" aria-labelledby="${id}">
 <h2 class="sec-h" id="${id}">${esc(t.h)}</h2>
-${MOCK === 'b' && i === 0 && MOCK_KB[p.slug] ? KB_LEGEND : ''}<dl class="ktbl">${t.rows
-    .map((r, ri) => { const kb = MOCK && i === 0 ? (MOCK_KB[p.slug] || {}).rows?.[ri] : ''; const mk = MOCK === 'b' && kb ? `<span class="kb-m">${KB_MARK[kb]}</span>` : ''; const lw = MOCK && MOCK !== 'b' && kb ? `<b class="kb-${kb}">${KB_NAME[kb]}</b>${r.law ? `・${esc(r.law)}` : ''}` : r.law ? esc(r.law) : ''; return `<div${whenAttr(r.when)}><dt>${esc(r.k)}</dt><dd>${mk}${esc(r.v)}${lw ? `<span class="law">${lw}</span>` : ''}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">${esc(r.srcT || '事例を見る')}</a>` : ''}</dd></div>`; })
+<dl class="ktbl">${t.rows
+    .map((r) => `<div${whenAttr(r.when)}><dt>${esc(r.k)}</dt><dd>${esc(r.v)}${lawSpan(r)}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">${esc(r.srcT || '事例を見る')}</a>` : ''}</dd></div>`)
     .join('')}</dl>
 </section>`;
     })
@@ -76,7 +72,7 @@ const checkBlock = (p) =>
     .map(
       (c, i) => `<section class="sec sec-todo np"${whenAttr(c.when)} aria-labelledby="kc-h${i}">
 <h2 class="sec-h" id="kc-h${i}">${esc(c.h)}</h2>
-${todoMock(p, c, i)}
+${todoList(c, i)}
 </section>`,
     )
     .join('\n');
