@@ -5,6 +5,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, CORNERS } from './site.mjs';
 import { KIHON } from './data/kihon/index.mjs';
+import { rail } from './rail.mjs';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
 const read = (p) => readFileSync(join(SRC, p), 'utf8');
@@ -65,6 +66,9 @@ export function page({ title, description, path, corner, body, js = '', crumbs =
   const noindex = !SITE.launched || forceNoindex;
   const ads = SITE.adsense && !noAds;
   const cornerName = corner ? CORNERS[corner].name : '';
+  // メニューの印：いまのページの URL がメニューにあればそれ（/shikaku/ 以下は資格の更新の期限）、なければコーナーで
+  const navHere = (FOOT_NAV.find(([h]) => h === path || (h === '/shikaku/koushin/' && path.startsWith('/shikaku/'))) || [])[0]
+    || (corner && FOOT_NAV.some(([h]) => h === CORNERS[corner].path) ? CORNERS[corner].path : '');
   const logo = `<a class="logo" href="${base}/"${isHome ? ' aria-current="page"' : ''}>${LOGO_MARK}${esc(SITE.name)}</a>`;
   const crumbHtml = crumbs.length
     ? `<nav class="crumbs" aria-label="パンくず"><ol><li><a href="${base}/">ホーム</a></li>${crumbs
@@ -113,10 +117,10 @@ ${lds}
 </head>
 <body${corner ? ` data-corner="${corner}"` : ''}>
 <header class="bar"><div class="bar-in">${logo}
-<nav class="gnav" aria-label="コーナー">${FOOT_NAV.map(([h, n]) => `<a href="${h}"${corner && CORNERS[corner].path === h ? ' aria-current="true"' : ''}>${n}</a>`).join('')}</nav>
+<nav class="gnav" aria-label="コーナー">${FOOT_NAV.map(([h, n]) => `<a href="${h}"${h === navHere ? ' aria-current="true"' : ''}>${n}</a>`).join('')}</nav>
 <details class="menu"><summary>メニュー</summary><ul>${FOOT_NAV.map(([h, n]) => `<li><a href="${h}">${n}</a></li>`).join('')}</ul></details></div></header>
-<main class="wrap${wide ? ' wide' : ''}">
-${crumbHtml}${body}
+<main class="wrap${wide ? ' wide' : ' pc-a'}">
+${wide ? `${crumbHtml}${body}` : `<div class="col">${crumbHtml}${body}</div>\n${rail(body)}`}
 </main>
 <footer class="foot"><div class="foot-in"><nav class="foot-nav" aria-label="サイトの中">${FOOT_NAV.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</nav><p class="foot-links">${FOOT_LINKS.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</p><p class="foot-name">${esc(SITE.name)}</p></div></footer>
 ${js ? `<script>${js}</script>` : ''}
