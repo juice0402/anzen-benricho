@@ -1,5 +1,5 @@
 // このサイトについて・プライバシーポリシー・免責事項・ページが見つからないとき
-// 広告の審査で見られるページ。広告は置かない（noAds）
+// 広告の審査で見られるページ。広告の枠は置かないが、AdSense のコードは head に入れる（審査の決まり：エラーのページ以外の全ページ）
 import { page, esc } from '../layout.mjs';
 import { aboutDesc } from '../describe.mjs';
 import { ALL_THEMES } from '../data/themes.mjs';
@@ -27,7 +27,6 @@ function info(path, h1, description, body) {
       path,
       body: `<article class="doc"><h1 class="doc-h">${h1}</h1>${body}${established()}</article>`,
       crumbs: [{ name: h1 }],
-      noAds: true,
     }),
   };
 }
