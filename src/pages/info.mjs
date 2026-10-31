@@ -57,7 +57,7 @@ ${contact}`,
 <ul class="doc-ul">${STORED.map((x) => `<li>${x}</li>`).join('')}</ul>
 <p>掲示に入れた名前は保存しません。ページを閉じると消えます。</p>
 <p>「担当者のやること」のチェックは保存しません。ページを閉じると消えます。</p>`)}
-${sec('アクセス解析', `<p>サイトの改善のために、Cookieを使わないアクセス解析（Cloudflare Web Analytics）を使うことがあります。集めるのは、見られたページ・参照元・ブラウザの種類などの統計で、個人を特定する情報はふくみません。</p>`)}
+${sec('アクセス解析', `<p>ページの見られ方を知るために、Cloudflare, Inc. の Cloudflare Web Analytics を使っています。Cookieは使わず、見たページ・参照元・ブラウザと端末の種類・国などを、個人がわからない形で集計します。</p>`)}
 ${sec('広告', `<p>当サイトは、第三者配信の広告サービス「Google AdSense」を利用しています。</p>
 <p>Googleなどの第三者配信事業者は、Cookieを使って、ユーザーが当サイトやほかのサイトに過去にアクセスしたときの情報にもとづいて広告を配信します。Googleは広告のCookieを使うことで、ユーザーが当サイトやほかのサイトにアクセスしたときの情報にもとづいて、Googleやそのパートナーが適切な広告を表示できるようにしています。</p>
 <p>パーソナライズ広告は、Googleの${ext('https://adssettings.google.com/', '広告設定')}で無効にできます。また、${ext('https://www.aboutads.info/', 'www.aboutads.info')}で、パーソナライズ広告に使われる第三者配信事業者のCookieを無効にできます。</p>
@@ -66,7 +66,7 @@ ${sec('アフィリエイト', `<p>当サイトは、楽天アフィリエイト
 ${sec('外部への情報の送信', `<p>当サイトのページを開くと、次の会社にお使いの端末の情報が送られることがあります。</p>
 <table class="doc-tbl"><thead><tr><th>送り先</th><th>送る情報</th><th>使い方</th></tr></thead><tbody>
 <tr><td>Google LLC（Google AdSense）</td><td>Cookieの識別子、見たページのURL、IPアドレス、ブラウザの種類</td><td>広告の表示と効果の測定</td></tr>
-<tr><td>Cloudflare, Inc.（Cloudflare Web Analytics を使うとき）</td><td>見たページのURL、参照元、ブラウザの種類</td><td>アクセスの集計</td></tr>
+<tr><td>Cloudflare, Inc.（Cloudflare Web Analytics）</td><td>見たページのURL、参照元、ブラウザと端末の種類、表示の速さ</td><td>アクセス解析</td></tr>
 </tbody></table>`)}
 ${sec('このポリシーの変更', `<p>必要に応じて変更することがあります。変更したときは、このページでお知らせします。</p>`)}
 ${contact}`,
