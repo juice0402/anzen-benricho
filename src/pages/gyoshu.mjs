@@ -1,5 +1,5 @@
 // 業種の入口 /anzen/gyoshu/<業種>/：その業種の今月のテーマと、それぞれの掲示の決まり
-// トップの業種の名前から来る。月が増えたら、1年の重点もここに足す
+// トップの業種の名前から来る。ほかの月のテーマには、その業種の掲示の決まりの1つ目を添える（審査の決まり：ページにしかない中身）
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
@@ -21,7 +21,7 @@ function entrance(month, themes, g, allThemes) {
   const body = `${monthHead(month, 'h1', esc(`${g.name}の安全衛生`), '', null, `g-${g.key}`)}
 ${fuda(entrancePath, g.key)}
 ${items.join('\n')}
-${others.length ? `<section class="sec paper" aria-labelledby="oth-h">\n<h2 class="sec-h" id="oth-h">ほかの月のテーマ</h2>\n<ul class="krel">${others.map((t) => `<li><a href="${gyoshuPath(t, g)}">${t.month}月 ${esc(t.title)}</a></li>`).join('')}</ul>\n</section>` : ''}
+${others.length ? `<section class="sec paper" aria-labelledby="oth-h">\n<h2 class="sec-h" id="oth-h">ほかの月のテーマ</h2>\n<ul class="khub oth">${others.map((t) => `<li><a href="${gyoshuPath(t, g)}"><b>${t.month}月 ${esc(t.title)}</b><span>${esc(t.gyoshu.find((x) => x.key === g.key).rules[0][0])}</span></a></li>`).join('')}</ul>\n</section>` : ''}
 ${g.key === 'seisou' ? `<section class="sec paper" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel"><li><a href="/shikaku/koushin/">清掃作業監督者などの更新の期限</a></li><li>${SAKUTTO_SEISOU}</li></ul>\n</section>` : ''}
 ${adSlot('end')}`;
   return {

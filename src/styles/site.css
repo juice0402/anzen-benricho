@@ -92,6 +92,7 @@ body { background: #fff; }
 .khub span, .mt-g span, .mu span { color: var(--muted); }
 .mt-g b { color: var(--link); }
 .mu b { color: var(--ink); }
+.oth b { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .sec-pick { gap: 10px; }
 .pick-ph .ph { margin: 0; }
 .pick-rules { font-size: 15px; }
