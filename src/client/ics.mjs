@@ -6,12 +6,12 @@ export function icsShift(d, y, m) {
   t.setDate(Math.min(d.getDate(), new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate()));
   return t;
 }
-function icsPad(n) { return (n < 10 ? '0' : '') + n; }
-function icsDay(d) { return d.getFullYear() + icsPad(d.getMonth() + 1) + icsPad(d.getDate()); }
-function icsStamp(d) {
+export function icsPad(n) { return (n < 10 ? '0' : '') + n; }
+export function icsDay(d) { return d.getFullYear() + icsPad(d.getMonth() + 1) + icsPad(d.getDate()); }
+export function icsStamp(d) {
   return d.getUTCFullYear() + icsPad(d.getUTCMonth() + 1) + icsPad(d.getUTCDate()) + 'T' + icsPad(d.getUTCHours()) + icsPad(d.getUTCMinutes()) + icsPad(d.getUTCSeconds()) + 'Z';
 }
-function icsText(s) { return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n'); }
+export function icsText(s) { return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n'); }
 // 1行75オクテットまで。こえたら CRLF と空白1つで折り返す（UTF-8 の字の途中では切らない）
 export function icsFold(line) {
   var out = '';

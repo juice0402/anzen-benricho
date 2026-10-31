@@ -11,6 +11,7 @@ import { YOTEI } from '../data/kihon/nenkan.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { homeDesc } from '../describe.mjs';
 import { NAYAMI } from '../data/nayami.mjs';
+import { calSub } from '../koyomi.mjs';
 
 // テーマの中身の短い説明（seoName のかっこの中）
 const sub = (t) => (t.seoName && t.seoName.includes('（') ? t.seoName.slice(t.seoName.indexOf('（') + 1, -1) : '');
@@ -59,6 +60,7 @@ ${nyTop}
       (t) => `<li><a href="${themePath(t)}">${photo(t.slug, { sizes: '(min-width: 800px) 200px, 128px', cls: 'ph ph-s' })}<span><small>${esc(t.undo ? t.undo.name : `${t.month}月`)}</small><b>${esc(t.title)}</b>${sub(t) ? `<span>${esc(sub(t))}</span>` : ''}</span></a></li>`,
     )
     .join('')}</ul>
+${themes.some((t) => t.quiz) ? `<p class="u-note hs-q"><a href="/anzen/${month}/#qz-h">${month}月号の今月の1問へ</a></p>` : ''}
 </section>
 <section class="hs" aria-labelledby="yt-h">
 <h2 class="hs-h" id="yt-h">これからの予定</h2>
@@ -69,6 +71,7 @@ ${nyTop}
       }</div></li>`,
     )
     .join('')}</ol>
+${calSub()}
 </section>
 <section class="hs" aria-labelledby="sr-h">
 <h2 class="hs-h" id="sr-h">調べる</h2>

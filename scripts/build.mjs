@@ -13,6 +13,7 @@ import shikakuPages from '../src/pages/shikaku.mjs';
 import kihonPages from '../src/pages/kihon.mjs';
 import monthPages from '../src/pages/months.mjs';
 import { SITE } from '../src/site.mjs';
+import { calendarIcs } from '../src/koyomi.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
@@ -32,6 +33,8 @@ for (const p of pages) write(p.path, p.html, p.file);
 // AdSense の運営者IDを入れたら ads.txt を置く（Google の決まった書き方）
 if (SITE.adsense) writeFileSync(join(DIST, 'ads.txt'), `google.com, ${SITE.adsense.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
 if (existsSync(join(ROOT, 'public'))) cpSync(join(ROOT, 'public'), DIST, { recursive: true });
+// カレンダーの購読（毎月1日の◯月号・運動の期間・法改正の施行日。#42）
+writeFileSync(join(DIST, 'calendar.ics'), calendarIcs({ themes: ALL_THEMES }));
 // 公開したら sitemap.xml（404 はのぞく）。lastmod は作り直した日
 if (SITE.launched) {
   const day = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
