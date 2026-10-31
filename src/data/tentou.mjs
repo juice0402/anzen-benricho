@@ -20,7 +20,7 @@ export const TENTOU = {
     { t: '山形労働局 令和8年度「冬の労災をなくそう運動」（令和8年12月1日〜令和9年2月28日）', u: 'https://jsite.mhlw.go.jp/yamagata-roudoukyoku/roudoukyoku/gyoumu_naiyou/kijun/fuyu-rousaiunndou.html' },
     { t: '石川労働局 令和7年度「冬季無災害運動」（新潟・富山・石川・福井・長野の労働局。令和7年12月1日〜令和8年2月28日）', u: 'https://jsite.mhlw.go.jp/ishikawa-roudoukyoku/content/contents/002472318.pdf' },
   ],
-  note: '冬の運動は雪の多い地域の労働局が12月から2月ごろに行い、名前と期間は局ごとにちがいます。職場のある地域の労働局のページで確認してください。',
+  note: '冬の運動は雪の多い地域の労働局が12月から2月か3月まで行い、名前と期間は局ごとにちがいます。職場のある地域の労働局で確認してください。',
   gyoshu: [
     {
       key: 'jimusho',
