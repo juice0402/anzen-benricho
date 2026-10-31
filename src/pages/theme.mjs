@@ -1,7 +1,10 @@
 // 毎月のテーマ（例 12月「年末の大掃除」）
 //   /anzen/theme/<slug>/          テーマの入口：運動、業種ごとに多いけが、業種をえらぶ
 //   /anzen/theme/<slug>/<業種>/   業種のページ：掲示・朝礼・やること・出典（1業種1ページ。検索と広告の審査で中身が1ページにまとまるように）
-import { page, esc, script, adSlot } from '../layout.mjs';
+import { page, esc, script, adSlot, clientLib } from '../layout.mjs';
+
+// 今月の実施（#43）：押した日を端末の中だけに残す（src/client/rec.mjs）。今ある「やること」のチェックは保存しないまま
+const REC_ITEMS = ['掲示を貼った', '朝礼で話した', 'やることを済ませた'];
 import { SITE } from '../site.mjs';
 import { themePath, gyoshuPath, fuda, monthHead, titleHtml, undoLine } from '../parts.mjs';
 import { ALL_THEMES } from '../data/themes.mjs';
@@ -76,7 +79,7 @@ function gyoshuPage(t, g) {
   const path = gyoshuPath(t, g);
   const body = `${monthHead(t.month, 'h1', titleHtml(t), `${g.name}の`, null, t.slug)}
 ${fuda((x) => gyoshuPath(t, x), g.key)}
-<nav class="toc np" aria-label="このページの中"><p class="toc-h">このページの中</p><ol><li><a href="#poster-h">掲示（A4で印刷）</a></li><li><a href="#talk-h">朝礼（1分の文）</a></li><li><a href="#todo-h">担当者のやること</a></li><li><a href="#src-h">出典</a></li></ol></nav>
+<nav class="toc np" aria-label="このページの中"><p class="toc-h">このページの中</p><ol><li><a href="#poster-h">掲示（A4で印刷）</a></li><li><a href="#talk-h">朝礼（1分の文）</a></li><li><a href="#todo-h">担当者のやること</a></li><li><a href="#rec-h">今月の実施</a></li><li><a href="#src-h">出典</a></li></ol></nav>
 <section class="sec sec-poster" aria-labelledby="poster-h">
 <h2 class="sec-h" id="poster-h">掲示</h2>
 ${sheet(t, g, path)}
@@ -91,6 +94,11 @@ ${g.poster ? `<p class="poster-pdf np"><a href="${g.poster}">ポスター（A4�
 <section class="sec sec-todo" aria-labelledby="todo-h">
 <h2 class="sec-h" id="todo-h">担当者のやること</h2>
 <ul class="todo">${g.todo.map((s, j) => `<li><label for="c-${j}"><input type="checkbox" id="c-${j}"><span>${esc(s)}</span></label></li>`).join('')}</ul>
+</section>
+<section class="sec sec-rec np" aria-labelledby="rec-h">
+<h2 class="sec-h" id="rec-h">今月の実施</h2>
+<ul class="todo rec" data-m="${t.month}" data-t="${t.slug}" data-g="${g.key}">${REC_ITEMS.map((s, j) => `<li><label for="r-${j}"><input type="checkbox" id="r-${j}"><span>${s}</span><small></small></label></li>`).join('')}</ul>
+<p class="u-note">押した日をこの端末に残し、トップの記録に丸がつく</p>
 </section>
 ${adSlot('mid')}
 <section class="sec sec-src" aria-labelledby="src-h">
@@ -108,7 +116,7 @@ ${links(t, g)}`;
       path,
       corner: 'anzen',
       body,
-      js: script('gyoshu'),
+      js: script('gyoshu') + '\n' + clientLib('rec') + '\n' + script('rec'),
       crumbs: [{ name: `${t.month}月の安全衛生`, href: `/anzen/${t.month}/` }, { name: t.title, href: themePath(t) }, { name: g.label }],
     }),
     lastmod: t.checked,

@@ -1,7 +1,8 @@
 // 総合トップ（10/27 写真ふう。同じ日に添削して作り直し）：今月の掲示と朝礼・業種、今月のテーマ、これからの予定、調べる（法改正はここにまとめた）
 // リンクは下線、リンクでない字は紺にしない
 // 中身のないコーナーや「準備中」の札は出さない
-import { page, esc, script, adSlot } from '../layout.mjs';
+import { page, esc, script, adSlot, clientLib } from '../layout.mjs';
+import { REC_MONTHS } from '../client/rec.mjs';
 import { SITE } from '../site.mjs';
 import { themePath, entrancePath, photo, hasPhoto } from '../parts.mjs';
 import { sheet } from './theme.mjs';
@@ -62,6 +63,13 @@ ${nyTop}
     .join('')}</ul>
 ${themes.some((t) => t.quiz) ? `<p class="u-note hs-q"><a href="/anzen/${month}/#qz-h">${month}月号の今月の1問へ</a></p>` : ''}
 </section>
+<section class="hs kr" aria-labelledby="kr-h">
+<h2 class="hs-h" id="kr-h">今年度の記録</h2>
+<p class="kr-run" hidden>続けて記録した月：<b>0</b>か月</p>
+<div class="stp">${REC_MONTHS.map((m) => `<div data-m="${m}" role="group" aria-label="${m}月"><span class="m">${m}月</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>`).join('')}</div>
+<p class="u-note">業種のページで、掲示・朝礼・やることを押すと丸がつく</p>
+<p class="u-note kr-print"><a href="/anzen/kiroku/">1年の実施記録を印刷する（A4）</a></p>
+</section>
 <section class="hs" aria-labelledby="yt-h">
 <h2 class="hs-h" id="yt-h">これからの予定</h2>
 <ol class="yt">${next
@@ -88,7 +96,7 @@ ${adSlot('home')}`;
       ld: [{ '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, alternateName: ['安全衛生便利帳', 'anzen-benricho'], url: `${SITE.url}/`, inLanguage: 'ja' }],
       path: '/',
       body,
-      js: script('remember'),
+      js: script('remember') + '\n' + clientLib('rec') + '\n' + script('rec'),
       isHome: true,
       wide: true,
     }),
