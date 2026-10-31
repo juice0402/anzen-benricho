@@ -34,6 +34,12 @@ ${SHIKAKU.map((s, i) => `<label for="k-${s.key}"><input type="radio" name="k" id
   const body = `${bandHead('講習・資格', '清掃作業監督者などの更新の期限', '<p class="pg-lead">修了証書の日付から、次の期限が出ます</p>', 'shikaku')}
 ${form}
 ${table}
+<section class="sec paper" aria-labelledby="memo-h">
+<h2 class="sec-h" id="memo-h">運営者が受けたときのこと</h2>
+<p>運営者は、病院清掃受託責任者と清掃作業監督者のどちらも持っています。</p>
+<p>病院清掃受託責任者の講習は、オンラインで事前に学んでから会場で講義を受け、最後に講義のまとめの小テストがありました。病院の中を清掃の目で見直せる内容で、受けていておもしろかったです。</p>
+<p>いまの講習の形と日程は、申し込みの前に協会の案内で確かめてください。</p>
+</section>
 <section class="sec paper" aria-labelledby="sr-h">
 <h2 class="sec-h" id="sr-h">あわせて見る</h2>
 <ul class="krel"><li><a href="/shikaku/kigen/">期限のある資格・ない資格</a></li><li><a href="/shikaku/tokubetsu/">特別教育の一覧</a></li><li><a href="/anzen/theme/oosouji/seisou/">清掃・ビルメンの年末の大掃除</a></li><li><a href="/anzen/theme/kansen/seisou/">清掃・ビルメンの冬の感染症（おう吐物の処理）</a></li><li>${SAKUTTO_SEISOU}</li></ul>
