@@ -56,6 +56,7 @@ const FOOT_LINKS = [
   ['/about/', 'このサイトについて'],
   ['/privacy/', 'プライバシーポリシー'],
   ['/disclaimer/', '免責事項'],
+  ...(SITE.contact ? [['/contact/', 'お問い合わせ']] : []),
 ];
 
 export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false, noAds = false, noindex: forceNoindex = false, ogTitle = '', wide = false }) {
