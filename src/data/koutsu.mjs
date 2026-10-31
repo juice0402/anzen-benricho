@@ -10,6 +10,18 @@ export const KOUTSU = {
   posterSrc: '出典：警察庁・内閣府・厚生労働省ほか',
   undo: { name: '年末の交通安全運動', span: '期間は都道府県ごと' },
   checked: '2026-10-22',
+  quiz: {
+    q: '忘年会の翌朝、運転するか迷うとき、決まりに合うのはどれ？',
+    choices: ['酒が残っていそうなら運転せず、上司に言う', 'ひと晩寝たので、運転してよい', '短い距離なら、ゆっくり走れば運転してよい'],
+    answer: 0,
+    why: '寝ても、お酒は朝まで残っていることがある。少しでも残っていそうなら運転しない。',
+    src: 'https://www.gov-online.go.jp/prg/prg25756.html',
+  },
+  gidai: [
+    '忘年会の翌日に運転する人がいないか、前もって確かめる',
+    '乗る前に体調とお酒を確かめるやり方を決める',
+    '早めにライトをつけることと、眠いときは休むことを伝える',
+  ],
   common: [
     { t: '内閣府 全国交通安全運動（全国の運動は春と秋。年末の運動は都道府県ごと）', u: 'https://www8.cao.go.jp/koutu/keihatsu/undou/zenkoku.html' },
     { t: '警察庁 薄暮時間帯における交通事故防止', u: 'https://www.npa.go.jp/bureau/traffic/anzen/hakubo.html' },

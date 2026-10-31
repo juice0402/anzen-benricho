@@ -11,6 +11,18 @@ export const OOSOUJI = {
   undo: { name: '年末年始無災害運動', span: '令和8年12月1日〜令和9年1月15日' },
   related: [{ t: 'この2つの洗剤、まぜると危ない？（判定と置き場の掲示）', href: '/kagaku/mazenai/' }],
   checked: '2026-10-22',
+  quiz: {
+    q: '脚立で高い所をふくとき、決まりに合うのはどれ？',
+    choices: ['届かないときは天板に乗ってふく', '天板には乗らず、高さの合う脚立を使う', '降りるときは道具を持ったまま降りる'],
+    answer: 1,
+    why: '脚立の天板には乗らない。降りるときは道具を持たず、手で支える。',
+    src: 'https://jsite.mhlw.go.jp/okayama-roudoukyoku/content/contents/000683747.pdf',
+  },
+  gidai: [
+    '大掃除の日と分担を決め、高所の担当に脚立を用意する',
+    '脚立の開き止めがきくか、使う前に確かめる',
+    '洗剤の置き場を分け、「まぜるな危険」の表示を確かめる',
+  ],
   common: [
     { t: '中央労働災害防止協会 年末年始無災害運動実施要領（令和8年12月1日〜令和9年1月15日・56回目）', u: 'https://www.jisha.or.jp/info/campaign/musaigai/youryou.html' },
     { t: '千葉労働局 年末年始無災害運動（令和7年12月1日〜令和8年1月15日）', u: 'https://jsite.mhlw.go.jp/chiba-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/musaigaiundou_nenmatunensi.html' },

@@ -43,6 +43,18 @@ export const KASAI = {
   ],
   undo: { name: '秋季全国火災予防運動', span: '令和8年11月9日〜15日' },
   checked: '2026-10-27',
+  quiz: {
+    q: '階段や非常口の前の置き場で、決まりに合うのはどれ？',
+    choices: ['作業のあいだだけなら、台車を置いてよい', '夜に使わない時間なら、段ボールを置いてよい', '避難の通路・階段・非常口の前は、いつも空ける'],
+    answer: 2,
+    why: '避難の通路・階段・非常口の前は、いつも空ける。平成13年の新宿のビル火災では、階段の物で逃げにくかった。',
+    src: 'https://www.city.sapporo.jp/shobo/yobo/shido/kankeishanominasamasa.html',
+  },
+  gidai: [
+    '避難の通路・階段・非常口の前に、物がないか見て回る',
+    '消火器の場所と、前に物がないかを確かめる',
+    '防火管理者が要るかどうか、消防署に確認する',
+  ],
   common: [
     { t: '消防庁 令和8年秋季全国火災予防運動の実施について（令和8年9月。11月9日〜15日）', u: 'https://www.fdma.go.jp/laws/tutatsu/items/2026_09_07_yobo1.pdf' },
     { t: '埼玉県 令和8年秋季全国火災予防運動（11月9日〜15日・全国統一防火標語）', u: 'https://www.pref.saitama.lg.jp/a0404/kasaiyobou/2026akinokasaiyobou.html' },

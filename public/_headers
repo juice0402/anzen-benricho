@@ -10,3 +10,7 @@ https://:project.pages.dev/*
 
 https://:version.:project.pages.dev/*
   X-Robots-Tag: noindex
+
+# カレンダーの購読（#42）
+/calendar.ics
+  Content-Type: text/calendar; charset=utf-8
