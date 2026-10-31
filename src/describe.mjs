@@ -136,16 +136,13 @@ export const koushinDesc = (list) =>
 
 // 資格ごとのページ：/shikaku/koushin/<page>/（期限の数え方・再講習の時期・出典の件数）
 export const koushinPageDesc = (p, s) => {
-  const rule = s.count === 'april' ? `期限は修了した日以後の最初の4月1日から${s.years}年以内。` : `期限は${s.years}年ごと。`;
-  const when = `再講習は${s.when.split('。')[0]}。`;
-  // 清掃の2つは、のびる決まりか、要る理由を1文足す
-  const more = s.count ? '' : end((s.early ? s.rule : s.why).split('。')[0]);
-  return fit(
-    [`${p.name}の再講習の期限を、${p.paper}の日付から計算します。`, rule, more, when, `公的な出典${p.src.length}件、${ym(p.checked)}に確認。`],
-    [`${p.name}の再講習の期限を、${p.paper}の日付から計算します。`, rule, when, `公的な出典${p.src.length}件、${ym(p.checked)}に確認。`],
-    [`${p.name}の再講習の期限を、${p.paper}の日付から計算します。`, rule, when],
-    [`${p.name}の再講習の期限を、${p.paper}の日付から計算します。`, rule],
-  );
+  const head = `${p.name}の再講習の期限を、${p.paper}の日付から計算します。`;
+  const rule = s.count === 'april' ? `期限は修了した日以後の最初の4月1日から${s.years}年以内です。` : `期限は${s.years}年ごとです。`;
+  const when = `再講習は${s.when.split('。')[0]}です。`;
+  // 清掃の2つは、のびる決まりか、要る理由を1文足す（です・ます調で）
+  const more = s.count ? '' : s.early ? `期限の${s.early}か月前から期限までに修了すると、期限から${s.years}年のびます。` : '修了証書は医療法施行規則の受託責任者の知識の証明に使われます。';
+  const src = `公的な出典${p.src.length}件を${ym(p.checked)}に確認しました。`;
+  return fit([head, rule, more, when, src], [head, rule, when, src], [head, rule, more, when], [head, rule, when]);
 };
 
 // このサイトについて
