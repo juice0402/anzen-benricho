@@ -10,8 +10,9 @@ export const SITE = {
   adsense: 'ca-pub-7891863499821813',
   // 審査に通ったあとに作る広告ユニットのID。空のあいだは広告の枠を出さない（空の枠を見せない）
   adSlots: { home: '', mid: '', end: '' },
-  // 問い合わせ・訂正の連絡先（Google フォームなど）。空のあいだは about に出さない
-  contact: '',
+  // お問い合わせ：全サイト共通の Google フォームの、サイト名を入れた事前入力の URL（連絡 C-020。短縮 URL は名前が入らないので使わない）
+  // 入れると /contact/ ができ、フッター・このサイトについて・プライバシーポリシーに出る
+  contact: 'https://docs.google.com/forms/d/e/1FAIpQLSdAYN3cjrLkbbFywxHmCS7bqLFtDN0VmlO3NuTVPqKpaFj6Dg/viewform?usp=pp_url&entry.1872798598=%E5%AE%89%E5%85%A8%E8%A1%9B%E7%94%9F%E3%81%AE%E4%BE%BF%E5%88%A9%E5%B8%B3',
 };
 
 // コーナー。色はデザインのCSSで決め、ここでは名前と場所だけ
