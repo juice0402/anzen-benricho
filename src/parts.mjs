@@ -40,3 +40,6 @@ export const bandHead = (band, title, extra = '', img = '') => `<header class="t
 ${img ? photo(img, { first: true }) : ''}
 ${extra}
 </header>`;
+
+// サクッと計算（姉妹サイト）の清掃の作業時間。清掃の仕事の人が両方に来ている（連絡 C-018）
+export const SAKUTTO_SEISOU = `<a href="https://sakutto-keisan.com/seisou-jikan/">清掃の作業時間の計算（サクッと計算）</a>`;

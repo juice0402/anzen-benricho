@@ -3,7 +3,7 @@
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
-import { gyoshuPath, entrancePath, fuda, monthHead, titleHtml, photo } from '../parts.mjs';
+import { gyoshuPath, entrancePath, fuda, monthHead, titleHtml, photo, SAKUTTO_SEISOU } from '../parts.mjs';
 import { gyoshuDesc } from '../describe.mjs';
 
 function entrance(month, themes, g, allThemes) {
@@ -22,6 +22,7 @@ function entrance(month, themes, g, allThemes) {
 ${fuda(entrancePath, g.key)}
 ${items.join('\n')}
 ${others.length ? `<section class="sec paper" aria-labelledby="oth-h">\n<h2 class="sec-h" id="oth-h">ほかの月のテーマ</h2>\n<ul class="krel">${others.map((t) => `<li><a href="${gyoshuPath(t, g)}">${t.month}月 ${esc(t.title)}</a></li>`).join('')}</ul>\n</section>` : ''}
+${g.key === 'seisou' ? `<section class="sec paper" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel"><li><a href="/shikaku/koushin/">清掃作業監督者などの更新の期限</a></li><li>${SAKUTTO_SEISOU}</li></ul>\n</section>` : ''}
 ${adSlot('end')}`;
   return {
     path,
