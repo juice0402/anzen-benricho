@@ -124,12 +124,29 @@ export const kagakuHubDesc = (list) => {
   );
 };
 
-// 資格の更新の期限：/shikaku/koushin/
+// 資格の更新の期限：/shikaku/koushin/（入口。資格の名前と年数）
 export const koushinDesc = (list) =>
-  fit([
-    `${list.map((s) => `${s.name}（${s.years}年ごと）`).join('と')}の修了した日を入れると、次の期限と再講習を受ける時期が出ます。`,
-    '入れた日付はこの端末の中だけで計算し、送りません。',
-  ]);
+  fit(
+    [
+      `${list.map((s) => s.name).join('・')}の修了した日を入れると、次の期限と再講習を受ける時期が出ます。`,
+      `期限は${[...new Set(list.map((s) => s.years))].join('年・')}年ごと。入れた日付はこの端末の中だけで計算し、送りません。`,
+    ],
+    [`${list.map((s) => s.name).join('・')}の修了した日を入れると、次の期限と再講習を受ける時期が出ます。`, '入れた日付は送りません。'],
+  );
+
+// 資格ごとのページ：/shikaku/koushin/<page>/（期限の数え方・再講習の時期・出典の件数）
+export const koushinPageDesc = (p, s) => {
+  const rule = s.count === 'april' ? `期限は修了した日以後の最初の4月1日から${s.years}年以内。` : `期限は${s.years}年ごと。`;
+  const when = `再講習は${s.when.split('。')[0]}。`;
+  // 清掃の2つは、のびる決まりか、要る理由を1文足す
+  const more = s.count ? '' : end((s.early ? s.rule : s.why).split('。')[0]);
+  return fit(
+    [`${p.name}の再講習の期限を、${p.paper}の日付から計算します。`, rule, more, when, `公的な出典${p.src.length}件、${ym(p.checked)}に確認。`],
+    [`${p.name}の再講習の期限を、${p.paper}の日付から計算します。`, rule, when, `公的な出典${p.src.length}件、${ym(p.checked)}に確認。`],
+    [`${p.name}の再講習の期限を、${p.paper}の日付から計算します。`, rule, when],
+    [`${p.name}の再講習の期限を、${p.paper}の日付から計算します。`, rule],
+  );
+};
 
 // このサイトについて
 export const aboutDesc = ({ themes, kihon, hourei }) =>

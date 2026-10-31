@@ -6,6 +6,15 @@ export function icsShift(d, y, m) {
   t.setDate(Math.min(d.getDate(), new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate()));
   return t;
 }
+// 修了した日から期限を出す。count が 'april' なら「修了した日以後の最初の4月1日から years 年以内」（防火・防災管理の再講習）
+// 4月1日に修了した日はその日から数え、期限は years 年後の3月31日
+export function icsLimit(d, years, count) {
+  if (count === 'april') {
+    var y = d.getMonth() < 3 || (d.getMonth() === 3 && d.getDate() === 1) ? d.getFullYear() : d.getFullYear() + 1;
+    return new Date(y + years, 2, 31);
+  }
+  return icsShift(d, years, 0);
+}
 export function icsPad(n) { return (n < 10 ? '0' : '') + n; }
 export function icsDay(d) { return d.getFullYear() + icsPad(d.getMonth() + 1) + icsPad(d.getDate()); }
 export function icsStamp(d) {
