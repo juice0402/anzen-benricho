@@ -43,6 +43,18 @@ export const KENSHIN = {
   ],
   undo: { name: '職場の健康診断実施強化月間', span: '毎年9月' },
   checked: '2026-10-27',
+  quiz: {
+    q: '会社の定期健康診断の受診は、法令の区分でどうなる？',
+    choices: ['受けるかどうかは、本人しだい', '働く人にも、受ける義務がある', '仕事が忙しい年は、受けなくてよい'],
+    answer: 1,
+    why: '法令の区分では、会社が行う健診は働く人にも受ける義務がある。掲示の決まりは「休まず受ける」。',
+    src: 'https://www.mhlw.go.jp/content/001696789.pdf',
+  },
+  gidai: [
+    '健診を受けていない人がいないか、名簿で確かめる',
+    '所見のある人の医師の意見を、3か月以内に聴く手順を決める',
+    '要再検査の人が、受けて結果を出せるよう伝え方を決める',
+  ],
   common: [
     { t: '山形労働局 令和8年度 全国労働衛生週間実施要綱（準備期間に健診の実施・医師の意見聴取と事後措置・保健指導）', u: 'https://jsite.mhlw.go.jp/yamagata-roudoukyoku/content/contents/002798548.pdf' },
     { t: '富山労働局 9月は職場の健康診断実施強化月間（毎年9月・意見聴取と事後措置を確実に）', u: 'https://jsite.mhlw.go.jp/toyama-roudoukyoku/news_topics/houdou/R08_kenshinkyoukagekkan.html' },

@@ -33,6 +33,18 @@ export const SHINJIN = {
   ],
   undo: null,
   checked: '2026-10-26',
+  quiz: {
+    q: '作業のやり方がわからないとき、決まりに合うのはどれ？',
+    choices: ['見よう見まねで、先に進める', '終わってから、まとめて聞く', '手を止めて聞く。知らない作業は始めない'],
+    answer: 2,
+    why: 'わからない時は手を止めて聞く。やり方を知らない作業は始めない。',
+    src: 'https://www.mhlw.go.jp/file/06-Seisakujouhou-11300000-Roudoukijunkyokuanzeneiseibu/syougyou2.pdf',
+  },
+  gidai: [
+    '雇入れ時の教育を入社後すぐに行ったか、記録で確かめる',
+    '「わからない時に聞く人」を決めて、新しい人に伝える',
+    '1週間後と1か月後に、困りごとを聞く日を決める',
+  ],
   common: [
     { t: '厚生労働省 令和7年における労働災害発生状況（確定値）（別表4 業種と事故の型・別表7 業種と年齢：飲食店は19歳以下が757人）', u: 'https://www.mhlw.go.jp/content/11302000/001704887.pdf' },
     { t: '愛知労働局 令和7年 愛知の労働災害発生状況（経験期間別：1年未満が1,258人・16.0%）', u: 'https://jsite.mhlw.go.jp/aichi-roudoukyoku/content/contents/002636281.pdf' },

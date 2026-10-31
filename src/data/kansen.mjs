@@ -14,6 +14,18 @@ export const KANSEN = {
   undo: null,
   related: [{ t: 'この2つの洗剤、まぜると危ない？（判定と置き場の掲示）', href: '/kagaku/mazenai/' }],
   checked: '2026-10-23',
+  quiz: {
+    q: '熱があるとき、掲示の決まりに合うのはどれ？',
+    choices: ['マスクをして、いつもどおり出勤する', '出勤せず、休んで医療機関に相談する', '午前だけ出て、午後は早めに帰る'],
+    answer: 1,
+    why: 'インフルエンザは、具合が悪くなる前の日から人にうつすことがある。熱があるときは出勤しない。',
+    src: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/infulenza/QA2026.html',
+  },
+  gidai: [
+    '休むときの連絡先と連絡のしかた、休む日数の目安を決める',
+    '休憩室など、みんながさわる所をふく人と時間を決める',
+    '清掃・ビルメンは、おう吐の処理セットが現場にあるか確かめる',
+  ],
   common: [
     { t: '厚生労働省 ノロウイルスに関するQ&A（12月〜1月に多い・うつり方・手洗い・おう吐物の処理）', u: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/kanren/yobou/040204-1.html' },
     { t: '厚生労働省 令和8年度インフルエンザQ&A（12月〜3月にはやる・換気・湿度・休む期間・証明書）', u: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/infulenza/QA2026.html' },
