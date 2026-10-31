@@ -41,6 +41,9 @@ const choice = (dim, items, label) =>
     .map(([k, t]) => `<button type="button" class="fuda-b" data-${dim}="${k}" aria-pressed="false">${t}</button>`)
     .join('')}</div>`;
 
+// A8.net の文字の広告：判定や道具のあとに1つ。「広告」と書き、コードはそのまま（印刷には出さない）
+const a8Block = (p) => (p.a8 ? `<p class="a8 np"><span class="ad-label">広告</span>${esc(p.a8.lead)}${p.a8.code}</p>` : '');
+
 const pickBlock = (p) => {
   if (!p.pick) return '';
   const fallback = p.pick.g && p.pick.n ? '業種と人数をえらぶと、答えが出ます' : p.pick.g ? '業種をえらぶと、答えが出ます' : '人数をえらぶと、答えが出ます';
@@ -204,6 +207,7 @@ function one(p) {
   const body = `${bandHead(p.band || '基本の決まり', p.h1, `<p class="k-ans">${esc(p.answer)}</p>`)}
 ${pickBlock(p)}
 ${tool(p)}
+${a8Block(p)}
 ${tableBlock(p)}
 ${checkBlock(p)}
 ${sheetBlock(p)}

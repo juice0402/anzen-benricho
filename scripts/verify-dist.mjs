@@ -118,11 +118,13 @@ for (const file of htmlFiles) {
     try { new vm.Script(m[1]); } catch (e) { fail(rel, `スクリプトの文法: ${e.message}`); }
   }
   // 外部のファイルを読み込まない（速さのため。広告を入れるときにここで例外を決める）
-  // 例外は AdSense のコードだけ（SITE.adsense を入れたとき、広告のないページ以外）
+  // 例外は AdSense のコード（SITE.adsense を入れたとき、広告のないページ以外）と、A8.net の文字の広告の数える画像（1×1）
+  const A8_PIXEL = /^<img border="0" width="1" height="1" src="https:\/\/www\d*\.a8\.net\/0\.gif\?a8mat=[0-9A-Z+]+"/;
   const ADSENSE = /^<script async src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-\d+"/;
   for (const m of html.matchAll(/<(?:script|img|link|iframe)\b[^>]*\b(?:src|href)="(https?:)?\/\/[^"]*"/g)) {
     if (m[0].includes('rel="canonical"')) continue;
     if (SITE.adsense && ADSENSE.test(m[0])) continue;
+    if (A8_PIXEL.test(m[0])) continue;
     fail(rel, `外部のファイルを読み込んでいる: ${m[0].slice(0, 80)}`);
   }
   for (const m of html.matchAll(/\b(?:href|src)="(\/[^"]*)"/g)) {

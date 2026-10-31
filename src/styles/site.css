@@ -79,6 +79,9 @@ body { background: #fff; }
 .src .chk, .src-note { color: var(--muted); }
 .memo dt a { color: var(--link); }
 .ad-label { color: var(--muted); }
+.a8 { font-size: 15px; line-height: 1.8; }
+.a8 .ad-label { margin-right: 8px; }
+.a8 a { color: var(--link); }
 
 /* 一覧（あわせて見る・目次・月・業種の入口） */
 .krel li { border-top: 1px solid var(--thin); }
