@@ -2,7 +2,7 @@
 import { page, esc, script, clientLib, adSlot } from '../layout.mjs';
 import { koushinDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
-import { bandHead } from '../parts.mjs';
+import { bandHead, SAKUTTO_SEISOU } from '../parts.mjs';
 import { SHIKAKU, SHIKAKU_CHECKED } from '../data/shikaku.mjs';
 import { fmtDate } from '../data/hourei.mjs';
 
@@ -36,7 +36,7 @@ ${form}
 ${table}
 <section class="sec paper" aria-labelledby="sr-h">
 <h2 class="sec-h" id="sr-h">あわせて見る</h2>
-<ul class="krel"><li><a href="/shikaku/kigen/">期限のある資格・ない資格</a></li><li><a href="/shikaku/tokubetsu/">特別教育の一覧</a></li><li><a href="/anzen/theme/oosouji/seisou/">清掃・ビルメンの年末の大掃除</a></li><li><a href="/anzen/theme/kansen/seisou/">清掃・ビルメンの冬の感染症（おう吐物の処理）</a></li></ul>
+<ul class="krel"><li><a href="/shikaku/kigen/">期限のある資格・ない資格</a></li><li><a href="/shikaku/tokubetsu/">特別教育の一覧</a></li><li><a href="/anzen/theme/oosouji/seisou/">清掃・ビルメンの年末の大掃除</a></li><li><a href="/anzen/theme/kansen/seisou/">清掃・ビルメンの冬の感染症（おう吐物の処理）</a></li><li>${SAKUTTO_SEISOU}</li></ul>
 </section>
 ${src}
 ${adSlot('end')}`;

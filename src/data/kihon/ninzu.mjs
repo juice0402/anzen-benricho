@@ -29,6 +29,11 @@ export default {
     { text: '10人で推進者、50人で衛生管理者・産業医・衛生委員会が加わる' },
   ],
   tool: null,
+  // A8.net の文字の広告（連絡 C-014。10/31 しょーくんが人数のページだけ・オンスク.JP の素材002に決めた）。リンクの文字とコードは A8 の決まりで書きかえない
+  a8: {
+    lead: '衛生管理者の免許の試験は、動画と練習問題のオンライン講座でも学べます。',
+    code: '<a href="https://px.a8.net/svt/ejp?a8mat=4BES24+FAQ0W2+408S+5YRHE" rel="nofollow">【オンスク.JP】</a>\n<img border="0" width="1" height="1" src="https://www13.a8.net/0.gif?a8mat=4BES24+FAQ0W2+408S+5YRHE" alt="">',
+  },
   toolData: null,
   check: [
     {
