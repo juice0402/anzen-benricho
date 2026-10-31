@@ -64,7 +64,7 @@ const tableBlock = (p) =>
       return `<section class="sec paper np" aria-labelledby="${id}">
 <h2 class="sec-h" id="${id}">${esc(t.h)}</h2>
 <dl class="ktbl">${t.rows
-    .map((r) => `<div${whenAttr(r.when)}><dt>${esc(r.k)}</dt><dd>${esc(r.v)}${lawSpan(r)}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">${esc(r.srcT || '事例を見る')}</a>` : ''}</dd></div>`)
+    .map((r) => `<div${whenAttr(r.when)}><dt>${r.to ? `<a href="${esc(r.to)}">${esc(r.k)}</a>` : esc(r.k)}</dt><dd>${esc(r.v)}${lawSpan(r)}${r.src ? `<a class="law" href="${esc(r.src)}" rel="noopener">${esc(r.srcT || '事例を見る')}</a>` : ''}</dd></div>`)
     .join('')}</dl>
 </section>`;
     })
