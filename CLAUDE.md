@@ -17,6 +17,7 @@
 - 化学物質のコーナー `/kagaku/`（10/26）：まぜない（2つの洗剤の判定）・SDS の見方・化学物質管理者が要るか・リスクアセスメントの入口。知識のページと同じ部品（`src/data/kihon/` の mazenai・sds・kanrisha・risk）。次亜塩素酸ナトリウムは2027-04-01から対象物（10/27 厚労省の通達・神奈川局・メーカーのSDSで確かめ、法改正 `kagaku-2027` にも）。裾切値はラベル・SDSとも1%（厚労省の一覧の Excel と労働安全衛生総合研究所の一覧。Excel は Claude の環境から開けないので Actions で読んだ）。書かなかったこと：選任の届出の要否、対象物の数
 - 月ごとのテーマ `/anzen/`（一覧）と `/anzen/<月>/`（運動・テーマごとの業種の入口・その月の法改正）
 - 月のページは「◯月号」（10/31 C-016 案A・#42）：業種ごとの memo・升目の暦（`src/koyomi.mjs`。運動の期間は `src/data/koyomi.mjs`、年度の日付は見張りの C〜G のときに直す）・今月の1問（テーマの `quiz`・`src/client/quiz.js`）・今月の委員会で話すこと（テーマの `gidai`）。カレンダーの購読 `/calendar.ics` をビルドで作る（毎月1日の◯月号・運動・法改正の施行日を12か月先まで。`tests/koyomi.test.mjs`）
+- 今年度の記録（10/31 C-016 案B・#43）：業種のページの「今月の実施」（掲示・朝礼・やることを押した日）を端末の中だけに残す（localStorage `anzen-rec-v1`。`src/client/rec.mjs`・`rec.js`、`tests/rec.test.mjs`）。トップの今月のテーマの下にスタンプ帳（4月〜3月）、`/anzen/kiroku/` に1年の実施記録の A4 の表
 - 印刷は A4 1枚。知識のページは紙（.psheet）だけ、ほかは np で印刷に出さない。印刷が1枚に収まるかは Playwright で PDF にして数える（長い掲示は print.css ですき間をつめている）
 - 紙の QR とホーム画面に追加（10/28）：サイトから印刷する紙（業種のページの掲示・知識のページの紙）のすみに、そのページの正規の URL の QR（`src/qr.mjs` でビルドのときに SVG。印刷のときだけ出る・一辺14mm・白い余白4マス。`tests/qr.test.mjs`）。Canva のポスター（public/poster/）には QR を入れない決まり。`/manifest.webmanifest`（display は browser のまま。アイコン 192・512 は `art/icon/render.py` で favicon.svg から）
 - 業種の入口 `/anzen/gyoshu/<業種>/`（トップの業種の名前から）：その業種の今月のテーマと掲示の決まり

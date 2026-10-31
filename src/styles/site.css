@@ -243,3 +243,27 @@ body { background: #fff; }
 .gd-t { font-size: 15px; font-weight: 700; margin-top: 6px; }
 .hs-q a { display: inline-block; padding: 10px 0; font-size: 15px; color: var(--link); }
 .mt-memo { font-size: 13px; line-height: 1.6; color: var(--muted); margin: -6px 0 0; padding-bottom: 10px; }
+
+/* 今年度の記録（C-016 案B・#43）：業種のページの今月の実施・トップのスタンプ帳・1年の実施記録の表 */
+.rec label { grid-template-columns: 24px 1fr auto; align-items: center; }
+.rec small { padding-left: 8px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+.stp { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--thin); border-left: 1px solid var(--thin); }
+.stp > div { border-right: 1px solid var(--thin); border-bottom: 1px solid var(--thin); padding: 8px 6px 10px; text-align: center; }
+.stp .m { display: inline-grid; place-items: center; width: 40px; height: 30px; font-weight: 700; font-size: 15px; color: var(--ink); }
+.stp .full .m { border: 2px solid var(--red); border-radius: 50% 46% 52% 48%; }
+.stp .dots { display: flex; justify-content: center; gap: 5px; margin-top: 6px; }
+.stp .dots i { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid #9aa0a6; box-sizing: border-box; }
+.stp .dots i.on { background: var(--brand); border-color: var(--brand); }
+.stp .now { background: #eef2f9; }
+.kr-run { font-size: 15px; }
+.kr-run b { color: var(--brand); font-size: 18px; margin: 0 2px; }
+.kr-print a { display: inline-block; padding: 8px 0; color: var(--link); }
+.kr-sheet .ps-title { font-size: 5.6cqw; }
+.kr-t { font-size: 2.5cqw; table-layout: fixed; }
+.kr-t th:nth-child(1) { width: 8%; }
+.kr-t th:nth-child(2) { width: 38%; }
+.kr-t th:nth-child(n+3) { width: 13.5%; }
+.kr-t th[scope="row"] { white-space: nowrap; }
+.kr-t thead th { font-size: 2.2cqw; white-space: nowrap; }
+.kr-t td, .kr-t th[scope="row"] { height: 6.6cqw; }
+.kr-list b { margin-right: 8px; }
