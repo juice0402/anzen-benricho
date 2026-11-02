@@ -15,10 +15,12 @@ test('紙のあるページには QR が1つあり、中身はそのページの
   assert.ok(withPaper.length >= ALL_THEMES.length * 4, `紙のあるページが少ない: ${withPaper.length}`);
   for (const p of withPaper) {
     const qrs = [...p.html.matchAll(/<svg class="qr"[\s\S]*?<\/svg>/g)].map((m) => m[0]);
-    assert.equal(qrs.length, 1, `${p.path} の QR の数`);
+    // 紙1枚に1つ（ヒヤリハットのように、えらんで印刷する紙が何枚かあるページは枚数ぶん）
+    const papers = p.html.match(/<div class="(?:sheet|psheet)[" ]/g).length;
+    assert.equal(qrs.length, papers, `${p.path} の QR の数`);
     const url = SITE.url + p.path;
     assert.ok(!/[?#]/.test(url) && url.endsWith('/'), `${p.path} は正規の URL ではない`);
-    assert.equal(qrs[0], qrSvg(url), `${p.path} の QR の中身がページの URL ではない`);
+    for (const q of qrs) assert.equal(q, qrSvg(url), `${p.path} の QR の中身がページの URL ではない`);
   }
 });
 
