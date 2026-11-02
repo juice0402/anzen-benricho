@@ -36,6 +36,7 @@
   - 道具：絵は `art/poster/lib.mjs` の部品で描き `render.mjs` で PNG（`_sheet.png` で4枚を見る）。Canva は大掃除の本番を copy-design すると ID がそのままなので、`canva-ops.mjs <テーマ>` が `template-b.json`・`assets.json`・`alt.json` から edit-design の操作を作る（字の幅を測って1行に収める。1けたの月は字を寄せ、題が長いと業種を帯の上へ）。書き出しはページごと（pdf・a4・pro）、URL は約1時間で切れる
 - 自動：毎月1日と15日 9:10 に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`。テーマ・法改正・資格・知識のページ）。`src/data` を変える PR でも同じ点検が動き、結果は check-run の注記に出る。WebFetch で開けても GitHub からは 404 の出典があるので、出典を足したら PR の注記で確かめる
 - 見張り（`mihari.yml`・`scripts/mihari.mjs`）：公開・作り直し・出典の点検の失敗と、毎朝の確認日の期限・国の発表（A〜G）を issue（mihari・night）にする。詳しくは `docs/mihari.md`
+- マージの印（`merge-ok.yml`・`scripts/merge-ok.mjs`）：司令塔が PR にラベル merge-ok を付けると、点検が通ったら squash でマージして公開を動かす。詳しくは `docs/merge-ok.md`
 
 ## サイト作りの方針（しょーくんの方針・10/17）：迷ったら上から順に優先する
 - 前提：中身が正しい・軽くて速い・利用者のデータを送らない・むだな通信をしない・SEO。公開前に高速化・デバッグ・SEO の点検
