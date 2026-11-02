@@ -1,0 +1,84 @@
+name: 見張り
+
+# 見張り（Claude の予約タスクの代わり。Claude の使用量は使わない）。何もなければ何もしない。中身は scripts/mihari.mjs
+#   公開・作り直し・出典の点検（main）が失敗 → issue（ラベル mihari。朝の確認がしょーくんに知らせる）。成功 → 同じ題の issue を閉じる
+#   毎朝 5:41（日本時間）：確認日の期限（C）と国の発表（A・B1・D〜G。見る期間のものだけ）→ issue（ラベル night。夜のまとめ作業が進める）
+#   手で試す：Actions の「見張り」→ Run workflow。dry_run（はじめから入っている）なら issue を作らず、作るはずの題と本文をログに出す。today で日付を変えて試せる
+
+on:
+  workflow_run:
+    workflows: ['Build and Deploy', '出典の点検']
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: '41 20 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'issue を作らず、作るはずの題と本文をログに出す'
+        type: boolean
+        default: true
+      today:
+        description: '試す日 YYYY-MM-DD（dry_run のときだけ。空なら今日）'
+        type: string
+        default: ''
+
+permissions:
+  issues: write
+  contents: read
+  actions: read
+
+concurrency:
+  group: mihari-${{ github.event.workflow_run.path || 'watch' }}
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: github.event_name == 'workflow_run'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: scripts
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: 失敗なら issue、成功なら閉じる
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/mihari.mjs notify
+
+  watch:
+    if: github.event_name != 'workflow_run'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: 前の記録を読む（見られなかったページの日数）
+        uses: actions/cache/restore@v4
+        with:
+          path: .mihari
+          key: mihari-${{ github.run_id }}
+          restore-keys: mihari-
+
+      - name: 確認日の期限と国の発表を見る
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          TODAY: ${{ inputs.today }}
+        run: node scripts/mihari.mjs watch
+
+      - name: 記録をとっておく
+        if: always() && !inputs.dry_run
+        uses: actions/cache/save@v4
+        with:
+          path: .mihari
+          key: mihari-${{ github.run_id }}
