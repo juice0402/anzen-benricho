@@ -75,3 +75,32 @@ test('義務の区別：根拠のある表の行と、やることのすべて�
   }
   assert.equal(open, KB_OPEN.size, 'KB_OPEN に、もうない項目がある');
 });
+
+// ヒヤリハット（#51）：記入例は4業種そろう・欄は用紙の欄の名前・紙の1行の字数に収まる。集計表の列と事故の型の21分類
+test('ヒヤリハット：記入例が4業種そろい、集計表の列と事故の型がある', () => {
+  const p = KIHON.find((x) => x.slug === 'hiyari');
+  const s = p.sheet;
+  const ks = s.rows.map((r) => r.k);
+  const gs = s.examples.flatMap((e) => e.when.g);
+  assert.deepEqual([...gs].sort(), [...G].sort(), '記入例は業種ごとに1つずつ');
+  for (const e of s.examples) {
+    assert.match(e.src, /^https:\/\/anzeninfo\.mhlw\.go\.jp\/hiyari\/hiy_\d{4}\.html$/, e.name);
+    assert.ok(p.src.some((x) => x.u === e.src), `${e.name} の事例が出典にある`);
+    for (const [k, v] of Object.entries({ ...e.v, ...(e.na || {}) })) {
+      assert.ok(ks.includes(k), `${e.name}：用紙にない欄 ${k}`);
+      const r = s.rows.find((x) => x.k === k);
+      assert.ok(len(v) <= 19 * (r.lines || 1), `${e.name}：${k} が紙の欄に入らない`);
+    }
+    for (const k of ['日時', '報告した人', '受けた人・ひとこと', '対策をした日']) assert.ok(!e.v[k], `${e.name}：${k} は空ける`);
+  }
+  assert.deepEqual(s.tally.cols, ['日付', '場所', '何が起きそうだったか', '事故の型', '対策', '対策をした日']);
+  assert.ok(s.tally.rows >= 8 && s.tally.rows <= 10, '集計表は8〜10行');
+  assert.equal(s.tally.types.length, 21, '事故の型は21分類');
+  assert.equal(new Set(s.tally.types).size, 21);
+  assert.equal(s.tally.types[0], '墜落・転落');
+  assert.equal(s.tally.types[20], '分類不能');
+  assert.ok(p.keywords.includes('ヒヤリハット 記入例') && p.keywords.includes('ヒヤリハット 集計表'));
+  // 集計と委員会への報告は職場で決めること（法令の義務のように書かない）
+  const it = p.check.flatMap((c) => c.items).find((x) => x.t.includes('委員会'));
+  assert.equal(it && it.kb, 's');
+});

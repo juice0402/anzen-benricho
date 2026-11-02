@@ -117,6 +117,71 @@ const nenkanBodies = (s) => {
   return [null, ...GYOSHU].map(body).join('');
 };
 
+// 用紙（kind: 'form'）。v を渡すと欄に字が入る（記入例）。data-pf は画面で書いた字を入れる所（報告書）
+const PF_CH = 19; // 紙の1行に入る字の数のめやす（欄の幅 59cqw ÷ 字の大きさ 3.1cqw）
+const formPaper = (p, o = {}) => {
+  const s = p.sheet;
+  const v = o.v || {};
+  const na = o.na || {};
+  const dd = (r, i) => {
+    const t = v[r.k] ? esc(v[r.k]) : na[r.k] ? `<span class="pf-na">${esc(na[r.k])}</span>` : '';
+    return `<dd style="--l:${r.lines || 1}"${o.input ? ` data-pf="${i}"` : ''}>${t}</dd>`;
+  };
+  return `<div class="psheet pf"${o.attr || ''}><div class="ps-in">
+<p class="ps-title">${esc(s.title)}${o.kicker ? `<span class="pf-kicker">${esc(o.kicker)}</span>` : ''}</p>
+${o.note || s.note ? `<p class="ps-note">${esc(o.note || s.note)}</p>` : ''}
+<dl class="pf-rows">${s.rows.map((r, i) => `<div><dt>${esc(r.k)}</dt>${dd(r, i)}</div>`).join('')}</dl>
+${foot(p)}
+</div></div>`;
+};
+
+// 1か月の集計表（委員会用）。題の月と件数、表、委員会で話したこと、紙の下に事故の型の名前
+const tallyPaper = (p, attr) => {
+  const t = p.sheet.tally;
+  return `<div class="psheet pt"${attr}><div class="ps-in">
+<p class="ps-title"><span class="pt-m"></span>${esc(t.title)}</p>
+<dl class="pg-f pt-f">${t.fields.map((f) => `<div><dt>${esc(f)}</dt><dd></dd></div>`).join('')}</dl>
+<table class="pg-t pt-t"><thead><tr>${t.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${`<tr>${'<td></td>'.repeat(t.cols.length)}</tr>`.repeat(t.rows)}</tbody></table>
+<dl class="pf-rows"><div><dt>${esc(t.talk.k)}</dt><dd style="--l:${t.talk.lines}"></dd></div></dl>
+<p class="pt-types"><b>${esc(t.typesH)}</b>${t.types.map((x) => `<span>${esc(x)}</span>`).join('')}</p>
+${foot(p)}
+</div></div>`;
+};
+
+// 紙が何枚かある用紙（ヒヤリハット #51）：報告書／記入例／集計表から1枚えらぶ（えらんだ1枚だけ見せて印刷）
+// えらび方は業種の切りかえと同じ文字の並び。記入例は4業種ぶんビルドで作り、えらんだ業種のものだけ見せる（kihon.js）
+const formPapers = (p) => {
+  const s = p.sheet;
+  const kinds = [['form', '報告書']];
+  if (s.examples) kinds.push(['rei', '記入例']);
+  if (s.tally) kinds.push(['tally', '集計表']);
+  const pick = kinds.length > 1
+    ? `<div class="fuda ps-pick np" role="group" aria-label="印刷する紙">${kinds.map(([k, t], i) => `<button type="button" class="fuda-b" data-ps="${k}" aria-pressed="${i ? 'false' : 'true'}">${t}</button>`).join('')}</div>`
+    : '';
+  const input = s.input
+    ? `<div class="ks-ctl pf-in np" data-psv="form">
+${s.rows.map((r, i) => {
+    const l = r.lines || 1;
+    const f = l > 1
+      ? `<textarea id="pf-${i}" rows="${l}" maxlength="${PF_CH * l}" autocomplete="off"></textarea>`
+      : `<input id="pf-${i}" type="text" maxlength="${PF_CH}" autocomplete="off">`;
+    return `<label class="ks-date" for="pf-${i}">${esc(r.k)}${f}</label>`;
+  }).join('\n')}
+<p class="ks-hint">書いた字は紙に入るだけで、送らず残しません</p>
+<button type="button" class="ks-cal-b pf-clear">書いた字を消す</button>
+</div>`
+    : '';
+  const rei = (s.examples || []).map((e) => formPaper(p, { v: e.v, na: e.na, kicker: '記入例', note: `職場のあんぜんサイトの事例（${e.name}）から`, attr: ` data-psv="rei" data-pr="${e.when.g.join(' ')}" hidden` })).join('\n');
+  const reiNone = s.examples ? `<p class="ks-hint pr-none np" data-psv="rei" hidden>上の「うちの職場」で業種をえらぶと出ます</p>` : '';
+  return {
+    ctl: `${pick}\n${input}`,
+    paper: `${formPaper(p, { input: s.input, attr: ' data-psv="form"' })}
+${reiNone}
+${rei}
+${s.tally ? tallyPaper(p, ' data-psv="tally" hidden') : ''}`,
+  };
+};
+
 const sheetBlock = (p) => {
   const s = p.sheet;
   if (!s) return '';
@@ -139,13 +204,10 @@ ${s.note ? `<p class="ks-hint">${esc(s.note)}</p>` : ''}
 <p class="pk-date">選任した日　　　　年　　月　　日</p>
 ${foot(p)}
 </div></div>`;
+  } else if (s.kind === 'form' && (s.input || s.examples || s.tally)) {
+    ({ ctl, paper } = formPapers(p));
   } else if (s.kind === 'form') {
-    paper = `<div class="psheet pf"><div class="ps-in">
-<p class="ps-title">${esc(s.title)}</p>
-${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
-<dl class="pf-rows">${s.rows.map((r) => `<div><dt>${esc(r.k)}</dt><dd style="--l:${r.lines || 1}"></dd></div>`).join('')}</dl>
-${foot(p)}
-</div></div>`;
+    paper = formPaper(p);
   } else if (s.kind === 'poster') {
     // 毎月のテーマの掲示と同じ形（決まり・確認欄・出典の1行）
     paper = `<div class="sheet"><div class="tora" aria-hidden="true"></div><div class="sheet-in">

@@ -76,6 +76,46 @@
 
   var pb = document.querySelector('.print-btn');
   if (pb) pb.addEventListener('click', function () { window.print(); });
+
+  // 用紙が何枚かあるページ（ヒヤリハット）：報告書・記入例・集計表から1枚。えらんだ1枚だけ見せて印刷する
+  // 報告書は画面で書いた字を紙の欄に入れるだけ（送らない・保存しない）。記入例はえらんだ業種のもの
+  var ps = document.querySelector('.ps-pick');
+  if (ps) {
+    var cur = 'form';
+    var psShow = function () {
+      var hasRei = false;
+      Array.prototype.forEach.call(document.querySelectorAll('[data-psv]'), function (el) {
+        var on = el.getAttribute('data-psv') === cur;
+        if (on && el.hasAttribute('data-pr')) on = !!sel.g && el.getAttribute('data-pr').split(' ').indexOf(sel.g) > -1;
+        if (on && el.hasAttribute('data-pr')) hasRei = true;
+        if (on && el.classList.contains('pr-none')) on = !sel.g;
+        el.hidden = !on;
+      });
+      Array.prototype.forEach.call(ps.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-ps') === cur ? 'true' : 'false'); });
+      if (pb) pb.hidden = cur === 'rei' && !hasRei;
+    };
+    ps.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b) return;
+      cur = b.getAttribute('data-ps');
+      psShow();
+    });
+    if (box) box.addEventListener('click', function () { setTimeout(psShow, 0); });
+    psShow();
+    var pfIn = document.querySelector('.pf-in');
+    if (pfIn) {
+      var pfPut = function (f) {
+        var dd = document.querySelector('[data-pf="' + f.id.slice(3) + '"]');
+        if (dd) dd.textContent = f.value;
+      };
+      pfIn.addEventListener('input', function (e) { if (e.target.id && e.target.id.indexOf('pf-') === 0) pfPut(e.target); });
+      pfIn.querySelector('.pf-clear').addEventListener('click', function () {
+        Array.prototype.forEach.call(pfIn.querySelectorAll('input, textarea'), function (f) { f.value = ''; pfPut(f); });
+      });
+      // 戻るボタンなどでブラウザが入力を残したときも、紙と合わせる
+      Array.prototype.forEach.call(pfIn.querySelectorAll('input, textarea'), pfPut);
+    }
+  }
   // 計算の道具
   var tb = document.querySelector('.ktool');
   if (tb) {

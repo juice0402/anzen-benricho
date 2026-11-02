@@ -209,6 +209,27 @@ li[hidden], .ktbl div[hidden], .sec[hidden] { display: none; }
 .pg-t { width: 100%; border-collapse: collapse; font-size: 2.8cqw; }
 .pg-t th, .pg-t td { border: .25cqw solid #9aa3a8; padding: .8cqw 1.2cqw; text-align: left; vertical-align: top; height: 5.4cqw; }
 .pg-t th { font-weight: 700; background: #eef1f3; }
+.psheet[hidden], .pf-in[hidden] { display: none; }
+/* ヒヤリハット（#51）：画面で書くと用紙に字が入る・記入例・1か月の集計表 */
+.pf-rows dd { overflow: hidden; font-size: 3.1cqw; line-height: 6.6cqw; overflow-wrap: anywhere; white-space: pre-wrap; padding-left: .6cqw; }
+.pf-na { font-size: 2.4cqw; color: #5c6670; }
+.pf-kicker { font-size: 3.6cqw; border: .3cqw solid currentColor; padding: .3cqw 2cqw; margin-left: 3cqw; vertical-align: .4em; white-space: nowrap; }
+.pf-in .ks-date input, .pf-in .ks-date textarea { max-width: none; }
+.ks-date textarea { font: inherit; font-size: 17px; line-height: 1.5; padding: 8px 10px; border-radius: 0; width: 100%; resize: vertical; }
+.pf-in .pf-clear { margin-top: -2px; }
+.ps-pick { margin-bottom: 4px; }
+.pr-none { padding: 12px 0; }
+.pt-m { display: inline-block; width: 12cqw; border-bottom: .3cqw solid currentColor; margin-right: 1cqw; height: 1em; vertical-align: baseline; }
+.pt-f { grid-template-columns: 40cqw; }
+.pt-t { font-size: 2.5cqw; table-layout: fixed; }
+.pt-t th, .pt-t td { height: 6.4cqw; padding: .6cqw .8cqw; }
+.pt-t th { height: auto; }
+.pt-t td:first-child, .pt-t th:first-child { width: 10%; }
+.pt-t th:nth-child(2) { width: 15%; }
+.pt-t th:nth-child(4) { width: 14%; }
+.pt-t th:nth-child(6) { width: 12%; }
+.pt-types { font-size: 2.2cqw; line-height: 1.5; display: flex; flex-wrap: wrap; gap: 0 2.2cqw; color: #3c4650; }
+.pt-types b { width: 100%; font-size: 2.4cqw; }
 
 /* 月のページ：業種ごとの入口 */
 .mt-g li + li { border-top: 1px solid var(--thin); }
