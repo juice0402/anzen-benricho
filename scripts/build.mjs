@@ -13,6 +13,7 @@ import shikakuPages from '../src/pages/shikaku.mjs';
 import kihonPages from '../src/pages/kihon.mjs';
 import monthPages from '../src/pages/months.mjs';
 import kirokuPage from '../src/pages/kiroku.mjs';
+import yomimonoPages from '../src/pages/yomimono.mjs';
 import { SITE } from '../src/site.mjs';
 import { calendarIcs } from '../src/koyomi.mjs';
 
@@ -28,7 +29,7 @@ const write = (path, html, name) => {
 };
 
 const ctx = { month: MONTH, themes: THEMES, allThemes: themesInOrder(), kaisei: nextKaisei() };
-const pages = [home(ctx), ...gyoshuPages(ctx), ...monthPages(ALL_THEMES, MONTH), kirokuPage(ALL_THEMES), ...ALL_THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...kihonPages(), ...infoPages()];
+const pages = [home(ctx), ...gyoshuPages(ctx), ...monthPages(ALL_THEMES, MONTH), kirokuPage(ALL_THEMES), ...ALL_THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...kihonPages(), ...yomimonoPages(), ...infoPages()];
 
 for (const p of pages) write(p.path, p.html, p.file);
 // AdSense の運営者IDを入れたら ads.txt を置く（Google の決まった書き方）

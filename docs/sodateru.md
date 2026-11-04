@@ -4,7 +4,7 @@
 
 ## 山
 
-### [ ] 読みものの置き場所（/yomimono/）と最初の1本
+### [x] 読みものの置き場所（/yomimono/）と最初の1本（#59）
 - やること：読みもののコーナーを作り、1本目を書く。データ `src/data/yomimono/index.mjs`（`YOMIMONO`・新しい順）と `src/data/yomimono/fuyu-neta.mjs`、ページ `src/pages/yomimono.mjs`（目次 `/yomimono/` と記事 `/yomimono/<slug>/`）、`src/site.mjs` のコーナーに「読みもの」、トップの「調べる」に1行（「季節のネタ・法改正のまとめなど◯本」）、サイトマップ、出典の点検（`scripts/check-sources.mjs` に記事の src を足す）、`tests/yomimono.test.mjs`、CLAUDE.md（いまの状態とファイルの表に1行ずつ）。1本目は docs/yomimono-neta.md のネタの山の1番目「冬の安全衛生ネタ 12〜2月の朝礼で話せること」を、同じファイルの書き方で書き、ネタの行を `[x]` にする
 - できあがりの条件：`npm run check` が緑。`/yomimono/` と `/yomimono/fuyu-neta/` が出る。テストが docs/yomimono-neta.md のひな形の項目（slug・h1・title・description・d・published・checked・photo・lead・sections・voice・links・src）と、本文900字以上・出典2つ以上・links 1〜3・photo が photos.mjs にあることを見る。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らす
 - 決まったこと：コーナーの名前は「読みもの」。データの形は docs/yomimono-neta.md のひな形のとおり（読みもの書きの予約タスクがそれで書く）。見た目はいまの部品だけで、新しい形は作らない：記事の頭は知識のページ・資格のページと同じ（パンくず・見出し・16:9 の写真）、目次の1行はトップの「こんなときは」と同じ形（写真 96×54・下線の太字・灰色の1行 d）。記事の中の並びは、はじめの答え（lead）→ 節（h2.sec-h、表があれば表）→ 運営者のひとこと（voice があるときだけ。見出し「運営者のひとこと」）→ 職場で確かめる（links）→ 広告の枠 adSlot('end') → 出典（ol.src。公開日と「◯年◯月◯日に確かめた内容です」）。記事は確認日の90日のテストと見張り（mihari の C）の対象外、毎週の出典の点検には入れる。説明文はデータの description をそのまま。印刷は作らない。写真は1本1枚で `ym-<slug>`（ほかのページと同じ写真は使わない）。パソコンの右の柱は、いまの rail（このページの中）がそのまま出る

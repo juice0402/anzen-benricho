@@ -22,4 +22,5 @@ export const CORNERS = {
   kyotsu: { name: '講習・法令', path: '/hourei/' },
   kihon: { name: '基本の決まり', path: '/kihon/' },
   kagaku: { name: '化学物質', path: '/kagaku/' },
+  yomimono: { name: '読みもの', path: '/yomimono/' },
 };
