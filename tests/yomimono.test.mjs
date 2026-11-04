@@ -1,7 +1,7 @@
 // 読みもの（/yomimono/）の決まり：ひな形の項目（docs/yomimono-neta.md）・本文900字以上・出典2つ以上で公的なサイト・つなぐ先1〜3・写真
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { YOMIMONO, yomimonoPath } from '../src/data/yomimono/index.mjs';
 import { PHOTO, photoBase } from '../src/data/photos.mjs';
 import { descLen } from '../src/describe.mjs';
@@ -86,4 +86,23 @@ for (const y of YOMIMONO) {
 test('読みもの：知識のページ・テーマ・こんなときはと同じ写真を使わない', () => {
   const used = new Set([...ALL_THEMES.map((t) => t.slug), ...NAYAMI.map((n) => n.ph), ...KIHON.map((p) => p.photo).filter(Boolean)]);
   for (const y of YOMIMONO) assert.ok(!used.has(y.photo), `${y.photo} はほかのページの写真`);
+});
+
+test('読みもの：ページとサイトマップ（目次と全部の記事が lastmod つきで出る）', async () => {
+  const { default: yomimonoPages } = await import('../src/pages/yomimono.mjs');
+  const pages = yomimonoPages();
+  assert.deepEqual(pages.map((p) => p.path), ['/yomimono/', ...YOMIMONO.map(yomimonoPath)]);
+  for (const p of pages) {
+    assert.ok(!p.file, `${p.path} がサイトマップから外れる`);
+    assert.match(p.lastmod, DAY, `${p.path} の lastmod`);
+  }
+  assert.ok(!pages[0].html.includes('class="adsbygoogle"'), '目次に広告の枠がある');
+  const build = readFileSync(new URL('../scripts/build.mjs', import.meta.url), 'utf8');
+  assert.match(build, /\.\.\.yomimonoPages\(\)/, 'build.mjs が読みもののページを作っていない');
+});
+
+test('読みもの：毎週の出典の点検に記事の出典が入る（確認日の期限は見ない）', () => {
+  const src = readFileSync(new URL('../scripts/check-sources.mjs', import.meta.url), 'utf8');
+  assert.match(src, /for \(const y of YOMIMONO\) for \(const s of y\.src\) add\(\{ t: s\.t, u: s\.url \}/);
+  assert.ok(!/YOMIMONO\.map\(\(y\) => \[[^\]]*checked/.test(src), '記事の確認日を期限の点検に入れている');
 });

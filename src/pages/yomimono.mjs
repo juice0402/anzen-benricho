@@ -59,6 +59,7 @@ ${src}`;
   };
 }
 
+// 目次には広告の枠を置かない（広告は記事のいちばん下だけ）
 function hub(list) {
   const path = '/yomimono/';
   const body = `${bandHead('読みもの', '安全衛生の読みもの', '<p class="pg-lead">季節のネタや法改正を1本ずつ</p>')}
@@ -67,8 +68,7 @@ function hub(list) {
 <ul class="ny ym-list">${list
     .map((y) => `<li><a href="${yomimonoPath(y)}">${photo(y.photo, { sizes: '96px', cls: 'ph ph-s' })}<span><b>${esc(y.h1)}</b><span>${esc(y.d)}</span></span></a></li>`)
     .join('')}</ul>
-</section>
-${adSlot('end')}`;
+</section>`;
   return {
     path,
     html: page({
