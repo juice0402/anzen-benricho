@@ -43,3 +43,5 @@ ${extra}
 
 // サクッと計算（姉妹サイト）の清掃の作業時間。清掃の仕事の人が両方に来ている（連絡 C-018）
 export const SAKUTTO_SEISOU = `<a href="https://sakutto-keisan.com/seisou-jikan/">清掃の作業時間の計算（サクッと計算）</a>`;
+// サクッと計算の現場手帳（C-021。清掃の現場の記録と見積もりの目安）
+export const SAKUTTO_GENBA = `<a href="https://sakutto-keisan.com/genba/">清掃の現場手帳（サクッと計算）</a>`;
