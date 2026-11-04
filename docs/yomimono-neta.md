@@ -74,7 +74,7 @@ export default {
 ## ネタの山
 書き方：`- [ ] 題 — だれの何に答えるか／出典の URL／つなぐ先／経験（あるときだけ）`。上から順に書く。出典が開けないネタは飛ばして、山のいちばん下へ回す
 
-- [ ] 冬の安全衛生ネタ 12〜2月の朝礼で話せること — 「安全衛生 ネタ 冬」で探す担当者に、12〜2月のテーマと全国の運動を月ごとに（docs/sodateru.md の1番目の夜が、置き場所といっしょに書く）／出典 https://anzeninfo.mhlw.go.jp/yougo/yougo94_1.html ・ https://www.jisha.or.jp/info/campaign/musaigai/youryou.html ・サイトのデータ src/data/themes.mjs（12・1・2月）と src/data/koyomi.mjs／つなぐ先 /anzen/12/ ・ /anzen/1/ ・ /anzen/2/
+- [x] 冬の安全衛生ネタ 12〜2月の朝礼で話せること（PR #60・2026-11-04）
 - [ ] 年末年始無災害運動とは（12月1日〜1月15日）— どんな運動で、小さな職場は何をするか／出典 https://www.jisha.or.jp/info/campaign/musaigai/youryou.html ・ https://jsite.mhlw.go.jp/tochigi-roudoukyoku/content/contents/002475103.pdf ・ https://jsite.mhlw.go.jp/chiba-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/musaigaiundou_nenmatunensi.html ／つなぐ先 /anzen/nenkan/ ・ /anzen/12/
 - [ ] 加湿器の手入れとレジオネラ（冬の事務所）— 事務所の加湿器を毎日・毎週どう手入れするか／出典 https://www.mhlw.go.jp/content/10900000/001318584.pdf ・ https://www.city.machida.tokyo.jp/iryo/hokenjo/kankyou/gaityu/shitudo_fuyu.files/kashituki.pdf ／つなぐ先 /anzen/theme/kanki/ ・ /kihon/setsubi/
 - [ ] 凍った床と雪の日の出入口（清掃・ビルメンの転倒）— 雪や凍結の朝、入口と通路をどう整えるか／出典 https://jsite.mhlw.go.jp/nagano-roudoukyoku/content/contents/touki_tentousaigaiboushi-leaflet202312.pdf ・ https://jsite.mhlw.go.jp/ishikawa-roudoukyoku/content/contents/002477015.pdf ・ https://anzeninfo.mhlw.go.jp/yougo/yougo94_1.html ／つなぐ先 /anzen/theme/tentou/seisou/
