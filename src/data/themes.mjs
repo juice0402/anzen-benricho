@@ -6,6 +6,7 @@ import { KOUTSU } from './koutsu.mjs';
 import { KANSEN } from './kansen.mjs';
 import { HARASSMENT } from './harassment.mjs';
 import { TENTOU } from './tentou.mjs';
+import { ISSANKA } from './issanka.mjs';
 import { YOUTSU } from './youtsu.mjs';
 import { KOKORO } from './kokoro.mjs';
 import { SHINJIN } from './shinjin.mjs';
@@ -20,7 +21,7 @@ import { KAROU } from './karou.mjs';
 import { KASAI } from './kasai.mjs';
 import { todayJst } from './hourei.mjs';
 
-export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, YOUTSU, KOKORO, SHINJIN, KOUREI, NECCHU, TE, NECCHU_TAIOU, KANDEN, KENSHIN, KANKI, KAROU, KASAI];
+export const ALL_THEMES = [OOSOUJI, KOUTSU, HARASSMENT, KANSEN, TENTOU, ISSANKA, YOUTSU, KOKORO, SHINJIN, KOUREI, NECCHU, TE, NECCHU_TAIOU, KANDEN, KENSHIN, KANKI, KAROU, KASAI];
 
 export const monthFor = (iso = todayJst(), themes = ALL_THEMES) => {
   const [, m, d] = iso.split('-').map(Number);
