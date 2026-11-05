@@ -193,6 +193,15 @@ body { background: #fff; }
   .ny { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; }
 }
 
+/* 読みもの（#59）：目次は「こんなときは」の行を1列で、記事ははじめの答え・表・つなぐ先の1行 */
+.ny.ym-list { display: block; }
+.ym-lead { font-size: 17px; line-height: 1.75; }
+.ym-tw { overflow-x: auto; }
+.ym-t { font-size: 14px; }
+.ym-t th { white-space: nowrap; }
+.ym-t tbody th { font-weight: 700; }
+.ym-d { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+
 /* フッター */
 .foot { background: #222; color: #fff; border: 0; margin-top: 0; }
 .foot-in { max-width: 1080px; padding-top: 28px; padding-bottom: 40px; gap: 12px; }

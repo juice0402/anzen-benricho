@@ -15,6 +15,7 @@
 - 資格の更新の期限 `/shikaku/koushin/`（`src/data/shikaku.mjs`、計算は `src/client/koushin.js`。端末の中だけ）。入口でえらぶのは清掃作業監督者・病院清掃受託責任者・甲種防火管理者・防災管理者の4つ。資格ごとのページ `/shikaku/koushin/kantoku/`・`byouin/`・`bouka/`（10/31 夜 #50。中身は `KOUSHIN_PAGES`、資格はえらばせない。防火・防災は「修了した日以後の最初の4月1日から5年以内」で `count: 'april'`・`icsLimit`。テストは `tests/shikaku.test.mjs`。title の頭「清掃作業監督者・病院清掃受託責任者」は入口の順位のため変えない）。期限の下の「カレンダーに入れる」で、期限・6か月前・1か月前の終日の予定（朝9時に通知、過ぎた日は入れない）の .ics を端末の中で作る（`src/client/ics.mjs`、テストは `tests/ics.test.mjs`。ページでは export を外して `clientLib('ics')` で埋め込む）
 - 知識のページ（10/23。討論はプロジェクトの claude/anzen-chishiki-debate-2026-10-23.md）：`src/data/kihon/*.mjs`（1ページ1ファイル、並びは index.mjs）、部品は `src/pages/kihon.mjs`・道具は `kihon-tools.mjs` と `src/client/kihon.js`。目次 `/kihon/`。1ページ1つの問い、答えは40字まで、判定・道具・チェック・印刷のどれかが必ずある、条文を書くなら e-Gov を出典に（`tests/kihon.test.mjs`）。「法令の区分では」と書き、区分に迷う業種は「労働基準監督署に確認」。義務の区別（10/29）：表の行とやることに `kb`（g 法令の義務・d 努力義務・s 職場で決めること）。通達が「必要」「〜こと」と書くものは法令の義務で文の最後に「（国の通達）」、通達・指針の「望ましい」は職場で決めること。いまは推進者・人数・入社・特別教育・資格の期限・設備・保存期間・死傷病報告・1年・ヒヤリハット・KY・巡視。1年（/anzen/nenkan/）の年間計画の紙は、全国の運動（`YOTEI`）をいつも埋め、業種をえらぶとその月のテーマ（業種のページへのリンク）・掲示の決まりの1つ目・その年度に施行の法改正が入る（4業種の表をビルドで作り、えらんだものだけ見せる。`tests/nenkan.test.mjs`）
 - 化学物質のコーナー `/kagaku/`（10/26）：まぜない（2つの洗剤の判定）・SDS の見方・化学物質管理者が要るか・リスクアセスメントの入口。知識のページと同じ部品（`src/data/kihon/` の mazenai・sds・kanrisha・risk）。次亜塩素酸ナトリウムは2027-04-01から対象物（10/27 厚労省の通達・神奈川局・メーカーのSDSで確かめ、法改正 `kagaku-2027` にも）。裾切値はラベル・SDSとも1%（厚労省の一覧の Excel と労働安全衛生総合研究所の一覧。Excel は Claude の環境から開けないので Actions で読んだ）。書かなかったこと：選任の届出の要否、対象物の数
+- 読みもの `/yomimono/`（11/4 夜 #59）：目次と記事 `/yomimono/<slug>/`。データは `src/data/yomimono/`（1本1ファイル・`index.mjs` の `YOMIMONO` に新しい順）、ページは `src/pages/yomimono.mjs`。書き方とネタの山は `docs/yomimono-neta.md`、決まりは `tests/yomimono.test.mjs`（ひな形の項目・本文900字以上・公的な出典2つ以上・つなぐ先1〜3・写真 `ym-<slug>`）。記事は90日のテストと見張りの C の対象外、毎週の出典の点検には入る。ヘッダー・フッター・トップの「調べる」から
 - 月ごとのテーマ `/anzen/`（一覧）と `/anzen/<月>/`（運動・テーマごとの業種の入口・その月の法改正）
 - 月のページは「◯月号」（10/31 C-016 案A・#42）：業種ごとの memo・升目の暦（`src/koyomi.mjs`。運動の期間は `src/data/koyomi.mjs`、年度の日付は見張りの C〜G のときに直す）・今月の1問（テーマの `quiz`・`src/client/quiz.js`）・今月の委員会で話すこと（テーマの `gidai`）。カレンダーの購読 `/calendar.ics` をビルドで作る（毎月1日の◯月号・運動・法改正の施行日を12か月先まで。`tests/koyomi.test.mjs`）
 - 今年度の記録（10/31 C-016 案B・#43）：業種のページの「今月の実施」（掲示・朝礼・やることを押した日）を端末の中だけに残す（localStorage `anzen-rec-v1`。`src/client/rec.mjs`・`rec.js`、`tests/rec.test.mjs`）。トップの今月のテーマの下にスタンプ帳（4月〜3月）、`/anzen/kiroku/` に1年の実施記録の A4 の表
@@ -70,6 +71,7 @@
 | `src/layout.mjs` | ページの外側（head・ヘッダー・フッター・パンくず） |
 | `src/parts.mjs` | 共通部品（業種の名前の並び・月の見出し・URL） |
 | `src/pages/*.mjs` | ページ（`home` 総合トップ、`gyoshu` 業種の入口、`theme` 毎月のテーマの入口と業種のページ、`months` 月ごとのテーマの一覧と月のページ、`kihon` 知識のページと目次・`kihon-tools` 計算の道具、`hourei` 法改正、`shikaku` 資格の更新、`info` このサイトについて・プライバシーポリシー・免責事項・404） |
+| `src/data/yomimono/*.mjs`・`src/pages/yomimono.mjs` | 読みもの（1本1ファイル。並びは `index.mjs` の `YOMIMONO`） |
 | `src/data/kihon/*.mjs` | 知識のページ（1ページ1ファイル。並びと人数の帯は `index.mjs`。`nenkan.mjs` の `YOTEI` はトップのこれからの予定） |
 | `src/client/*.js` | ブラウザ用のスクリプト（`gyoshu` 業種のページの印刷・コピー・業種を覚える、`remember` 覚えた業種に丸、`hourei` うちの職場の印、`koushin` 資格の期限の計算、`kihon` 知識のページの判定・道具・印刷） |
 | `src/styles/` | `base.css` 骨組みと掲示の紙、`site.css` 色と飾り（写真ふう）、`print.css` 掲示だけを A4 1枚に |

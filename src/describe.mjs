@@ -151,3 +151,11 @@ export const aboutDesc = ({ themes, kihon, hourei }) =>
     `職場の安全衛生の担当者向けのサイトです。いまは月ごとのテーマ${themes}本、安全衛生の決まり${kihon}ページ、法改正${hourei}件。`,
     '厚生労働省・労働局・e-Govなど公的な資料だけを出典にし、確認日から90日で確かめ直します。広告の扱いも。',
   ]);
+
+// 読みものの目次：/yomimono/（記事はデータの description をそのまま使う）
+export const yomimonoHubDesc = (list, fmtDate) => {
+  const head = `安全衛生の担当者向けに、季節のネタや法改正のまとめを1本に1つの問いで書いた読みもの${list.length}本。`;
+  const last = `最新は「${list[0].h1}」（${fmtDate(list[0].published)}）。`;
+  const more = '出典は労働局などの公的な資料だけ。';
+  return fit([head, last, more], [head, last], [head, more]);
+};

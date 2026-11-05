@@ -4,6 +4,7 @@ import { ALL_THEMES as THEMES } from '../src/data/themes.mjs';
 import { HOUREI, HOUREI_CHECKED } from '../src/data/hourei.mjs';
 import { SHIKAKU, SHIKAKU_CHECKED } from '../src/data/shikaku.mjs';
 import { KIHON } from '../src/data/kihon/index.mjs';
+import { YOMIMONO } from '../src/data/yomimono/index.mjs';
 
 const list = new Map();
 const add = (s, where) => list.set(s.u, list.get(s.u) || { ...s, where });
@@ -15,6 +16,8 @@ for (const h of HOUREI) for (const s of h.src) add(s, `法改正・${h.title}`);
 for (const k of SHIKAKU) for (const s of k.src) add(s, `資格・${k.name}`);
 // 知識のページ（2026-10-26 から点検に入れた）
 for (const p of KIHON) for (const s of p.src) add(s, `知識・${p.h1}`);
+// 読みもの（#59）。URL だけ点検し、確認日の期限は見ない（記事に「◯年◯月◯日に確かめた内容」と出る）
+for (const y of YOMIMONO) for (const s of y.src) add({ t: s.t, u: s.url }, `読みもの・${y.h1}`);
 
 const UA = 'Mozilla/5.0 (compatible; anzen-benricho-linkcheck; +https://anzen-benricho.com/about/)';
 const open = async (u) => {

@@ -8,6 +8,7 @@ import { themePath, entrancePath, photo, hasPhoto } from '../parts.mjs';
 import { sheet } from './theme.mjs';
 import { houreiPath, fmtDate, todayJst, HOUREI } from '../data/hourei.mjs';
 import { KIHON } from '../data/kihon/index.mjs';
+import { YOMIMONO } from '../data/yomimono/index.mjs';
 import { YOTEI } from '../data/kihon/nenkan.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { homeDesc } from '../describe.mjs';
@@ -32,6 +33,8 @@ export default function home({ month, themes, allThemes, kaisei }) {
     nKagaku && { k: 'kagaku', href: '/kagaku/', name: '化学物質', d: `まぜると危ない洗剤・SDSの見方など${nKagaku}ページ` },
     { k: 'hourei', href: '/hourei/', name: '法改正の一覧', d: laws.length ? `次は${fmtDate(laws[0].date)}から。全${HOUREI.length}件` : `施行日の順に${HOUREI.length}件` },
     { k: 'shikaku', href: '/shikaku/koushin/', name: '資格の更新の期限', d: '修了証書の日付から次の講習の時期' },
+    // 読みもの（#59）。写真はいちばん新しい記事のもの
+    YOMIMONO.length && { k: YOMIMONO[0].photo, href: '/yomimono/', name: '読みもの', d: `季節のネタ・法改正のまとめなど${YOMIMONO.length}本` },
   ].filter(Boolean);
   // いちばん上（10/27 しょーくんが3案から、スマホは「写真・見出し・業種」、パソコンは「見出しの横に写真、業種の横に小さな掲示の紙」に決めた）
   const first = themes[0];

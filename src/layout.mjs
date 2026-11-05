@@ -5,6 +5,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, CORNERS } from './site.mjs';
 import { KIHON } from './data/kihon/index.mjs';
+import { YOMIMONO } from './data/yomimono/index.mjs';
 import { rail } from './rail.mjs';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
@@ -52,6 +53,7 @@ const FOOT_NAV = [
   ...(KIHON.some((p) => p.path.startsWith('/kagaku/')) ? [['/kagaku/', '化学物質']] : []),
   ['/hourei/', '法改正の一覧'],
   ['/shikaku/koushin/', '資格の更新の期限'],
+  ...(YOMIMONO.length ? [['/yomimono/', '読みもの']] : []),
 ];
 const FOOT_LINKS = [
   ['/about/', 'このサイトについて'],
