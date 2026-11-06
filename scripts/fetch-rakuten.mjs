@@ -62,7 +62,8 @@ try {
     if (list.length < SHOW) {
       const must = found.filter((x) => (k.must ?? []).some((w) => x.name.includes(w)));
       const ok = found.filter((x) => fits(x, k));
-      counts.push(`${k.key} ${list.length}件（結果${found.length}・must${must.length}・条件${ok.length}・お店${new Set(ok.map((x) => x.shop)).size}）`);
+      const rv = must.filter((x) => x.reviews >= 10 && x.rating >= 4.0);
+      counts.push(`${k.key} ${list.length}件（結果${found.length}・must${must.length}・レビュー${rv.length}・条件${ok.length}・お店${new Set(ok.map((x) => x.shop)).size}）`);
     } else counts.push(`${k.key} ${list.length}件`);
   }
 } catch (e) {
