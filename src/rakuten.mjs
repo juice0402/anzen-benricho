@@ -83,13 +83,18 @@ export function cleanName(s) {
   return t || String(s).replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, '').trim();
 }
 
-// 物ごとの条件に合うか（商品名に must のどれか。ng と全体の外す言葉が入っていない。レビュー10件以上・評価4.0以上）
+// レビューの条件（ふつうは10件以上・評価4.0以上。物ごとに kau.minReviews・kau.minRating で変えられる）
+export const MIN_REVIEWS = 10;
+export const MIN_RATING = 4.0;
+export const reviewOk = (it, kau = {}) => it.reviews >= (kau.minReviews ?? MIN_REVIEWS) && it.rating >= (kau.minRating ?? MIN_RATING);
+
+// 物ごとの条件に合うか（商品名に must のどれか。ng と全体の外す言葉が入っていない。レビューの条件）
 export function fits(it, kau) {
   const n = it.name;
   if (!(it.avail === 1 && it.price > 0 && it.url.startsWith('https://') && it.img.startsWith('https://'))) return false;
   if (!(kau.must ?? []).some((w) => n.includes(w))) return false;
   if ([...NG_ALL, ...(kau.ng ?? [])].some((w) => n.includes(w))) return false;
-  if (it.reviews < 10 || it.rating < 4.0) return false;
+  if (!reviewOk(it, kau)) return false;
   return true;
 }
 
