@@ -5,7 +5,8 @@ import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import { SITE } from '../src/site.mjs';
 import { descLen, DESC_MIN, DESC_MAX } from '../src/describe.mjs';
-import { RAKUTEN_CREDIT, RAKUTEN_PR, SHOW } from '../src/rakuten.mjs';
+import { RAKUTEN_CREDIT, RAKUTEN_PR, SHOW, minShowOf } from '../src/rakuten.mjs';
+import { KAU } from '../src/data/kau.mjs';
 const descs = new Map();
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -84,7 +85,8 @@ for (const file of htmlFiles) {
       if (!html.includes(`<p class="pg-lead">${RAKUTEN_PR}</p>`)) fail(rel, '1画面めに広告の表示がない');
       const ul = (html.match(/<ul class="rows shop">([\s\S]*?)<\/ul>/) || [])[1] || '';
       const links = [...ul.matchAll(/<a href="([^"]*)"([^>]*)>/g)];
-      if (links.length !== SHOW) fail(rel, `商品が ${links.length} 件（${SHOW} 件のはず）`);
+      const min = minShowOf(KAU[rel.split('/')[2]]);
+      if (links.length < min || links.length > SHOW) fail(rel, `商品が ${links.length} 件（${min}〜${SHOW} 件のはず）`);
       for (const m of links) {
         if (!/^https:\/\/([a-z0-9-]+\.)*rakuten\.co\.jp\//.test(m[1])) fail(rel, '商品のリンクが楽天ではない（中身はログに出さない）');
         if (m[2] !== ' rel="sponsored nofollow noopener" target="_blank"') fail(rel, '商品のリンクに rel="sponsored nofollow noopener" target="_blank" がない');

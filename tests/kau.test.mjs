@@ -70,6 +70,12 @@ test('物のページ：商品があるとき・ないとき（AdSense なし・
   // 3件に届かない物は商品の節を出さない
   const few = soroeruPages(ALL_THEMES, 12, { ...products, items: { ...products.items, daisha: products.items.daisha.slice(0, 2) } });
   assert.ok(!few.find((p) => p.path === '/soroeru/daisha/').html.includes('rows shop'));
+  // minShow の物（吐いた物の処理セット）は2件でも出す。1件なら出さない
+  const two = soroeruPages(ALL_THEMES, 12, { ...products, items: { ...products.items, hakimono: products.items.hakimono.slice(0, 2) } });
+  assert.equal((two.find((p) => p.path === '/soroeru/hakimono/').html.match(/<li/g) || []).length >= 2, true);
+  assert.ok(two.find((p) => p.path === '/soroeru/hakimono/').html.includes('rows shop'));
+  const one = soroeruPages(ALL_THEMES, 12, { ...products, items: { ...products.items, hakimono: products.items.hakimono.slice(0, 1) } });
+  assert.ok(!one.find((p) => p.path === '/soroeru/hakimono/').html.includes('rows shop'));
   // 目次は商品を出さないので AdSense はそのまま
   assert.ok(withP[0].html.includes('adsbygoogle') && !withP[0].html.includes('rows shop'));
 });

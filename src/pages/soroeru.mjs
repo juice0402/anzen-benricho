@@ -2,12 +2,12 @@
 //   /soroeru/        目次（商品を出さないので AdSense はそのまま）
 //   /soroeru/<key>/  物のページ：見出し → 広告の1行 → なぜ今か → 選ぶときに見る所 → 楽天市場の商品3つ → 値段を見た日 → クレジット → あわせて見る
 // 物のページは AdSense を置かない（noAds）・楽天以外へのリンクを置かない（楽天ウェブサービス規約 第8条4項。出典は名前と確認日だけ）
-// 商品はビルドの前に Actions が取る（scripts/fetch-rakuten.mjs）。ないとき・3件に届かないときは、商品の節と広告の1行とクレジットを出さない
+// 商品はビルドの前に Actions が取る（scripts/fetch-rakuten.mjs）。ないとき・3件（kau の minShow の物はその件数）に届かないときは、商品の節と広告の1行とクレジットを出さない
 import { page, esc, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead, themePath, photo } from '../parts.mjs';
 import { KAU_READY, kauPath } from '../data/kau.mjs';
-import { RAKUTEN_CREDIT, RAKUTEN_PR, SHOW, priceBand } from '../rakuten.mjs';
+import { RAKUTEN_CREDIT, RAKUTEN_PR, SHOW, minShowOf, priceBand } from '../rakuten.mjs';
 import { soroeruHubDesc, soroeruDesc } from '../describe.mjs';
 
 const ym = (iso) => `${Number(iso.slice(0, 4))}年${Number(iso.slice(5, 7))}月`;
@@ -34,7 +34,7 @@ function itemPage(k, themes, products) {
   const path = kauPath(k.key);
   const theme = k.theme ? themes.find((t) => t.slug === k.theme) : null;
   const list = products?.items?.[k.key] ?? [];
-  const shop = list.length >= SHOW ? list.slice(0, SHOW) : [];
+  const shop = list.length >= minShowOf(k) ? list.slice(0, SHOW) : [];
   const more = [
     ...(k.month ? [[`/anzen/${k.month}/`, `${k.month}月の安全衛生（${k.month}月号）`]] : []),
     ...(theme ? [[themePath(theme), `${theme.title}の掲示と朝礼`]] : []),
