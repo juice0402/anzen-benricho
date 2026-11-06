@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import { SITE } from '../src/site.mjs';
 import { descLen, DESC_MIN, DESC_MAX } from '../src/describe.mjs';
+import { RAKUTEN_CREDIT, RAKUTEN_PR, SHOW } from '../src/rakuten.mjs';
 const descs = new Map();
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -69,8 +70,33 @@ for (const file of htmlFiles) {
     if (canon !== SITE.url + rel) fail(rel, `canonical がちがう: ${canon}`);
   }
 
-  // 見える文字（スクリプト・スタイルの中は見ない）
-  const shown = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '').replace(/<style>[\s\S]*?<\/style>/g, '');
+  // 楽天の商品（#66）：そろえる物のページ /soroeru/<key>/ だけ。楽天から取った情報（商品名・URL）はログに出さない（規約 第10条9号。公開リポジトリのログは誰でも見られる）
+  const kauPage = /^\/soroeru\/[a-z0-9-]+\/$/.test(rel);
+  const hasShop = html.includes('<ul class="rows shop">');
+  if (!kauPage && (hasShop || html.includes(RAKUTEN_CREDIT) || /(hb\.afl|thumbnail\.image)\.rakuten\.co\.jp/.test(html))) fail(rel, '楽天の商品を、そろえる物のページの外に出している');
+  if (kauPage) {
+    if (html.includes('adsbygoogle')) fail(rel, 'そろえる物のページに AdSense がある');
+    for (const m of html.matchAll(/href="(https?:\/\/[^"]+)"/g)) {
+      if (!m[1].startsWith(`${SITE.url}/`) && !/^https:\/\/([a-z0-9-]+\.)*rakuten\.(co\.jp|com)\//.test(m[1])) fail(rel, 'そろえる物のページに楽天以外へのリンクがある（中身はログに出さない）');
+    }
+    if (hasShop) {
+      if (!html.includes(RAKUTEN_CREDIT)) fail(rel, '楽天のクレジットがない・変わっている');
+      if (!html.includes(`<p class="pg-lead">${RAKUTEN_PR}</p>`)) fail(rel, '1画面めに広告の表示がない');
+      const ul = (html.match(/<ul class="rows shop">([\s\S]*?)<\/ul>/) || [])[1] || '';
+      const links = [...ul.matchAll(/<a href="([^"]*)"([^>]*)>/g)];
+      if (links.length !== SHOW) fail(rel, `商品が ${links.length} 件（${SHOW} 件のはず）`);
+      for (const m of links) {
+        if (!/^https:\/\/([a-z0-9-]+\.)*rakuten\.co\.jp\//.test(m[1])) fail(rel, '商品のリンクが楽天ではない（中身はログに出さない）');
+        if (m[2] !== ' rel="sponsored nofollow noopener" target="_blank"') fail(rel, '商品のリンクに rel="sponsored nofollow noopener" target="_blank" がない');
+      }
+      for (const m of ul.matchAll(/<img [^>]*>/g)) {
+        if (!/^<img class="shop-im" src="https:\/\/thumbnail\.image\.rakuten\.co\.jp\/[^"]*" width="128" height="128" loading="lazy"/.test(m[0])) fail(rel, '商品の画像が楽天の URL のまま・大きさ・lazy になっていない（中身はログに出さない）');
+      }
+    } else if (html.includes(RAKUTEN_CREDIT) || html.includes(RAKUTEN_PR)) fail(rel, '商品がないのに楽天のクレジットか広告の表示がある');
+  }
+
+  // 見える文字（スクリプト・スタイルの中は見ない。楽天の商品名は相手の文なので外す）
+  const shown = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '').replace(/<style>[\s\S]*?<\/style>/g, '').replace(/<ul class="rows shop">[\s\S]*?<\/ul>/g, '');
   const emoji = [...shown.matchAll(/\p{Extended_Pictographic}/gu)].map((m) => m[0]).filter((c) => !'©®™'.includes(c));
   if (emoji.length) fail(rel, `絵文字がある: ${[...new Set(emoji)].join(' ')}`);
   // AI がよく使う言い回しを使わない。サイト名の「便利帳」は名前なので数えない
@@ -125,7 +151,9 @@ for (const file of htmlFiles) {
     if (m[0].includes('rel="canonical"')) continue;
     if (SITE.adsense && ADSENSE.test(m[0])) continue;
     if (A8_PIXEL.test(m[0])) continue;
-    fail(rel, `外部のファイルを読み込んでいる: ${m[0].slice(0, 80)}`);
+    // そろえる物のページの商品の画像（楽天の URL のまま）
+    if (kauPage && /^<img class="shop-im" src="https:\/\/thumbnail\.image\.rakuten\.co\.jp\//.test(m[0])) continue;
+    fail(rel, kauPage ? '外部のファイルを読み込んでいる（楽天のページなので中身はログに出さない）' : `外部のファイルを読み込んでいる: ${m[0].slice(0, 80)}`);
   }
   for (const m of html.matchAll(/\b(?:href|src)="(\/[^"]*)"/g)) {
     if (!resolves(m[1])) fail(rel, `リンク先がない: ${m[1]}`);

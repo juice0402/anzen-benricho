@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { SITE, CORNERS } from './site.mjs';
 import { KIHON } from './data/kihon/index.mjs';
 import { YOMIMONO } from './data/yomimono/index.mjs';
+import { KAU_READY } from './data/kau.mjs';
 import { rail } from './rail.mjs';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
@@ -55,6 +56,8 @@ const FOOT_NAV = [
   ['/shikaku/koushin/', '資格の更新の期限'],
   ...(YOMIMONO.length ? [['/yomimono/', '読みもの']] : []),
 ];
+// フッターだけのリンク（ヘッダーのコーナーには入れない。#66 そろえる物）
+const FOOT_ONLY = [...(KAU_READY.length ? [['/soroeru/', 'そろえる物']] : [])];
 const FOOT_LINKS = [
   ['/about/', 'このサイトについて'],
   ['/privacy/', 'プライバシーポリシー'],
@@ -124,7 +127,7 @@ ${lds}
 <main class="wrap${wide ? ' wide' : ' pc-a'}">
 ${wide ? `${crumbHtml}${body}` : `<div class="col">${crumbHtml}${body}</div>\n${rail(body)}`}
 </main>
-<footer class="foot"><div class="foot-in"><nav class="foot-nav" aria-label="サイトの中">${FOOT_NAV.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</nav><p class="foot-links">${FOOT_LINKS.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</p><p class="foot-name">${esc(SITE.name)}</p></div></footer>
+<footer class="foot"><div class="foot-in"><nav class="foot-nav" aria-label="サイトの中">${[...FOOT_NAV, ...FOOT_ONLY].map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</nav><p class="foot-links">${FOOT_LINKS.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</p><p class="foot-name">${esc(SITE.name)}</p></div></footer>
 ${js ? `<script>${js}</script>` : ''}
 </body>
 </html>

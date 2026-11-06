@@ -361,7 +361,7 @@ export const RUNS = {
     events: ['push', 'schedule', 'workflow_dispatch'],
     what: (ev) => ({
       push: 'main に入れた変更の本番への公開（Build and Deploy）が失敗した。サイトは前の版のまま。',
-      schedule: '毎月1日と15日の本番の作り直し（Build and Deploy）が失敗した。今月のテーマ・次の改正が切りかわっていないかもしれない。',
+      schedule: '本番の作り直し（Build and Deploy。毎日の楽天の商品の取りなおしと、毎月1日と15日）が失敗した。楽天の商品・今月のテーマ・次の改正が前のままかもしれない。',
     })[ev] || '手で動かした本番の公開（Build and Deploy）が失敗した。サイトは前の版のまま。',
   },
   '.github/workflows/check-sources.yml': {
