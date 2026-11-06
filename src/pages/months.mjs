@@ -8,6 +8,7 @@ import { bandHead, monthHead, themePath, gyoshuPath, titleHtml, photo } from '..
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { HOUREI, houreiPath, fmtDate } from '../data/hourei.mjs';
 import { monthDesc, monthsDesc } from '../describe.mjs';
+import { kauOfMonth, kauPath } from '../data/kau.mjs';
 
 // 今月の1問（テーマごとに1問）。押すと正解・解説・出典が出る（src/client/quiz.js。結果は保存しない・送らない）
 const KANA = ['ア', 'イ', 'ウ'];
@@ -48,6 +49,8 @@ function monthPage(m, themes) {
   const path = `/anzen/${m}/`;
   const undos = ts.filter((t) => t.undo).map((t) => `<li><b>${esc(t.undo.name)}</b><span>${esc(t.undo.span)}</span></li>`).join('');
   const laws = HOUREI.filter((h) => Number(h.date.slice(5, 7)) === m);
+  // 今月そろえる物（#66）：物の名前・なぜ今かの1行・物のページへの文字のリンクだけ（楽天の商品は出さない）
+  const kau = kauOfMonth(m);
   const body = `${monthHead(m, 'h1', '安全衛生テーマ', `${m}月号`)}
 ${undos ? `<section class="sec paper" aria-labelledby="mu-h"><h2 class="sec-h" id="mu-h">${m}月の運動</h2><ul class="mt-g mu">${undos}</ul></section>` : ''}
 ${ts
@@ -62,6 +65,7 @@ ${ts
 </section>`,
     )
     .join('\n')}
+${kau ? `<section class="sec paper" aria-labelledby="mk-h"><h2 class="sec-h" id="mk-h">今月そろえる物</h2><ul class="krel mk"><li><a href="${kauPath(kau.key)}">${esc(kau.t)}</a><p>${esc(kau.why)}</p></li></ul></section>` : ''}
 ${koyomiHtml(m)}
 ${quizHtml(ts)}
 ${gidaiHtml(ts)}

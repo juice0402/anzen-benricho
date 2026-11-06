@@ -276,3 +276,11 @@ body { background: #fff; }
 .kr-t thead th { font-size: 2.2cqw; white-space: nowrap; }
 .kr-t td, .kr-t th[scope="row"] { height: 6.6cqw; }
 .kr-list b { margin-right: 8px; }
+
+/* そろえる物（#66）：月のページの「今月そろえる物」と、物のページの楽天市場の商品（目次の行と同じ部品） */
+.krel.mk li { padding-bottom: 12px; }
+.krel.mk a { display: block; padding-bottom: 2px; }
+.krel.mk p { margin: 0; font-size: 14px; color: var(--muted); }
+.rows .shop-im { width: 128px; height: 128px; object-fit: contain; }
+.sr-pt { margin-bottom: 10px; }
+.sr-credit { font-size: 12.5px; color: var(--muted); margin-top: 8px; }

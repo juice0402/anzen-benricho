@@ -16,6 +16,7 @@
 - 知識のページ（10/23。討論はプロジェクトの claude/anzen-chishiki-debate-2026-10-23.md）：`src/data/kihon/*.mjs`（1ページ1ファイル、並びは index.mjs）、部品は `src/pages/kihon.mjs`・道具は `kihon-tools.mjs` と `src/client/kihon.js`。目次 `/kihon/`。1ページ1つの問い、答えは40字まで、判定・道具・チェック・印刷のどれかが必ずある、条文を書くなら e-Gov を出典に（`tests/kihon.test.mjs`）。「法令の区分では」と書き、区分に迷う業種は「労働基準監督署に確認」。義務の区別（10/29）：表の行とやることに `kb`（g 法令の義務・d 努力義務・s 職場で決めること）。通達が「必要」「〜こと」と書くものは法令の義務で文の最後に「（国の通達）」、通達・指針の「望ましい」は職場で決めること。いまは推進者・人数・入社・特別教育・資格の期限・設備・保存期間・死傷病報告・1年・ヒヤリハット・KY・巡視。1年（/anzen/nenkan/）の年間計画の紙は、全国の運動（`YOTEI`）をいつも埋め、業種をえらぶとその月のテーマ（業種のページへのリンク）・掲示の決まりの1つ目・その年度に施行の法改正が入る（4業種の表をビルドで作り、えらんだものだけ見せる。`tests/nenkan.test.mjs`）
 - 化学物質のコーナー `/kagaku/`（10/26）：まぜない（2つの洗剤の判定）・SDS の見方・化学物質管理者が要るか・リスクアセスメントの入口。知識のページと同じ部品（`src/data/kihon/` の mazenai・sds・kanrisha・risk）。次亜塩素酸ナトリウムは2027-04-01から対象物（10/27 厚労省の通達・神奈川局・メーカーのSDSで確かめ、法改正 `kagaku-2027` にも）。裾切値はラベル・SDSとも1%（厚労省の一覧の Excel と労働安全衛生総合研究所の一覧。Excel は Claude の環境から開けないので Actions で読んだ）。書かなかったこと：選任の届出の要否、対象物の数
 - 読みもの `/yomimono/`（11/4 夜 #59）：目次と記事 `/yomimono/<slug>/`。データは `src/data/yomimono/`（1本1ファイル・`index.mjs` の `YOMIMONO` に新しい順）、ページは `src/pages/yomimono.mjs`。書き方とネタの山は `docs/yomimono-neta.md`、決まりは `tests/yomimono.test.mjs`（ひな形の項目・本文900字以上・公的な出典2つ以上・つなぐ先1〜3・写真 `ym-<slug>`）。記事は90日のテストと見張りの C の対象外、毎週の出典の点検には入る。ヘッダー・フッター・トップの「調べる」から
+- そろえる物 `/soroeru/`（目次）と `/soroeru/<key>/`（11/6 夜 #66。案1「別のページ」）：データは `src/data/kau.mjs`（`KAU`・月ごとの `KAU_MONTH`。points のある物だけページと月のリンクを出す。いまは hakimono・suberidome・daisha）、ページは `src/pages/soroeru.mjs`。物のページは見出し → 1行「広告　楽天アフィリエイトを利用しています」→ なぜ今か → 選ぶときに見る所3つ（出典は名前と確認日だけ・リンクにしない）→ 楽天市場の商品3つ → 値段を見た日 → 楽天のクレジット → あわせて見る。AdSense なし（noAds）・楽天以外へのリンクなし。商品はビルドの前に `scripts/fetch-rakuten.mjs`（`src/rakuten.mjs`。machi の写し）が取り `data/rakuten/`（.gitignore）へ。Secrets のない PR・手元では商品の節を出さない。main と毎日5:41の作り直しで取れなければ止める。月のページ（12・1・2月）に「今月そろえる物」（文字のリンクと1行だけ）、フッターに「そろえる物」。テストは `tests/kau.test.mjs`・`tests/rakuten.test.mjs`、点検は `verify-dist.mjs`
 - 月ごとのテーマ `/anzen/`（一覧）と `/anzen/<月>/`（運動・テーマごとの業種の入口・その月の法改正）
 - 月のページは「◯月号」（10/31 C-016 案A・#42）：業種ごとの memo・升目の暦（`src/koyomi.mjs`。運動の期間は `src/data/koyomi.mjs`、年度の日付は見張りの C〜G のときに直す）・今月の1問（テーマの `quiz`・`src/client/quiz.js`）・今月の委員会で話すこと（テーマの `gidai`）。カレンダーの購読 `/calendar.ics` をビルドで作る（毎月1日の◯月号・運動・法改正の施行日を12か月先まで。`tests/koyomi.test.mjs`）
 - 今年度の記録（10/31 C-016 案B・#43）：業種のページの「今月の実施」（掲示・朝礼・やることを押した日）を端末の中だけに残す（localStorage `anzen-rec-v1`。`src/client/rec.mjs`・`rec.js`、`tests/rec.test.mjs`）。トップの今月のテーマの下にスタンプ帳（4月〜3月）、`/anzen/kiroku/` に1年の実施記録の A4 の表
@@ -35,7 +36,7 @@
 - 共有されたときの画像（10/27 連絡 C-004）：全ページ同じ `public/img/og.jpg`（しょーくんが3案から「掲示板にポスター4枚」に決めた。Canva の DAHZLrgYG6E の3ページ目、下地は `art/ogp/render.mjs`）。URL に中身の印（?v=）。Canva の絵は import.json の path を `img/<名前>.png`・`.jpg` にすると public/img/ に入る
 - ポスター（10/26 連絡 C-004）：Canva Pro で A4 の印刷用 PDF。絵は自分たちで描く（`art/poster/<テーマ>/` の SVG・PNG。黒い太い線と赤1色、人は描かない）。文字はデータの掲示の決まりから。Canva へは raw.githubusercontent.com の PNG を取りこむ（シェルからは Canva に上げられない）。PDF は `art/poster/import.json` を claude/ のブランチに push すると `poster-import.yml` が public/poster/ に取りこむ。業種のデータの `poster` に置き場所を書くと「A4で印刷」の下にリンクが出る。10/27 時点で12月4テーマ・1月〜3月・4月2テーマ・5月〜11月・11月2テーマの68枚（11月は働きすぎを防ぐ・職場の火事に備える。12か月すべてにテーマがある）
   - 道具：絵は `art/poster/lib.mjs` の部品で描き `render.mjs` で PNG（`_sheet.png` で4枚を見る）。Canva は大掃除の本番を copy-design すると ID がそのままなので、`canva-ops.mjs <テーマ>` が `template-b.json`・`assets.json`・`alt.json` から edit-design の操作を作る（字の幅を測って1行に収める。1けたの月は字を寄せ、題が長いと業種を帯の上へ）。書き出しはページごと（pdf・a4・pro）、URL は約1時間で切れる
-- 自動：毎月1日と15日 9:10 に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`。テーマ・法改正・資格・知識のページ）。`src/data` を変える PR でも同じ点検が動き、結果は check-run の注記に出る。WebFetch で開けても GitHub からは 404 の出典があるので、出典を足したら PR の注記で確かめる
+- 自動：毎月1日と15日 9:10 と毎日 5:41（楽天の商品の取りなおし）に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`。テーマ・法改正・資格・知識のページ）。`src/data` を変える PR でも同じ点検が動き、結果は check-run の注記に出る。WebFetch で開けても GitHub からは 404 の出典があるので、出典を足したら PR の注記で確かめる
 - 見張り（`mihari.yml`・`scripts/mihari.mjs`）：公開・作り直し・出典の点検の失敗と、毎朝の確認日の期限・国の発表（A〜G）を issue（mihari・night）にする。詳しくは `docs/mihari.md`
 - マージの印（`merge-ok.yml`・`scripts/merge-ok.mjs`）：司令塔が PR にラベル merge-ok を付けると、点検が通ったら squash でマージして公開を動かす。詳しくは `docs/merge-ok.md`
 - 自動で育つしくみ（11/4 連絡 C-024）：予約タスク「読みもの書き」が水曜と日曜に `docs/yomimono-neta.md`（書き方とネタの山）から1本書いて自分でマージする。夜のまとめ作業は、夜の issue がない夜に `docs/sodateru.md`（育てる山）のいちばん上を1つ取って PR まで進める。どちらもしょーくんが OK したものだけ
@@ -67,10 +68,11 @@
 | 場所 | 中身 |
 |---|---|
 | `src/site.mjs` | サイト名・URL・コーナー |
-| `src/data/*.mjs` | 毎月のテーマ（`oosouji`・`koutsu`：業種ごとの掲示・朝礼・やること・出典・多いけが）、今月のテーマの一覧 `themes`、業種 `gyoshu`、法改正 |
+| `src/data/*.mjs` | 毎月のテーマ（`oosouji`・`koutsu`：業種ごとの掲示・朝礼・やること・出典・多いけが）、今月のテーマの一覧 `themes`、業種 `gyoshu`、法改正、そろえる物 `kau` |
+| `src/rakuten.mjs`・`scripts/fetch-rakuten.mjs` | 楽天の商品の取り方（えらび方・値段の幅・クレジット）と取得（Actions だけ。件数だけログに出す） |
 | `src/layout.mjs` | ページの外側（head・ヘッダー・フッター・パンくず） |
 | `src/parts.mjs` | 共通部品（業種の名前の並び・月の見出し・URL） |
-| `src/pages/*.mjs` | ページ（`home` 総合トップ、`gyoshu` 業種の入口、`theme` 毎月のテーマの入口と業種のページ、`months` 月ごとのテーマの一覧と月のページ、`kihon` 知識のページと目次・`kihon-tools` 計算の道具、`hourei` 法改正、`shikaku` 資格の更新、`info` このサイトについて・プライバシーポリシー・免責事項・404） |
+| `src/pages/*.mjs` | ページ（`home` 総合トップ、`gyoshu` 業種の入口、`theme` 毎月のテーマの入口と業種のページ、`months` 月ごとのテーマの一覧と月のページ、`kihon` 知識のページと目次・`kihon-tools` 計算の道具、`hourei` 法改正、`shikaku` 資格の更新、`soroeru` そろえる物、`info` このサイトについて・プライバシーポリシー・免責事項・404） |
 | `src/data/yomimono/*.mjs`・`src/pages/yomimono.mjs` | 読みもの（1本1ファイル。並びは `index.mjs` の `YOMIMONO`） |
 | `src/data/kihon/*.mjs` | 知識のページ（1ページ1ファイル。並びと人数の帯は `index.mjs`。`nenkan.mjs` の `YOTEI` はトップのこれからの予定） |
 | `src/client/*.js` | ブラウザ用のスクリプト（`gyoshu` 業種のページの印刷・コピー・業種を覚える、`remember` 覚えた業種に丸、`hourei` うちの職場の印、`koushin` 資格の期限の計算、`kihon` 知識のページの判定・道具・印刷） |

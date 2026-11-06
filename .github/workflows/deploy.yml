@@ -5,12 +5,17 @@ name: Build and Deploy
 #   main への push        → 本番（https://anzen-benricho.com）。公開のあと、変わったページを IndexNow で知らせる
 #   毎月1日と15日 9:10（日本時間）→ 本番を作り直す（今月のテーマ・法改正の「施行済み」・トップの「次の改正」を切りかえる）
 #   プルリクエスト        → プレビュー（PRにURLをコメント）
+#   毎日 5:41（日本時間）   → 本番を作り直す（そろえる物のページの楽天の商品を取りなおす。#66）
+# そろえる物のページの楽天の商品は、ビルドの前に毎回とりなおす（scripts/fetch-rakuten.mjs）
+#   取ったものはコミットしない・ログに出さない・成果物（artifacts）に上げない（公開リポジトリのため。楽天ウェブサービス規約 第10条9号）。ログと注記は呼び出しの回数と件数だけ
+#   main と作り直しで取れなければ止める（公開しない。前の公開がそのまま残る）。Secrets のない PR は取らずに、商品の節を出さずにビルドする
 
 on:
   push:
     branches: [main]
   schedule:
     - cron: '10 0 1,15 * *'
+    - cron: '41 20 * * *'
   pull_request:
   workflow_dispatch:
 
@@ -39,7 +44,18 @@ jobs:
       - name: テスト
         run: npm test
 
+      - name: 楽天の商品を取る（件数だけ出す）
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          REQUIRE_RAKUTEN: ${{ github.event_name != 'pull_request' && '1' || '0' }}
+        run: node scripts/fetch-rakuten.mjs
+
       - name: ビルド
+        env:
+          REQUIRE_RAKUTEN: ${{ github.event_name != 'pull_request' && '1' || '0' }}
         run: npm run build
 
       - name: 全ページ点検

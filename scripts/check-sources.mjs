@@ -5,6 +5,7 @@ import { HOUREI, HOUREI_CHECKED } from '../src/data/hourei.mjs';
 import { SHIKAKU, SHIKAKU_CHECKED } from '../src/data/shikaku.mjs';
 import { KIHON } from '../src/data/kihon/index.mjs';
 import { YOMIMONO } from '../src/data/yomimono/index.mjs';
+import { KAU_READY } from '../src/data/kau.mjs';
 
 const list = new Map();
 const add = (s, where) => list.set(s.u, list.get(s.u) || { ...s, where });
@@ -18,6 +19,8 @@ for (const k of SHIKAKU) for (const s of k.src) add(s, `資格・${k.name}`);
 for (const p of KIHON) for (const s of p.src) add(s, `知識・${p.h1}`);
 // 読みもの（#59）。URL だけ点検し、確認日の期限は見ない（記事に「◯年◯月◯日に確かめた内容」と出る）
 for (const y of YOMIMONO) for (const s of y.src) add({ t: s.t, u: s.url }, `読みもの・${y.h1}`);
+// そろえる物（#66）
+for (const k of KAU_READY) for (const s of k.src) add({ t: s.t, u: s.url }, `そろえる物・${k.t}`);
 
 const UA = 'Mozilla/5.0 (compatible; anzen-benricho-linkcheck; +https://anzen-benricho.com/about/)';
 const open = async (u) => {
@@ -45,6 +48,7 @@ const old = [
   ['法改正', HOUREI_CHECKED],
   ['資格の更新の期限', SHIKAKU_CHECKED],
   ...KIHON.map((p) => [`知識・${p.h1}`, p.checked]),
+  ...KAU_READY.map((k) => [`そろえる物・${k.t}`, k.checked]),
 ].filter(([, d]) => days(d) >= 76).map(([n, d]) => `- ${n}：確認日 ${d} から ${days(d)} 日（90日でテストが止まり、公開できなくなる）`);
 
 console.log(`出典 ${list.size} 件を点検しました。`);

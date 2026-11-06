@@ -1,5 +1,5 @@
 // データからページを作って dist/ に書き出す（依存パッケージなし）
-import { rmSync, mkdirSync, writeFileSync, cpSync, existsSync } from 'node:fs';
+import { rmSync, mkdirSync, writeFileSync, cpSync, existsSync, readFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { MONTH, THEMES, ALL_THEMES, themesInOrder } from '../src/data/themes.mjs';
@@ -14,11 +14,20 @@ import kihonPages from '../src/pages/kihon.mjs';
 import monthPages from '../src/pages/months.mjs';
 import kirokuPage from '../src/pages/kiroku.mjs';
 import yomimonoPages from '../src/pages/yomimono.mjs';
+import soroeruPages from '../src/pages/soroeru.mjs';
+import { PRODUCTS_PATH } from '../src/rakuten.mjs';
 import { SITE } from '../src/site.mjs';
 import { calendarIcs } from '../src/koyomi.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
+// 楽天の商品（Actions がビルドの前に取る。コミットしない。#66）。REQUIRE_RAKUTEN=1（main・作り直し）でなければ止める
+const productsFile = join(ROOT, PRODUCTS_PATH);
+const products = existsSync(productsFile) ? JSON.parse(readFileSync(productsFile, 'utf8')) : null;
+if (!products && process.env.REQUIRE_RAKUTEN === '1') {
+  console.error('楽天の商品（data/rakuten/products.json）がありません');
+  process.exit(1);
+}
 rmSync(DIST, { recursive: true, force: true });
 mkdirSync(DIST, { recursive: true });
 
@@ -29,7 +38,7 @@ const write = (path, html, name) => {
 };
 
 const ctx = { month: MONTH, themes: THEMES, allThemes: themesInOrder(), kaisei: nextKaisei() };
-const pages = [home(ctx), ...gyoshuPages(ctx), ...monthPages(ALL_THEMES, MONTH), kirokuPage(ALL_THEMES), ...ALL_THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...kihonPages(), ...yomimonoPages(), ...infoPages()];
+const pages = [home(ctx), ...gyoshuPages(ctx), ...monthPages(ALL_THEMES, MONTH), kirokuPage(ALL_THEMES), ...ALL_THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...kihonPages(), ...yomimonoPages(), ...soroeruPages(ALL_THEMES, MONTH, products), ...infoPages()];
 
 for (const p of pages) write(p.path, p.html, p.file);
 // AdSense の運営者IDを入れたら ads.txt を置く（Google の決まった書き方）

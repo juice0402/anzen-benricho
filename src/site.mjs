@@ -23,4 +23,5 @@ export const CORNERS = {
   kihon: { name: '基本の決まり', path: '/kihon/' },
   kagaku: { name: '化学物質', path: '/kagaku/' },
   yomimono: { name: '読みもの', path: '/yomimono/' },
+  soroeru: { name: 'そろえる物', path: '/soroeru/' },
 };
