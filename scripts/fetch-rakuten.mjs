@@ -7,7 +7,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { KAU_READY } from '../src/data/kau.mjs';
-import { cleanKeys, searchUrl, parseItems, pick, HEADERS, PRODUCTS_PATH, SHOW } from '../src/rakuten.mjs';
+import { cleanKeys, searchUrl, parseItems, pick, fits, HEADERS, PRODUCTS_PATH, SHOW } from '../src/rakuten.mjs';
 
 const keys = cleanKeys(process.env);
 const note = (level, msg) => {
@@ -58,7 +58,12 @@ try {
     for (const kw of k.kw) found.push(...(await get(searchUrl(keys, kw))));
     const list = pick(found, k, SHOW);
     out[k.key] = list.length >= SHOW ? list : [];
-    counts.push(`${k.key} ${list.length}件`);
+    // 3件に届かないときは、言葉を直す手がかりに数だけ出す（検索の結果・must に合う・条件に合う・お店の数。商品名は出さない）
+    if (list.length < SHOW) {
+      const must = found.filter((x) => (k.must ?? []).some((w) => x.name.includes(w)));
+      const ok = found.filter((x) => fits(x, k));
+      counts.push(`${k.key} ${list.length}件（結果${found.length}・must${must.length}・条件${ok.length}・お店${new Set(ok.map((x) => x.shop)).size}）`);
+    } else counts.push(`${k.key} ${list.length}件`);
   }
 } catch (e) {
   note('error', `取れませんでした：${String(e.message ?? e).slice(0, 200)}`);
