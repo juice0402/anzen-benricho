@@ -1,5 +1,5 @@
 # 育てる山（夜の作業が上から1つずつ取る）
-しょーくんが OK したものだけ。順番は上から。2026-11-04 に5つ OK（プロジェクトの資料 claude/sodatsu-spec.md）、11/6 に「買う理由」（連絡 C-025・claude/site-principles.md の「買いに来る理由がある人を集める」）を OK し、同じ日に楽天を API に変えて3つに分けた。
+しょーくんが OK したものだけ。順番は上から。2026-11-04 に5つ OK（プロジェクトの資料 claude/sodatsu-spec.md）、11/6 に「買う理由」（連絡 C-025・claude/site-principles.md の「買いに来る理由がある人を集める」）を OK し、同じ日に楽天を API に変えて3つに分けた。同じ日の夜、12月号がトップに出る 11/15 より前に出すため、そろえる物の1つ目を1月のポスターより上にした（1月のポスターは 12/15 までに）。
 1つの項目は、そのまま夜の issue の本文になる（claude/night-rules.md の「issue の書き方」の形）。出典の URL は、夜も開けるように項目に書いてある。
 
 ## 山
@@ -23,15 +23,6 @@
 - 画像：1枚 `issanka`。事務所のすみに置いた石油ファンヒーターと、少し開けた窓（写真ふう・16:9・人と文字なし）
 - マージ：する
 
-### [ ] 1月「暖房と一酸化炭素」のポスター4枚
-- やること：4業種のポスター（A4 の PDF）を作り、業種のデータに `poster` を入れる。絵は `art/poster/issanka/art.mjs`、Canva は大掃除の本番 DAHZG1vSiIU を copy-design して `node art/poster/canva-ops.mjs issanka` の操作で組む
-- 順番：「1月の2つ目のテーマ『暖房と一酸化炭素』」のあと（そちらがマージ待ちなら、そのブランチの上に積む）
-- できあがりの条件：`public/poster/<年-月>/issanka-<業種>.pdf` が4つ入り、業種のページの「A4で印刷」の下にリンクが出る。pdftotext で掲示の決まりの文が入っていることを確かめ、pdftoppm で4枚を並べて目で見た。`npm run check` が緑
-- 決まったこと：形は案B「月めくりの1枚」（いまの68枚と同じ）。デザイン名「1月 暖房と一酸化炭素 ポスター（4業種・案B）」。絵は黒い太い線と赤1色で、人も手も描かない（ストーブ・窓・換気扇・エンジンの機械など）。顔に見える配置にしない。QR は入れない。Canva の素材は入れない（自分たちの絵とサイトの文字だけ）
-- 迷ったら：Canva の取りこみ結果の smart_tags で、別の物に見えていないか確かめる。書き出しの URL は約1時間で切れるので、すぐ import.json で取りこむ
-- 読むファイル：CLAUDE.md（ポスターの2行）、art/poster/ の lib.mjs・render.mjs・canva-ops.mjs・template-b.json、プロジェクトの資料 claude/anzen-handoff.md の「ポスターの作り方」
-- マージ：する
-
 ### [ ] そろえる物のページと楽天の取得（買う理由・その1）
 - やること：楽天API で商品を取り、物ごとの「そろえる物」のページに出すしくみを作り、12月・1月・2月の3つの物のページを中身つきで作る。月のページ（◯月号）には、物の名前・なぜ今かの1行・そのページへの文字のリンクだけを出す（楽天の商品は出さない）。作るもの：`src/data/kau.mjs`（下の形）、`src/rakuten.mjs` と `scripts/fetch-rakuten.mjs`（machi-shakaika の同じ名前のファイルを写して、この形に合わせる）、`.github/workflows/deploy.yml`（ビルドの前に取得・毎日1回の作り直しを足す）、`.gitignore` に `data/rakuten/`、ページ `src/pages/soroeru.mjs`（目次 `/soroeru/` と物のページ `/soroeru/<key>/`）、月のページの「今月そろえる物」、`scripts/verify-dist.mjs` の楽天のページの点検、テスト `tests/rakuten.test.mjs`・`tests/kau.test.mjs`、プライバシーポリシー、フッターに「そろえる物」、CLAUDE.md（いまの状態とファイルの表）
 - できあがりの条件：`npm run check` が緑（Secrets がない手元では商品の節が出ないだけで通る）。PR の build-deploy で取得が動き、check-run の注記に「呼び出し◯回・物ごとの件数」だけが出る（商品名は出ない）。プレビューの `/soroeru/hakimono/`・`suberidome/`・`daisha/` に商品3つずつ・「広告」の表示・クレジットが出て、AdSense のコードがない。12月・1月・2月の月のページに「今月そろえる物」が出て、AdSense はそのまま。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らす。物のページの文は、書いていない別の Claude が出典と照らして点検した
@@ -48,6 +39,15 @@
 - 迷ったら：PR の build-deploy で取得がキーの誤りで止まったら、PR の本文に書いて止める（main で取得が止まると公開が止まるため。キーはしょーくんに入れ直してもらう）。さがす言葉で3件に届かないときは、言葉を1つ足すか must をゆるめて、PR に書く（商品名は書かない）。商品が合っているかは夜には見られないので、マージのあとにしょーくんが本番の物のページを見て、合わない商品があればこのサイトのチャットで must・ng を直す。吐いた物の処理セットは病気を防ぐ・治すと書かない（備えの道具として）
 - 読むファイル：CLAUDE.md、machi-shakaika（公開リポジトリ。`git clone --depth 1 https://github.com/juice0402/machi-shakaika`）の `src/rakuten.mjs`・`scripts/fetch-rakuten.mjs`・`.github/workflows/deploy.yml`（楽天の部分）・`scripts/verify-dist.mjs`（楽天のページの点検）・`tests/rakuten.test.mjs`、src/layout.mjs（noAds）、src/pages/months.mjs（月のページ）、src/pages/info.mjs（プライバシーポリシー）、src/data/themes.mjs と各テーマのデータ、プロジェクトの資料 claude/oshi-techo-spec.md の「楽天API・アフィリエイトのルール」と claude/sakutto-tougou-plan.md の「外部読み込みの点検」
 - マージ：する（PR の build-deploy で取得が通ってから）
+
+### [ ] 1月「暖房と一酸化炭素」のポスター4枚
+- やること：4業種のポスター（A4 の PDF）を作り、業種のデータに `poster` を入れる。絵は `art/poster/issanka/art.mjs`、Canva は大掃除の本番 DAHZG1vSiIU を copy-design して `node art/poster/canva-ops.mjs issanka` の操作で組む
+- 順番：「1月の2つ目のテーマ『暖房と一酸化炭素』」のあと（そちらがマージ待ちなら、そのブランチの上に積む）
+- できあがりの条件：`public/poster/<年-月>/issanka-<業種>.pdf` が4つ入り、業種のページの「A4で印刷」の下にリンクが出る。pdftotext で掲示の決まりの文が入っていることを確かめ、pdftoppm で4枚を並べて目で見た。`npm run check` が緑
+- 決まったこと：形は案B「月めくりの1枚」（いまの68枚と同じ）。デザイン名「1月 暖房と一酸化炭素 ポスター（4業種・案B）」。絵は黒い太い線と赤1色で、人も手も描かない（ストーブ・窓・換気扇・エンジンの機械など）。顔に見える配置にしない。QR は入れない。Canva の素材は入れない（自分たちの絵とサイトの文字だけ）
+- 迷ったら：Canva の取りこみ結果の smart_tags で、別の物に見えていないか確かめる。書き出しの URL は約1時間で切れるので、すぐ import.json で取りこむ
+- 読むファイル：CLAUDE.md（ポスターの2行）、art/poster/ の lib.mjs・render.mjs・canva-ops.mjs・template-b.json、プロジェクトの資料 claude/anzen-handoff.md の「ポスターの作り方」
+- マージ：する
 
 ### [ ] そろえる物のページの残り（買う理由・その2）
 - やること：前の項目で中身を作らなかった物のページ9つ（dansa・wbgt・tebukuro・horeizai・konsento・co2・shokaki・ondo・shodo）に、なぜ今か・選ぶときに見る所・出典を足し、月のページ（4・5・6・7・8・10・11月）の「今月そろえる物」を出す
