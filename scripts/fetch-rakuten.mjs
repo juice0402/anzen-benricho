@@ -2,12 +2,12 @@
 // 物ごとに：src/data/kau.mjs の kw で商品検索（レビューが多い順・買えるものだけ・画像あり）→ 条件に合うものを3つ（src/rakuten.mjs の pick）
 // このリポジトリは公開なので、取ったものは data/rakuten/（.gitignore）に置くだけ。商品名などはログに出さない（呼び出しの回数と件数だけ）
 // キーがない（Secrets のない PR・手元）：取らずに終わる（商品の節を出さずにビルドする）。REQUIRE_RAKUTEN=1（main・作り直し）のときは止める
-// 取れない・3件以上の物が半分より少ない：止める（終了コード 1）→ 公開しない（前の公開がそのまま残る）。3件に届かない物は空にする（その物の商品の節だけ出さない）
+// 取れない・3件以上の物が半分より少ない：止める（終了コード 1）→ 公開しない（前の公開がそのまま残る）。3件（minShow の物はその件数）に届かない物は空にする（その物の商品の節だけ出さない）
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { KAU_READY } from '../src/data/kau.mjs';
-import { cleanKeys, searchUrl, parseItems, pick, fits, HEADERS, PRODUCTS_PATH, SHOW, reviewOk } from '../src/rakuten.mjs';
+import { cleanKeys, searchUrl, parseItems, pick, fits, HEADERS, PRODUCTS_PATH, SHOW, reviewOk, minShowOf } from '../src/rakuten.mjs';
 
 const keys = cleanKeys(process.env);
 const note = (level, msg) => {
@@ -57,7 +57,7 @@ try {
     const found = [];
     for (const kw of k.kw) found.push(...(await get(searchUrl(keys, kw))));
     const list = pick(found, k, SHOW);
-    out[k.key] = list.length >= SHOW ? list : [];
+    out[k.key] = list.length >= minShowOf(k) ? list : [];
     // 3件に届かないときは、言葉を直す手がかりに数だけ出す（検索の結果・must に合う・条件に合う・お店の数。商品名は出さない）
     if (list.length < SHOW) {
       const must = found.filter((x) => (k.must ?? []).some((w) => x.name.includes(w)));
@@ -71,8 +71,8 @@ try {
   process.exit(1);
 }
 
-// 見張り：商品が3件ある物が半分より少なければ、楽天の仕様が変わったなどと考えて止める
-const enough = Object.values(out).filter((l) => l.length >= SHOW).length;
+// 見張り：商品が出せる物（ふつう3件・minShow の物はその件数）が半分より少なければ、楽天の仕様が変わったなどと考えて止める
+const enough = KAU_READY.filter((k) => (out[k.key]?.length ?? 0) >= minShowOf(k)).length;
 if (enough < Math.ceil(KAU_READY.length / 2)) {
   note('error', `商品が少なすぎます（呼び出し ${calls}回：${counts.join('・')}）`);
   process.exit(1);

@@ -11,6 +11,8 @@ export const HEADERS = { Referer: `${SITE_ORIGIN}/`, Origin: SITE_ORIGIN };
 export const PRODUCTS_PATH = 'data/rakuten/products.json';
 // 1つの物に出す数
 export const SHOW = 3;
+// 商品の節を出す最小の件数（ふつうは SHOW。物ごとに kau.minShow で下げられる＝吐いた物の処理セットは2・11/7 しょーくん）
+export const minShowOf = (kau = {}) => kau.minShow ?? SHOW;
 
 // 楽天のクレジット（文字版のスニペット。1文字も変えない）
 export const RAKUTEN_CREDIT = `<!-- Rakuten Web Services Attribution Snippet FROM HERE -->
