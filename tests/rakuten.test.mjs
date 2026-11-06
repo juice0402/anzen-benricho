@@ -20,6 +20,11 @@ test('物の条件：must・ng・在庫・レビュー10件以上・評価4.0以
   assert.equal(fits(item({ avail: 0 }), kau), false);
   assert.equal(fits(item({ reviews: 9 }), kau), false);
   assert.equal(fits(item({ rating: 3.9 }), kau), false);
+  // 物ごとにレビューの条件をゆるめられる
+  const loose = { ...kau, minReviews: 3, minRating: 3.5 };
+  assert.equal(fits(item({ reviews: 3, rating: 3.5 }), loose), true);
+  assert.equal(fits(item({ reviews: 2 }), loose), false);
+  assert.equal(fits(item({ rating: 3.4 }), loose), false);
   assert.equal(fits(item({ img: '' }), kau), false);
 });
 

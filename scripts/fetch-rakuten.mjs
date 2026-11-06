@@ -7,7 +7,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { KAU_READY } from '../src/data/kau.mjs';
-import { cleanKeys, searchUrl, parseItems, pick, fits, HEADERS, PRODUCTS_PATH, SHOW } from '../src/rakuten.mjs';
+import { cleanKeys, searchUrl, parseItems, pick, fits, HEADERS, PRODUCTS_PATH, SHOW, reviewOk } from '../src/rakuten.mjs';
 
 const keys = cleanKeys(process.env);
 const note = (level, msg) => {
@@ -62,7 +62,7 @@ try {
     if (list.length < SHOW) {
       const must = found.filter((x) => (k.must ?? []).some((w) => x.name.includes(w)));
       const ok = found.filter((x) => fits(x, k));
-      const rv = must.filter((x) => x.reviews >= 10 && x.rating >= 4.0);
+      const rv = must.filter((x) => reviewOk(x, k));
       counts.push(`${k.key} ${list.length}件（結果${found.length}・must${must.length}・レビュー${rv.length}・条件${ok.length}・お店${new Set(ok.map((x) => x.shop)).size}）`);
     } else counts.push(`${k.key} ${list.length}件`);
   }
