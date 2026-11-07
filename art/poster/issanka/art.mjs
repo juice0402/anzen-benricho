@@ -38,11 +38,12 @@ write(import.meta.url, {
   inshoku: svg([
     shape('M240 26 L 362 24 L 364 140 L 242 142 Z'),
     shape(circ(302, 82, 44), '#fff', 7),
-    ...[0, 90, 180, 270].map((a) => { const r = (d) => [302 + Math.cos(((a + d) * Math.PI) / 180) * 36, 82 + Math.sin(((a + d) * Math.PI) / 180) * 36].map((v) => v.toFixed(1)).join(' '); return fill(`M302 82 L ${r(-6)} C ${r(10)} ${r(26)} ${r(34)} Z`); }),
+    ...[0, 72, 144, 216, 288].map((a) => { const r = (d, k) => [302 + Math.cos(((a + d) * Math.PI) / 180) * k, 82 + Math.sin(((a + d) * Math.PI) / 180) * k].map((v) => v.toFixed(1)).join(' '); return shape(`M${r(-4, 10)} C ${r(-14, 30)} ${r(4, 40)} ${r(22, 34)} C ${r(26, 24)} ${r(18, 14)} ${r(10, 10)} Z`, '#fff', 5); }),
     shape(circ(302, 82, 8), '#fff', 6),
     line('M30 254 L 370 252', 9),
     shape('M80 180 L 176 178 L 166 252 L 90 253 Z'),
     line('M84 194 L 172 193', 6),
+    shape('M112 222 L 144 221 L 145 246 L 113 247 Z', '#fff', 6),
     shape('M74 168 L 182 166 L 184 182 L 72 183 Z', '#fff', 7),
     ...[96, 120, 144, 166].map((x, i) => fill(`M${x - 9} ${166 - (i % 2) * 2} L ${x + 9} ${166 - (i % 2) * 2} L ${x + 6} ${154} L ${x - 6} ${155} Z`, R)),
     line('M150 140 C 176 112 210 118 236 96', 7, R), head(236, 96, -35),
