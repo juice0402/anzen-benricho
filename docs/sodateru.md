@@ -40,7 +40,7 @@
 - 読むファイル：CLAUDE.md、machi-shakaika（公開リポジトリ。`git clone --depth 1 https://github.com/juice0402/machi-shakaika`）の `src/rakuten.mjs`・`scripts/fetch-rakuten.mjs`・`.github/workflows/deploy.yml`（楽天の部分）・`scripts/verify-dist.mjs`（楽天のページの点検）・`tests/rakuten.test.mjs`、src/layout.mjs（noAds）、src/pages/months.mjs（月のページ）、src/pages/info.mjs（プライバシーポリシー）、src/data/themes.mjs と各テーマのデータ、プロジェクトの資料 claude/oshi-techo-spec.md の「楽天API・アフィリエイトのルール」と claude/sakutto-tougou-plan.md の「外部読み込みの点検」
 - マージ：する（PR の build-deploy で取得が通ってから）
 
-### [ ] 1月「暖房と一酸化炭素」のポスター4枚
+### [x] 1月「暖房と一酸化炭素」のポスター4枚（#70）
 - やること：4業種のポスター（A4 の PDF）を作り、業種のデータに `poster` を入れる。絵は `art/poster/issanka/art.mjs`、Canva は大掃除の本番 DAHZG1vSiIU を copy-design して `node art/poster/canva-ops.mjs issanka` の操作で組む
 - 順番：「1月の2つ目のテーマ『暖房と一酸化炭素』」のあと（そちらがマージ待ちなら、そのブランチの上に積む）
 - できあがりの条件：`public/poster/<年-月>/issanka-<業種>.pdf` が4つ入り、業種のページの「A4で印刷」の下にリンクが出る。pdftotext で掲示の決まりの文が入っていることを確かめ、pdftoppm で4枚を並べて目で見た。`npm run check` が緑
