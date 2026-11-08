@@ -44,5 +44,6 @@ export const PHOTO = {
   'ny-hozon': '書庫の金属の棚に並んだ、無地の保存箱',
   // 読みもの（#59。1本に1枚 ym-<slug>。ほかのページと同じ写真は使わない）
   'ym-fuyu-neta': '冬の朝の通用口の前に立てかけた雪かきのスコップと、まいた融雪剤',
+  'ym-kashitsuki-teire': '休憩室の棚の上で、タンクを外して置いた卓上の加湿器と、たたんだふきん',
 };
 export const photoBase = (k) => `/img/photo/${k}`;
