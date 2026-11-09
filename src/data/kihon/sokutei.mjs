@@ -4,7 +4,7 @@
 //   5条 空調や機械換気の設備が送る空気は 1000ppm 以下）、WBGT は hourei.mjs の necchusho（WBGT 28度以上か気温31度以上の場所で、
 //   1時間以上続くか、1日4時間をこえる作業）。WBGT は報告の体制と手順の対象になる暑さかだけを出し、作業の重さごとの基準値は出さない
 // 事務所でない作業場：安衛則に二酸化炭素・気温18〜28℃・湿度の数字はない（坑内や暑熱の作業場の決まりは別）ので、事務所の数字を「目安」として出す
-// 安衛則612条の2（熱中症）は福岡労働局のページで条文番号を、厚労省の資料で対象の条件を確かめた（2026-11-10）
+// 安衛則612条の2（熱中症）は神奈川労働局の資料（条文の全文と対象の条件）と厚労省の資料で確かめた（2026-11-10。福岡局のページは GitHub から 404 だったので外した）
 // 記録は端末の中だけ（localStorage の anzen-sokutei-v1。送らない）。1か月・1場所・1件で、同じ月と場所は上書き（src/client/sokutei.mjs）
 export default {
   slug: 'sokutei',
@@ -123,7 +123,7 @@ export default {
     { t: '兵庫労働局 作業環境測定を行うべき作業場（中央管理方式の空気調和設備の事務所の室は2月以内ごとに1回・記録3年。事務所則7条）', u: 'https://jsite.mhlw.go.jp/hyogo-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/hourei_seido/sokutei_sagyouba.html' },
     { t: '厚生労働省 検討会 参考資料2 関係条文（安衛則604条の照度。令和2年）', u: 'https://www.mhlw.go.jp/content/11201000/000662899.pdf' },
     { t: '厚生労働省 職場における熱中症対策の強化について（WBGT28度以上または気温31度以上で、連続1時間以上か1日4時間を超える作業）', u: 'https://www.mhlw.go.jp/content/11303000/001682838.pdf' },
-    { t: '福岡労働局 改正労働安全衛生規則の報告体制・重篤化防止手順の周知例について（第612条の2）', u: 'https://jsite.mhlw.go.jp/fukuoka-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/netyusho_kaisei_syuuti_r0707.html' },
+    { t: '神奈川労働局 職場の熱中症対策の資料（令和8年4月。労働安全衛生規則第612条の2の全文・WBGT28度以上又は気温31度以上で連続1時間以上又は1日4時間を超える作業）', u: 'https://jsite.mhlw.go.jp/kanagawa-roudoukyoku/content/contents/002638387.pdf' },
   ],
   checked: '2026-11-10',
 };
