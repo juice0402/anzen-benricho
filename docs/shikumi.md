@@ -24,7 +24,7 @@ CLAUDE.md には要約だけを書き、くわしい仕様と経緯はここに�
 
 ## そろえる物
 
-- そろえる物 `/soroeru/`（目次）と `/soroeru/<key>/`（11/6 夜 #66。案1「別のページ」）：データは `src/data/kau.mjs`（`KAU`・月ごとの `KAU_MONTH`。points のある物だけページと月のリンクを出す。いまは hakimono・suberidome・daisha）、ページは `src/pages/soroeru.mjs`。物のページは見出し → 1行「広告　楽天アフィリエイトを利用しています」→ なぜ今か → 選ぶときに見る所3つ（出典は名前と確認日だけ・リンクにしない）→ 楽天市場の商品3つ → 値段を見た日 → 楽天のクレジット → あわせて見る。AdSense なし（noAds）・楽天以外へのリンクなし。商品はビルドの前に `scripts/fetch-rakuten.mjs`（`src/rakuten.mjs`。machi の写し）が取り `data/rakuten/`（.gitignore）へ。Secrets のない PR・手元では商品の節を出さない。main と毎日5:41の作り直しで取れなければ止める。月のページ（12・1・2月）に「今月そろえる物」（文字のリンクと1行だけ）、フッターに「そろえる物」。テストは `tests/kau.test.mjs`・`tests/rakuten.test.mjs`、点検は `verify-dist.mjs`
+- そろえる物 `/soroeru/`（目次）と `/soroeru/<key>/`（11/6 夜 #66。案1「別のページ」）：データは `src/data/kau.mjs`（`KAU`・月ごとの `KAU_MONTH`。points のある物だけページと月のリンクを出す。11/9 #75 で12の物すべて。測る道具の温湿度計・照度計は why の数字を知識のページ setsubi から）、ページは `src/pages/soroeru.mjs`。物のページは見出し → 1行「広告　楽天アフィリエイトを利用しています」→ なぜ今か → 選ぶときに見る所3つ（出典は名前と確認日だけ・リンクにしない）→ 楽天市場の商品3つ → 値段を見た日 → 楽天のクレジット → あわせて見る。AdSense なし（noAds）・楽天以外へのリンクなし。商品はビルドの前に `scripts/fetch-rakuten.mjs`（`src/rakuten.mjs`。machi の写し）が取り `data/rakuten/`（.gitignore）へ。Secrets のない PR・手元では商品の節を出さない。main と毎日5:41の作り直しで取れなければ止める。月のページ（3月と9月をのぞく月）に「今月そろえる物」（文字のリンクと1行だけ）、フッターに「そろえる物」。テストは `tests/kau.test.mjs`・`tests/rakuten.test.mjs`、点検は `verify-dist.mjs`
 
 ## ◯月号
 

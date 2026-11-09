@@ -5,6 +5,7 @@ import { KAU, KAU_MONTH, KAU_READY, kauOfMonth } from '../src/data/kau.mjs';
 import { ALL_THEMES } from '../src/data/themes.mjs';
 import soroeruPages from '../src/pages/soroeru.mjs';
 import monthPages from '../src/pages/months.mjs';
+import SETSUBI from '../src/data/kihon/setsubi.mjs';
 
 const NG = ['おすすめ', 'お得', '最安', '今すぐ', 'しましょう', 'ぜひ', '便利', '簡単', '安心', 'ポイント', 'コツ', '定価', '手遅れ'];
 
@@ -24,7 +25,7 @@ test('すべての物に、名前・さがす言葉・must がある。月の物
 });
 
 test('中身のある物：なぜ今か・選ぶときに見る所3つ・出典2つ以上・確認日から90日', () => {
-  assert.deepEqual(KAU_READY.map((k) => k.key), ['hakimono', 'suberidome', 'daisha']);
+  assert.deepEqual(KAU_READY.map((k) => k.key).sort(), Object.keys(KAU).sort(), 'どの物にも中身がある（#75）');
   for (const k of KAU_READY) {
     assert.ok(k.why && !k.why.endsWith('。'), `${k.key}：why（文末の「。」はページで足す）`);
     assert.equal(k.points.length, 3, k.key);
@@ -34,13 +35,16 @@ test('中身のある物：なぜ今か・選ぶときに見る所3つ・出典2
     assert.ok(days >= 0 && days <= 90, `${k.key}：確認日 ${k.checked} から ${Math.floor(days)} 日。出典を開いて確かめ直し、checked を直す`);
     const text = [k.why, ...k.points].join('');
     for (const w of NG) assert.ok(!text.includes(w), `${k.key}：使わない言葉「${w}」`);
-    // なぜ今かの数字は、そのテーマのデータにある数字だけ
-    const t = ALL_THEMES.find((x) => x.slug === k.theme);
-    const data = JSON.stringify(t);
+    // なぜ今かの数字は、そのテーマのデータにある数字だけ（測る道具は知識のページ setsubi の数字）
+    const data = k.sokutei ? JSON.stringify(SETSUBI) : JSON.stringify(ALL_THEMES.find((x) => x.slug === k.theme));
     for (const n of k.why.match(/[\d,]+(?:\.\d+)?/g) ?? []) assert.ok(data.includes(n), `${k.key}：数字 ${n} がテーマのデータにない`);
   }
-  // 吐いた物の処理セットは病気を防ぐ・治すと書かない
-  assert.ok(!/防ぐ|防げ|治/.test([KAU.hakimono.why, ...KAU.hakimono.points].join('')));
+  // 吐いた物の処理セットと保冷剤は病気を防ぐ・治すと書かない
+  for (const k of [KAU.hakimono, KAU.horeizai]) assert.ok(!/防ぐ|防げ|治|予防/.test([k.why, ...k.points].join('')), k.t);
+  // 消火器の設置の決まりは、なぜ今かに書かない（火事のテーマにある）
+  assert.ok(!/設置|義務|置かなければ/.test(KAU.shokaki.why));
+  // 出典の題に機種の型番を書かない
+  for (const k of KAU_READY) for (const s of k.src) assert.ok(!/[A-Z]{1,4}-?\d{2,}[A-Z]*/.test(s.t.replace(/JIS [A-Z] \d+(-\d)?|EN388|ISO \d+|CO2|C 7612/g, '')), `${k.key}：型番 ${s.t}`);
 });
 
 const products = {
@@ -51,7 +55,7 @@ const products = {
 test('物のページ：商品があるとき・ないとき（AdSense なし・楽天以外へのリンクなし）', () => {
   const withP = soroeruPages(ALL_THEMES, 12, products);
   const noP = soroeruPages(ALL_THEMES, 12, null);
-  assert.deepEqual(withP.map((p) => p.path), ['/soroeru/', '/soroeru/hakimono/', '/soroeru/suberidome/', '/soroeru/daisha/']);
+  assert.deepEqual(withP.map((p) => p.path), ['/soroeru/', ...KAU_READY.map((k) => `/soroeru/${k.key}/`)]);
   for (const p of withP.slice(1)) {
     assert.ok(p.html.includes('<p class="pg-lead">広告　楽天アフィリエイトを利用しています</p>'));
     assert.equal((p.html.match(/rel="sponsored nofollow noopener" target="_blank"/g) || []).length, 3);
@@ -80,14 +84,15 @@ test('物のページ：商品があるとき・ないとき（AdSense なし・
   assert.ok(withP[0].html.includes('adsbygoogle') && !withP[0].html.includes('rows shop'));
 });
 
-test('月のページ：12月・1月・2月に「今月そろえる物」（文字のリンクだけ）、ほかの月は出さない', () => {
+test('月のページ：物のある月に「今月そろえる物」（文字のリンクだけ）、3月・9月・10月は出さない', () => {
   const pages = monthPages(ALL_THEMES, 12);
-  for (const m of [12, 1, 2]) {
+  for (const m of [12, 1, 2, 4, 5, 6, 7, 8, 11]) {
     const html = pages.find((p) => p.path === `/anzen/${m}/`).html;
     const k = kauOfMonth(m);
     assert.ok(html.includes('今月そろえる物') && html.includes(`<a href="/soroeru/${k.key}/">${k.t}</a>`), `${m}月`);
     assert.ok(!html.includes('rakuten'), `${m}月に楽天の商品やリンクがある`);
     assert.ok(html.includes('adsbygoogle'), `${m}月の AdSense はそのまま`);
   }
-  for (const m of [3, 4, 9, 10]) assert.ok(!pages.find((p) => p.path === `/anzen/${m}/`).html.includes('今月そろえる物'), `${m}月`);
+  // 10月は CO2モニターとつながる行がテーマにないのでリンクを出さない（monthLink: false）
+  for (const m of [3, 9, 10]) assert.ok(!pages.find((p) => p.path === `/anzen/${m}/`).html.includes('今月そろえる物'), `${m}月`);
 });
