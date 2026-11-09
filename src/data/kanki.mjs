@@ -35,6 +35,7 @@ export const KANKI = {
   posterSrc: '出典：厚生労働省・消防庁ほか',
   related: [
     { t: '職場の巡視 だれが・何回？', href: '/kihon/junshi/' },
+    { t: '測った二酸化炭素・室温・湿度を記録する', href: '/kihon/sokutei/' },
     { t: 'SDS の見方', href: '/kagaku/sds/' },
     { t: '9月 健康診断の結果を生かす', href: '/anzen/theme/kenshin/' },
   ],

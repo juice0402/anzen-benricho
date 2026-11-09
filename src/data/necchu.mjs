@@ -35,6 +35,7 @@ export const NECCHU = {
   posterSrc: '出典：厚生労働省・労働局ほか',
   related: [
     { t: '熱中症の報告の体制と手順（2025年6月から義務）', href: '/hourei/necchusho/' },
+    { t: '測ったWBGTを記録する', href: '/kihon/sokutei/' },
     { t: '4月 新しく入った人の安全', href: '/anzen/theme/shinjin/' },
     { t: '安全衛生の1年 全国の運動はいつ？', href: '/anzen/nenkan/' },
   ],

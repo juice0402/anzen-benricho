@@ -37,6 +37,20 @@ ${num('kt-hr', 'この人の週の所定労働時間（時間）')}${num('kt-nr'
 <label class="kt-chk" for="kt-mk"><input id="kt-mk" type="checkbox">${esc(d.makeLabel)}</label>
 <label class="kt-chk" for="kt-pp"><input id="kt-pp" type="checkbox">${esc(d.ppeLabel)}</label></div>`,
   }),
+  // 職場を測る記録帳（#77）：測った数字を決まりとくらべ、端末の中だけに月ごとに残す（src/client/sokutei.js）
+  sokutei: (d) => {
+    const dec = (id, label, max) => `<label for="${id}">${esc(label)}<input id="${id}" type="number" min="0" max="${max}" step="any" inputmode="decimal"></label>`;
+    return {
+      h: '測った数字を入れる',
+      body: `<div class="kt-in sk-in">${date('sk-d', d.input.d)}<label for="sk-p">${esc(d.input.p)}<input id="sk-p" type="text" maxlength="20" autocomplete="off" placeholder="例：2階事務室"></label>
+${dec('sk-co2', d.input.co2, 99999)}${dec('sk-temp', d.input.temp, 60)}${dec('sk-hum', d.input.hum, 100)}${dec('sk-lux', d.input.lux, 200000)}${dec('sk-wbgt', d.input.wbgt, 50)}</div>`,
+      after: `<button type="button" class="ks-cal-b sk-save" hidden>この月・この場所の記録にする</button>
+<p class="ks-hint sk-msg" aria-live="polite"></p>
+<h3 class="sk-h">今年度の記録<span class="sk-fy"></span></h3>
+<div class="sk-wrap"><table class="sk-t"><thead><tr><th>月</th><th>場所</th><th>CO2</th><th>気温</th><th>湿度</th><th>照度</th><th>WBGT</th><th></th></tr></thead><tbody class="sk-body"></tbody></table></div>
+<p class="ks-hint sk-none">まだ記録はありません</p>`,
+    };
+  },
 };
 
 export const tool = (p) => {
@@ -46,6 +60,7 @@ export const tool = (p) => {
 <h2 class="sec-h" id="ktool-h">${t.h}</h2>
 ${t.body}
 <div class="kt-out" aria-live="polite" hidden></div>
+${t.after || ''}
 ${notes(p.toolData.notes)}
 <script type="application/json" class="kt-d">${json(p.toolData)}</script>
 </section>`;

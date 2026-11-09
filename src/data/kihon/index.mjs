@@ -11,6 +11,7 @@ import nyusha from './nyusha.mjs';
 import tokubetsu from './tokubetsu.mjs';
 import kigen from './kigen.mjs';
 import setsubi from './setsubi.mjs';
+import sokutei from './sokutei.mjs';
 import hozon from './hozon.mjs';
 import shishobyo from './shishobyo.mjs';
 import nenkan from './nenkan.mjs';
@@ -23,4 +24,4 @@ import sds from './sds.mjs';
 import kanrisha from './kanrisha.mjs';
 import risk from './risk.mjs';
 
-export const KIHON = [suishinsha, ninzu, nyusha, tokubetsu, kigen, setsubi, hozon, shishobyo, nenkan, hiyari, ky, junshi, mazenai, sds, kanrisha, risk];
+export const KIHON = [suishinsha, ninzu, nyusha, tokubetsu, kigen, setsubi, sokutei, hozon, shishobyo, nenkan, hiyari, ky, junshi, mazenai, sds, kanrisha, risk];

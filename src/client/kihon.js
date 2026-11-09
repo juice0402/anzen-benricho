@@ -116,8 +116,8 @@
       Array.prototype.forEach.call(pfIn.querySelectorAll('input, textarea'), pfPut);
     }
   }
-  // 計算の道具
-  var tb = document.querySelector('.ktool');
+  // 計算の道具（測る記録帳は sokutei.js が受けもつ）
+  var tb = document.querySelector('.ktool:not([data-tool="sokutei"])');
   if (tb) {
     var td = JSON.parse(tb.querySelector('.kt-d').textContent);
     var ko = tb.querySelector('.kt-out');
