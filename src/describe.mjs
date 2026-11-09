@@ -163,11 +163,12 @@ export const yomimonoHubDesc = (list, fmtDate) => {
 // そろえる物の目次：/soroeru/（#66）
 export const soroeruHubDesc = (list) => {
   const src = new Set(list.flatMap((k) => k.src.map((s) => s.url))).size;
-  const names = list.map((k) => `${k.month ? `${k.month}月の` : ''}${k.t}`).join('・');
-  return fit(
-    [`安全衛生の月のテーマに合わせて、職場にそろえる物${list.length}つ。${names}。`, `物ごとに選ぶときに見る所3つと、公的な資料や取扱説明書の出典${src}件。`],
-    [`安全衛生の月のテーマに合わせて、職場にそろえる物${list.length}つ。${names}。`, `物ごとに選ぶときに見る所3つ。`],
-  );
+  const name = (k) => `${k.month ? `${k.month}月の` : ''}${k.t}`;
+  const head = `安全衛生の月のテーマに合わせて、職場にそろえる物${list.length}点。`;
+  // 物が多いときは、はじめの数点の名前だけ（#75 で12点になった）
+  const few = (n) => `${list.slice(0, n).map(name).join('・')}${list.length > n ? 'など' : ''}。`;
+  const tail = `物ごとに選ぶときに見る所3つと、公的な資料や取扱説明書の出典${src}件。`;
+  return fit([head, few(list.length), tail], [head, few(list.length), '物ごとに選ぶときに見る所3つ。'], [head, few(4), tail], [head, few(3), tail], [head, few(2), tail]);
 };
 
 // そろえる物のページ：/soroeru/<key>/（なぜ今かの数字・見る所の数・出典の件数・確かめた月）
@@ -175,5 +176,5 @@ export const soroeruDesc = (k, theme) => {
   const head = theme ? `${k.month}月の「${theme.title}」で職場にそろえる${k.t}の選び方。` : `職場を測る${k.t}の選び方。`;
   const why = end(k.why);
   const tail = `選ぶときに見る所${k.points.length}つと出典${k.src.length}件（${ym(k.checked)}確認）。`;
-  return fit([head, why, tail], [head, tail, '楽天市場の商品も。'], [head, tail]);
+  return fit([head, why, tail], [head, fact(k.why), tail], [head, why], [head, fact(k.why)], [head, tail, '楽天市場の商品も。'], [head, tail]);
 };
