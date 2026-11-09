@@ -43,6 +43,8 @@ test('中身のある物：なぜ今か・選ぶときに見る所3つ・出典2
   for (const k of [KAU.hakimono, KAU.horeizai]) assert.ok(!/防ぐ|防げ|治|予防/.test([k.why, ...k.points].join('')), k.t);
   // 消火器の設置の決まりは、なぜ今かに書かない（火事のテーマにある）
   assert.ok(!/設置|義務|置かなければ/.test(KAU.shokaki.why));
+  // 出典の題に機種の型番を書かない
+  for (const k of KAU_READY) for (const s of k.src) assert.ok(!/[A-Z]{1,4}-?\d{2,}[A-Z]*/.test(s.t.replace(/JIS [A-Z] \d+(-\d)?|EN388|ISO \d+|CO2|C 7612/g, '')), `${k.key}：型番 ${s.t}`);
 });
 
 const products = {
@@ -82,14 +84,15 @@ test('物のページ：商品があるとき・ないとき（AdSense なし・
   assert.ok(withP[0].html.includes('adsbygoogle') && !withP[0].html.includes('rows shop'));
 });
 
-test('月のページ：物のある月に「今月そろえる物」（文字のリンクだけ）、3月と9月は出さない', () => {
+test('月のページ：物のある月に「今月そろえる物」（文字のリンクだけ）、3月・9月・10月は出さない', () => {
   const pages = monthPages(ALL_THEMES, 12);
-  for (const m of [12, 1, 2, 4, 5, 6, 7, 8, 10, 11]) {
+  for (const m of [12, 1, 2, 4, 5, 6, 7, 8, 11]) {
     const html = pages.find((p) => p.path === `/anzen/${m}/`).html;
     const k = kauOfMonth(m);
     assert.ok(html.includes('今月そろえる物') && html.includes(`<a href="/soroeru/${k.key}/">${k.t}</a>`), `${m}月`);
     assert.ok(!html.includes('rakuten'), `${m}月に楽天の商品やリンクがある`);
     assert.ok(html.includes('adsbygoogle'), `${m}月の AdSense はそのまま`);
   }
-  for (const m of [3, 9]) assert.ok(!pages.find((p) => p.path === `/anzen/${m}/`).html.includes('今月そろえる物'), `${m}月`);
+  // 10月は CO2モニターとつながる行がテーマにないのでリンクを出さない（monthLink: false）
+  for (const m of [3, 9, 10]) assert.ok(!pages.find((p) => p.path === `/anzen/${m}/`).html.includes('今月そろえる物'), `${m}月`);
 });

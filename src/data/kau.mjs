@@ -8,8 +8,8 @@
 // 2026-11-06：台車は2社の取扱説明書（耐荷重をこえない・偏らせない・はみ出さない・腰の高さ以上に積まない）、
 //   すべり止めマットは新見署・彦根署・広島北署・亀戸署・茨城局の資料、吐いた物の処理セットは川崎市・大阪府・厚労省の資料（12月のテーマと同じ）で書いた
 // 2026-11-09（#75）：残りの9つ。見る所はどれも2つ以上の資料（公的な資料・メーカーの取扱説明書やカタログ）で一致したことだけ。
-//   測る道具（温湿度計・照度計）の why の数字は知識のページ setsubi（事務所則）の数字。CO2モニターは10月の事務所・店舗のやること
-//   「空気の測定の記録」に、温湿度計は同じ月の決まり「温湿度計で見る」につながる。保冷剤は体を冷やす物として書き、防ぐ・治すと書かない。
+//   測る道具（温湿度計・照度計）の why の数字は知識のページ setsubi（事務所則）の数字。CO2モニターは10月の掲示・朝礼・やることに
+//   つながる行がないので、月のページにリンクを出さない（monthLink: false）。保冷剤は体を冷やす物として書き、防ぐ・治すと書かない。
 //   消火器は設置の決まりを書かない（11月の火事のテーマにある）
 
 export const KAU = {
@@ -113,11 +113,11 @@ export const KAU = {
     points: [
       '黒い球（黒球）のついた物か。黒球のない室内用は、日の当たる外では正しく測れないことがある',
       'JIS B 7922 に合う物か。JISマークか、適合の表示を見る',
-      '測るときは黒球を握らず、体から離して持ち、値が落ち着くまで待つ',
+      '測るときは黒球を握らず、値が落ち着くまで待つ',
     ],
     src: [
       { t: '環境省 暑さ指数（WBGT）の把握（技術情報編 第6章。JIS B 7922 の携帯型・屋外は黒球つき・黒球を握らない・約10分待つ）', url: 'https://www.env.go.jp/content/000119019.pdf' },
-      { t: '佐藤計量器製作所 熱中症暑さ指数計 SK-170GT の取扱説明書（JIS B 7922 クラス2・黒球・体から離して持つ・周りになじませてから測る）', url: 'https://static.sksato.co.jp/manual/ja/manual_8312-10.pdf' },
+      { t: '佐藤計量器製作所 暑さ指数計の取扱説明書（JIS B 7922 クラス2・黒球・周りになじませてから測る）', url: 'https://static.sksato.co.jp/manual/ja/manual_8312-10.pdf' },
     ],
     checked: '2026-11-09',
   },
@@ -160,7 +160,7 @@ export const KAU = {
       { t: '厚生労働省 熱中症予防の普及啓発・注意喚起について（平成30年7月の事務連絡。保冷剤・氷・冷たいタオルで体を冷やす・首のまわり、わきの下、足の付け根）', url: 'https://www.mhlw.go.jp/content/000335769.pdf' },
       { t: '厚生労働省 熱中症予防の普及啓発・注意喚起について（平成28年5月の事務連絡。新潟労働局の掲載。保冷剤・氷・冷たいタオル・首のまわり、わきの下、足の付け根）', url: 'https://jsite.mhlw.go.jp/niigata-roudoukyoku/content/contents/000069763_280518necchushouyobou.pdf' },
       { t: '東京都生活文化局 保冷剤での凍傷に注意！（タオルを巻いて地肌に直接ふれないように・同じ所に長く当てない）', url: 'https://www.shouhiseikatu.metro.tokyo.lg.jp/attention/documents/kigaihoreizaiinsatuyou.pdf' },
-      { t: '三重化学工業 クールマスクの取扱説明書（冷やした物を直接肌に当てると凍傷のおそれ・タオルなどで冷たさを調整）', url: 'https://www.matsuyoshi.co.jp/assets/pdf/manual/man_00886021.pdf' },
+      { t: '三重化学工業 冷却用ジェルの取扱説明書（冷やした物を直接肌に当てると凍傷のおそれ・タオルなどで冷たさを調整）', url: 'https://www.matsuyoshi.co.jp/assets/pdf/manual/man_00886021.pdf' },
     ],
     checked: '2026-11-09',
   },
@@ -190,7 +190,9 @@ export const KAU = {
     kw: ['CO2モニター 二酸化炭素濃度計'],
     must: ['CO2', '二酸化炭素'],
     ng: ['交換用', 'ボンベ'],
-    why: '事務作業の部屋の二酸化炭素は5000ppm以下、空調や機械換気の設備が送る空気は1000ppm以下（事務所衛生基準規則）。部屋の空気を測って記録する',
+    why: '事務作業の部屋の二酸化炭素は5000ppm以下、空調や機械換気の設備が送る空気は1000ppm以下（事務所衛生基準規則）',
+    // 10月の掲示・朝礼・やることに CO2モニターとつながる行がないので、月のページにはリンクを出さない（#76 点検の指摘）
+    monthLink: false,
     theme: 'kanki',
     month: 10,
     points: [
@@ -200,7 +202,7 @@ export const KAU = {
     ],
     src: [
       { t: '厚生労働省 二酸化炭素濃度測定器を使用する際の留意点（別添1。NDIR・定期的に校正・外の空気は415〜450ppm程度・ドアや窓から離し人から50cm以上）', url: 'https://www.mhlw.go.jp/content/000968524.pdf' },
-      { t: '佐藤計量器製作所 CO2モニター SK-50CTH の取扱説明書（NDIR・外の空気で校正・窓や換気口、人の息がかかる所をさける・人から50cm以上）', url: 'https://www.matsuyoshi.co.jp/assets/pdf/manual/man_00886198.pdf' },
+      { t: '佐藤計量器製作所 CO2モニターの取扱説明書（NDIR・外の空気で校正・窓や換気口、人の息がかかる所をさける・人から50cm以上）', url: 'https://www.matsuyoshi.co.jp/assets/pdf/manual/man_00886198.pdf' },
     ],
     checked: '2026-11-09',
   },
@@ -209,7 +211,7 @@ export const KAU = {
     kw: ['消火器 業務用'],
     must: ['消火器'],
     ng: ['リサイクル', '引取', 'ケース', '格納箱', '標識'],
-    why: '東京消防庁の管内では、令和7年に飲食店の火事が438件、事務所の火事が236件あった。11月は消火器の場所と、使える物かを確かめる',
+    why: '東京消防庁の管内では、令和7年に飲食店の火事が438件、事務所の火事が236件あった。11月は消火器の場所と、前に物がないかを確かめる',
     theme: 'kasai',
     month: 11,
     points: [
@@ -238,7 +240,7 @@ export const KAU = {
     ],
     src: [
       { t: '厚生労働省 検討会の資料5 事務室の作業環境測定（事務室の中央部の床上75〜120cm・2か月以内ごと）', url: 'https://www.mhlw.go.jp/content/11201000/000700627.pdf' },
-      { t: 'カスタム 大型アナログ温湿度計 CTH-30A の取扱説明書（湿度の精度・直射日光と冷暖房の風、壁際や角をさける・約1時間で正しい値）', url: 'https://www.kk-custom.co.jp/dth/pdf/M_CTH-30A.pdf' },
+      { t: 'カスタム 温湿度計の取扱説明書（湿度の精度・直射日光と冷暖房の風、壁際や角をさける・約1時間で正しい値）', url: 'https://www.kk-custom.co.jp/dth/pdf/M_CTH-30A.pdf' },
       { t: 'エンペックス気象計 デジタル温度・湿度計の取扱説明書（湿度の精度は40〜70%RHで±5%・約1時間で正しい値）', url: 'https://image.yodobashi.com/etcobject/100000001008219824/M0000012859.pdf' },
     ],
     checked: '2026-11-09',
@@ -256,8 +258,8 @@ export const KAU = {
       '机や作業台の上に、受光部を上に向けて置いて測る',
     ],
     src: [
-      { t: 'コニカミノルタ 照度計 T-10A シリーズ（JIS C 1609-1 一般形AA級・受光部を本体から外せる）', url: 'https://satosokuteiki.com/upload/items/444/lxt10a.pdf' },
-      { t: 'HIOKI 照度計 FT3424 のカタログ（JIS C 1609-1 一般形AA級・受光部を離すと人の影や服の影響をさけられる・机の上で測る）', url: 'https://www.satosokuteiki.com/upload/items/2319/ft3424.pdf' },
+      { t: 'コニカミノルタ 照度計のカタログ（JIS C 1609-1 一般形AA級・受光部を本体から外せる）', url: 'https://satosokuteiki.com/upload/items/444/lxt10a.pdf' },
+      { t: 'HIOKI 照度計のカタログ（JIS C 1609-1 一般形AA級・受光部を離すと人の影や服の影響をさけられる・机の上で測る）', url: 'https://www.satosokuteiki.com/upload/items/2319/ft3424.pdf' },
       { t: '岩崎電気 照度の測定（JIS C 7612。水平面で測る・作業面は机や作業台の上・指定がなければ床上80cm）', url: 'https://www.iwasaki.co.jp/documents/jp/lighting/support/tech-data/calculation/illuminance.pdf' },
     ],
     checked: '2026-11-09',
@@ -273,5 +275,5 @@ export const kauPath = (key) => `/soroeru/${key}/`;
 // その月のページに出す物（ページのある物だけ）
 export const kauOfMonth = (m) => {
   const key = KAU_MONTH[m];
-  return key && KAU[key].points?.length ? { key, ...KAU[key] } : null;
+  return key && KAU[key].points?.length && KAU[key].monthLink !== false ? { key, ...KAU[key] } : null;
 };
