@@ -217,6 +217,25 @@ li[hidden], .ktbl div[hidden], .sec[hidden] { display: none; }
 .pf-in .ks-date input, .pf-in .ks-date textarea { max-width: none; }
 .ks-date textarea { font: inherit; font-size: 17px; line-height: 1.5; padding: 8px 10px; border-radius: 0; width: 100%; resize: vertical; }
 .pf-in .pf-clear { margin-top: -2px; }
+/* 議事録の紙（#80）：日時・場所・出席者／議題／話したこと／決めたこと／次の回・確認欄 */
+.pj-fs { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 6px; }
+.pj-fs legend { font-size: 13px; padding: 0 0 4px; }
+.pj-fd { grid-template-columns: 1fr 6em 6em; gap: 6px; }
+.pj-fd .ks-date input { max-width: none; }
+.pj .ps-in { gap: 2.4cqw; }
+.pj-f > div { min-height: 6.4cqw; grid-template-columns: auto minmax(0, 1fr); min-width: 0; }
+.pj-f dd { font-size: 2.8cqw; line-height: 1.3; overflow: hidden; white-space: nowrap; padding-bottom: .6cqw; }
+.pj-f .pj-w { grid-column: 1 / -1; }
+.pj-e { grid-template-columns: 1fr 1fr; }
+.pj-e > div:first-child { grid-column: 1 / -1; }
+.pj-b { display: grid; gap: .6cqw; }
+.pj-h { font-size: 2.8cqw; font-weight: 700; }
+.pj-g { margin: 0; padding: 0 0 0 4cqw; list-style: decimal; font-size: 2.4cqw; }
+.pj-g li { height: 5.4cqw; line-height: 5.4cqw; border-bottom: .25cqw solid #9aa3a8; white-space: nowrap; overflow: hidden; padding-left: .6cqw; }
+.pj-l { margin: 0; height: calc(var(--l) * 5.4cqw); font-size: 2.6cqw; line-height: 5.4cqw; overflow: hidden; overflow-wrap: anywhere; white-space: pre-wrap; padding-left: .6cqw; background: repeating-linear-gradient(transparent 0 calc(5.4cqw - .25cqw), #9aa3a8 calc(5.4cqw - .25cqw) 5.4cqw); }
+.pj-t { table-layout: fixed; font-size: 2.6cqw; }
+.pj-t td { height: 5.4cqw; line-height: 1.2; white-space: nowrap; overflow: hidden; }
+.pj-t th:nth-child(2), .pj-t th:nth-child(3) { width: 19%; }
 .ps-pick { margin-bottom: 4px; }
 .pr-none { padding: 12px 0; }
 .pt-m { display: inline-block; width: 12cqw; border-bottom: .3cqw solid currentColor; margin-right: 1cqw; height: 1em; vertical-align: baseline; }

@@ -30,14 +30,15 @@ ${qs.length > 1 ? `<p class="qz-t">${esc(t.title)}</p>` : ''}<p class="qz-q">${e
 </section>`;
 };
 
-// 今月の委員会で話すこと（テーマごとに議題の例3つ。印刷には出さない）
+// 今月の委員会で話すこと（テーマごとに議題の例3つ。印刷には出さない）。テーマごとに、その議題が入った議事録の紙（/kihon/gijiroku/?t=<テーマ>。#80）へ
 const gidaiHtml = (ts) => {
   const gs = ts.filter((t) => t.gidai);
   if (!gs.length) return '';
   return `<section class="sec gd-s np" aria-labelledby="gd-h">
 <h2 class="sec-h" id="gd-h">今月の委員会で話すこと</h2>
 <p class="pg-lead">運営者が委員会の資料に使う議題の立て方です</p>
-${gs.map((t) => `${gs.length > 1 ? `<h3 class="gd-t">${esc(t.title)}</h3>` : ''}<ul class="gd">${t.gidai.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>`).join('\n')}
+${gs.map((t) => `${gs.length > 1 ? `<h3 class="gd-t">${esc(t.title)}</h3>` : ''}<ul class="gd">${t.gidai.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>
+<p class="gd-a"><a href="/kihon/gijiroku/?t=${t.slug}">この議題が入った議事録の紙（A4）</a></p>`).join('\n')}
 <p class="u-note">委員会のない職場は、朝礼や打ち合わせの議題に</p>
 </section>`;
 };
