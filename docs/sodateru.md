@@ -84,12 +84,22 @@
 - 読むファイル：CLAUDE.md、src/client/quiz.js、src/client/rec.mjs・rec.js（スタンプ帳）、src/pages/months.mjs、src/pages/home.mjs、src/pages/info.mjs（プライバシーポリシー）、tests/koyomi.test.mjs・tests/rec.test.mjs
 - マージ：する
 
-### [ ] 資格の期限を何人分も残す台帳（資格の更新）
-- やること：資格の更新の期限 `/shikaku/koushin/` で出した期限を、職場の何人分でも端末の中に残せるようにする。期限の結果の下に「台帳に残す」のボタンと呼び名の欄（入れなくてもよい・`inputmode="text"`・`maxlength="10"`）。入口のページの計算の下に「資格の期限の台帳」の節を足し、呼び名・資格・修了日・期限・あと何日を期限の近い順の表に出す（1行ずつ消せる。期限が過ぎた行は「期限切れ」と出して残す）。A4 1枚の台帳の紙（印刷・すみにサイト名と QR）。資格ごとのページ（kantoku・byouin・bouka）には「台帳に残す」と、入口の台帳への1行のリンクだけ。記録は localStorage の新しいキー `anzen-shikaku-v1`（送らない。いまの `koushin` のキーはそのまま残す）。期限の計算はいまの koushin.js と `icsLimit`（ics.mjs）を使い、足す・消す・並べかえは新しい部品 `src/client/daicho.mjs`（sokutei.mjs と同じく、ページでは export を外して入れる）。プライバシーポリシーの「ブラウザに保存する情報」（info.mjs の `STORED`）に1行
-- できあがりの条件：`npm run check` が緑。tests/shikaku.test.mjs にテストを足した（キーの名前・送らない〔fetch・sendBeacon・XMLHttpRequest がない〕・期限の近い順・同じ呼び名と資格は上書き・防火・防災の4月1日の数え方が台帳でも同じ）。計算の部分はいままでどおりスマホの1画面（390×660）に入る。印刷が A4 1枚（Playwright で PDF にして数える）。呼び名に `<b>` などを入れても HTML にならない（エスケープ）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
-- 決まったこと：連絡 C-026（11/6 しょーくん「読み物を拡充、答えに関する読み物とか、記事のボリューム、自分で計算できるなどの来る理由を継続していくことが大切」）の③「自分で計算できる・自分の数字が残る」を、いちばん表示の多い /shikaku/koushin/（claude/search-data-anzen.md の 11/6 の回で 61表示・7.8位・0クリック）に足す。計算と記録は端末の中だけで送らない（CLAUDE.md）。資格の更新には講座の広告を置かない（claude/anzen-handoff.md の「広告・アフィリエイト」）。title の頭「清掃作業監督者・病院清掃受託責任者」は変えない（docs/shikumi.md の「資格の更新の期限」）。印刷は A4 1枚で、紙のすみにサイト名と QR（CLAUDE.md・claude/anzen-handoff.md の「大事な決めごと」）
-- 迷ったら：呼び名が空なら「1人目」「2人目」のように番号で出す（名前を入れさせない）。同じ呼び名・同じ資格は上書き（職場を測る記録帳の「同じ月と場所は上書き」と同じ考え。呼び名が空の行どうしは上書きせず足す）。A4 に入りきらない行は、期限の近い順に入るだけ入れ、紙の下に「ほかの◯件は画面の台帳で見る」の1行（職場を測る記録帳の紙と同じ形）。台帳から .ics をまとめて作る機能は作らない（1件ずつのいまの「カレンダーに入れる」のまま）。台帳が0件のときは節の見出しと1行だけにし、印刷のボタンを出さない。全ページ点検の1行の決まり（.u-note は26字など）にかかったら文を短くする。新しい見た目の形は作らず、いまの表（pg-t）と紙（.psheet）を使う
-- 読むファイル：CLAUDE.md、docs/shikumi.md の「資格の更新の期限」、src/pages/shikaku.mjs、src/client/koushin.js・ics.mjs、src/data/shikaku.mjs、src/client/sokutei.mjs・sokutei.js（端末の中の記録と A4 の紙の形）、src/pages/kihon.mjs（印刷の紙）、src/pages/info.mjs（STORED）、tests/shikaku.test.mjs・tests/sokutei.test.mjs
+### [ ] 資格の期限を何人分も残す台帳（資格の更新・その1：記録と表）
+- やること：資格の更新の期限 `/shikaku/koushin/` で出した期限を、職場の何人分でも端末の中に残せるようにする。期限の結果の下に「台帳に残す」のボタンと呼び名の欄（入れなくてもよい・`inputmode="text"`・`maxlength="10"`）。入口のページの計算の下に「資格の期限の台帳」の節を足し、呼び名・資格・修了日・期限・あと何日を期限の近い順の表に出す（1行ずつ消せる。期限が過ぎた行は「期限切れ」と出して残す）。記録は localStorage の新しいキー `anzen-shikaku-v1`（送らない。いまの `koushin` のキーはそのまま残す）。期限の計算はいまの koushin.js と `icsLimit`（ics.mjs）を使い、足す・消す・並べかえは新しい部品 `src/client/daicho.mjs`（sokutei.mjs と同じく、ページでは export を外して入れる）。プライバシーポリシーの「ブラウザに保存する情報」（info.mjs の `STORED`）に1行。印刷の紙と資格ごとのページへの足しは次の項目
+- できあがりの条件：`npm run check` が緑。tests/shikaku.test.mjs にテストを足した（キーの名前・送らない〔fetch・sendBeacon・XMLHttpRequest がない〕・期限の近い順・同じ呼び名と資格は上書き・防火・防災の4月1日の数え方が台帳でも同じ）。計算の部分はいままでどおりスマホの1画面（390×660）に入る。呼び名に `<b>` などを入れても HTML にならない（エスケープ）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：連絡 C-026（11/6 しょーくん「読み物を拡充、答えに関する読み物とか、記事のボリューム、自分で計算できるなどの来る理由を継続していくことが大切」）の③「自分で計算できる・自分の数字が残る」を、いちばん表示の多い /shikaku/koushin/（claude/search-data-anzen.md の 11/6 の回で 61表示・7.8位・0クリック）に足す。計算と記録は端末の中だけで送らない（CLAUDE.md）。資格の更新には講座の広告を置かない（claude/anzen-handoff.md の「広告・アフィリエイト」）。title の頭「清掃作業監督者・病院清掃受託責任者」は変えない（docs/shikumi.md の「資格の更新の期限」）
+- 迷ったら：呼び名が空なら「1人目」「2人目」のように番号で出す（名前を入れさせない）。同じ呼び名・同じ資格は上書き（職場を測る記録帳の「同じ月と場所は上書き」と同じ考え。呼び名が空の行どうしは上書きせず足す）。台帳から .ics をまとめて作る機能は作らない（1件ずつのいまの「カレンダーに入れる」のまま）。台帳が0件のときは節の見出しと1行だけにする。全ページ点検の1行の決まり（.u-note は26字など）にかかったら文を短くする。新しい見た目の形は作らず、いまの表（pg-t）を使う
+- 読むファイル：CLAUDE.md、docs/shikumi.md の「資格の更新の期限」、src/pages/shikaku.mjs、src/client/koushin.js・ics.mjs、src/data/shikaku.mjs、src/client/sokutei.mjs・sokutei.js（端末の中の記録の形）、src/pages/info.mjs（STORED）、tests/shikaku.test.mjs・tests/sokutei.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-10）
+
+### [ ] 資格の期限の台帳（その2：A4の紙と資格ごとのページ）
+- やること：「資格の期限を何人分も残す台帳（その1）」でできた台帳を、A4 1枚の台帳の紙にして印刷できるようにする（`.psheet`・紙のすみにサイト名と QR）。台帳が1件以上あるときだけ「印刷する」のボタンを出す。資格ごとのページ（kantoku・byouin・bouka）には「台帳に残す」と、入口の台帳への1行のリンクだけを足す。
+- できあがりの条件：`npm run check` が緑。印刷が A4 1枚（Playwright で PDF にして数える）。呼び名に `<b>` などを入れても紙の上で HTML にならない。資格ごとのページの計算の部分もスマホの1画面（390×660）に入る。スマホとパソコンのスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：印刷は A4 1枚で、紙のすみにサイト名と QR（CLAUDE.md・claude/anzen-handoff.md の「大事な決めごと」）。記録は端末の中だけで送らない（CLAUDE.md）
+- 迷ったら：A4 に入りきらない行は、期限の近い順に入るだけ入れ、紙の下に「ほかの◯件は画面の台帳で見る」の1行（職場を測る記録帳の紙と同じ形）。新しい見た目の形は作らず、いまの紙（.psheet）を使う。0件のときは紙もボタンも出さない
+- 順番：「資格の期限を何人分も残す台帳（その1：記録と表）」のあと（そのブランチがマージ待ちなら、その上に作る）
+- 読むファイル：CLAUDE.md、src/pages/shikaku.mjs、src/client/daicho.mjs（その1で作る）、src/pages/kihon.mjs（印刷の紙）、src/client/sokutei.mjs・sokutei.js（A4 の紙の形）、tests/shikaku.test.mjs
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-10）
 
