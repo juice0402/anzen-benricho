@@ -191,7 +191,6 @@ const minutesPapers = (p) => {
   const inp = (key, label, max) => `<label class="ks-date" for="pj-${key}">${esc(label)}<input id="pj-${key}" type="text" maxlength="${max}" autocomplete="off"></label>`;
   const ctl = `<div class="ks-ctl pj-in np">
 <label for="pj-t">月のテーマ<select id="pj-t"><option value="">えらばない</option>${minutesThemes().map((t) => `<option value="${t.slug}">${t.month}月 ${esc(t.title)}</option>`).join('')}</select></label>
-<p class="ks-hint">えらぶと、そのテーマの議題が入ります</p>
 ${s.head.map((k, i) => inp(`h${i}`, k, 12)).join('\n')}
 ${inp('w', s.who.k, s.who.max)}
 <fieldset class="pj-fs"><legend>${esc(s.gidai.k)}</legend>${Array.from({ length: s.gidai.rows }, (_, i) => `<input id="pj-g${i}" type="text" maxlength="${s.gidai.max}" autocomplete="off" aria-label="${esc(s.gidai.k)} ${i + 1}">`).join('')}</fieldset>
