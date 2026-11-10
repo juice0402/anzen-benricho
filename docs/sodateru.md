@@ -83,3 +83,40 @@
 - 迷ったら：1ページが長くなりすぎるとき（スマホで20画面より長い）は、月ごとに折りたたむ（details）。テーマが2つある月は、スタンプは両方正解で1つ
 - 読むファイル：CLAUDE.md、src/client/quiz.js、src/client/rec.mjs・rec.js（スタンプ帳）、src/pages/months.mjs、src/pages/home.mjs、src/pages/info.mjs（プライバシーポリシー）、tests/koyomi.test.mjs・tests/rec.test.mjs
 - マージ：する
+
+### [ ] 資格の期限を何人分も残す台帳（資格の更新・その1：記録と表）
+- やること：資格の更新の期限 `/shikaku/koushin/` で出した期限を、職場の何人分でも端末の中に残せるようにする。期限の結果の下に「台帳に残す」のボタンと呼び名の欄（入れなくてもよい・`inputmode="text"`・`maxlength="10"`）。入口のページの計算の下に「資格の期限の台帳」の節を足し、呼び名・資格・修了日・期限・あと何日を期限の近い順の表に出す（1行ずつ消せる。期限が過ぎた行は「期限切れ」と出して残す）。記録は localStorage の新しいキー `anzen-shikaku-v1`（送らない。いまの `koushin` のキーはそのまま残す）。期限の計算はいまの koushin.js と `icsLimit`（ics.mjs）を使い、足す・消す・並べかえは新しい部品 `src/client/daicho.mjs`（sokutei.mjs と同じく、ページでは export を外して入れる）。プライバシーポリシーの「ブラウザに保存する情報」（info.mjs の `STORED`）に1行。印刷の紙と資格ごとのページへの足しは次の項目
+- できあがりの条件：`npm run check` が緑。tests/shikaku.test.mjs にテストを足した（キーの名前・送らない〔fetch・sendBeacon・XMLHttpRequest がない〕・期限の近い順・同じ呼び名と資格は上書き・防火・防災の4月1日の数え方が台帳でも同じ）。計算の部分はいままでどおりスマホの1画面（390×660）に入る。呼び名に `<b>` などを入れても HTML にならない（エスケープ）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：連絡 C-026（11/6 しょーくん「読み物を拡充、答えに関する読み物とか、記事のボリューム、自分で計算できるなどの来る理由を継続していくことが大切」）の③「自分で計算できる・自分の数字が残る」を、いちばん表示の多い /shikaku/koushin/（claude/search-data-anzen.md の 11/6 の回で 61表示・7.8位・0クリック）に足す。計算と記録は端末の中だけで送らない（CLAUDE.md）。資格の更新には講座の広告を置かない（claude/anzen-handoff.md の「広告・アフィリエイト」）。title の頭「清掃作業監督者・病院清掃受託責任者」は変えない（docs/shikumi.md の「資格の更新の期限」）
+- 迷ったら：呼び名が空なら「1人目」「2人目」のように番号で出す（名前を入れさせない）。同じ呼び名・同じ資格は上書き（職場を測る記録帳の「同じ月と場所は上書き」と同じ考え。呼び名が空の行どうしは上書きせず足す）。台帳から .ics をまとめて作る機能は作らない（1件ずつのいまの「カレンダーに入れる」のまま）。台帳が0件のときは節の見出しと1行だけにする。全ページ点検の1行の決まり（.u-note は26字など）にかかったら文を短くする。新しい見た目の形は作らず、いまの表（pg-t）を使う
+- 読むファイル：CLAUDE.md、docs/shikumi.md の「資格の更新の期限」、src/pages/shikaku.mjs、src/client/koushin.js・ics.mjs、src/data/shikaku.mjs、src/client/sokutei.mjs・sokutei.js（端末の中の記録の形）、src/pages/info.mjs（STORED）、tests/shikaku.test.mjs・tests/sokutei.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-10）
+
+### [ ] 資格の期限の台帳（その2：A4の紙と資格ごとのページ）
+- やること：「資格の期限を何人分も残す台帳（その1）」でできた台帳を、A4 1枚の台帳の紙にして印刷できるようにする（`.psheet`・紙のすみにサイト名と QR）。台帳が1件以上あるときだけ「印刷する」のボタンを出す。資格ごとのページ（kantoku・byouin・bouka）には「台帳に残す」と、入口の台帳への1行のリンクだけを足す。
+- できあがりの条件：`npm run check` が緑。印刷が A4 1枚（Playwright で PDF にして数える）。呼び名に `<b>` などを入れても紙の上で HTML にならない。資格ごとのページの計算の部分もスマホの1画面（390×660）に入る。スマホとパソコンのスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：印刷は A4 1枚で、紙のすみにサイト名と QR（CLAUDE.md・claude/anzen-handoff.md の「大事な決めごと」）。記録は端末の中だけで送らない（CLAUDE.md）
+- 迷ったら：A4 に入りきらない行は、期限の近い順に入るだけ入れ、紙の下に「ほかの◯件は画面の台帳で見る」の1行（職場を測る記録帳の紙と同じ形）。新しい見た目の形は作らず、いまの紙（.psheet）を使う。0件のときは紙もボタンも出さない
+- 順番：「資格の期限を何人分も残す台帳（その1：記録と表）」のあと（そのブランチがマージ待ちなら、その上に作る）
+- 読むファイル：CLAUDE.md、src/pages/shikaku.mjs、src/client/daicho.mjs（その1で作る）、src/pages/kihon.mjs（印刷の紙）、src/client/sokutei.mjs・sokutei.js（A4 の紙の形）、tests/shikaku.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-10）
+
+### [ ] 読みものの RSS
+- やること：読みものの RSS `/yomimono/feed.xml` をビルドで作る（RSS 2.0。記事ごとに題・URL・説明文〔データの description〕・公開日〔published〕。新しい順・全部）。読みものの目次と記事のページ、トップの head に `<link rel="alternate" type="application/rss+xml">`（読みものが1本以上あるときだけ）。目次 /yomimono/ の下に「RSS で読む」の文字のリンクを1行。テストは tests/yomimono.test.mjs に足す。CLAUDE.md の「読みもの」の行と docs/shikumi.md の「読みもの」に RSS のことを短く
+- できあがりの条件：`npm run check` が緑。テストで、feed.xml の件数が `YOMIMONO` と同じ・リンクが https://anzen-benricho.com/ から始まる・pages.dev が入らない・XML の特別な字（& < >）がエスケープされている、を見る。docs/yomimono-neta.md の書き方は変えずに、記事を足すと RSS にも入る
+- 決まったこと：楽しさの「呼び戻せる入口：ホーム画面に追加・カレンダーの購読（.ics）・RSS」（claude/site-principles.md の「楽しさで、わざわざ来てもらう」）。ホーム画面に追加（/manifest.webmanifest）とカレンダーの購読（/calendar.ics）はもうあるので、まだの RSS を足す。形はサクッと計算の読みものの RSS（公開リポジトリ juice0402/sakutto-keisan の src/pages/yomimono.mjs の `FEED`・`feedXml`、src/layout.mjs の `feed`）に合わせる。外部のファイルは読まない（CLAUDE.md）
+- 迷ったら：◯月号（月のページ）は入れず、読みものだけにする（サクッと計算と同じ。◯月号はカレンダーの購読が毎月1日に知らせている）。RSS の説明文はデータの description をそのまま使い、新しい文を書かない。サイトマップには入れない。ページの関数から xml を書き出す口がなければ、calendar.ics と同じく scripts/build.mjs で書き出す（全ページ点検は .html だけを見るので、xml は点検にかからない）
+- 読むファイル：CLAUDE.md、docs/shikumi.md の「読みもの」、src/pages/yomimono.mjs、src/data/yomimono/index.mjs、src/layout.mjs（head）、scripts/build.mjs（calendar.ics の書き出し）、scripts/verify-dist.mjs、tests/yomimono.test.mjs、サクッと計算の src/pages/yomimono.mjs・src/layout.mjs（`git clone --depth 1 https://github.com/juice0402/sakutto-keisan`）
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-10）
+
+### [ ] 1年の実施記録に、月ごとのそろえる物
+- やること：1年の実施記録 `/anzen/kiroku/` の「◯年度の12か月のテーマ」の各月の行に、その月のそろえる物（`kauOfMonth`。ページのある物だけ）を「そろえる物：物の名前」の文字のリンクで足す。印刷の紙（.kr-sheet）には足さない。テストを足す（tests/kau.test.mjs か新しい tests/kiroku.test.mjs）
+- できあがりの条件：`npm run check` が緑。テストで、記録帳のページに `KAU_MONTH` の月のうちページのある物すべてへのリンクがあり、紙（.kr-sheet）の中に /soroeru/ のリンクがない・楽天の商品とクレジットがない・AdSense のコードはある、を見る。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：月のページと記録帳は、そろえる物へ文字のリンクだけを出し、AdSense はそのまま（この山の「そろえる物のページと楽天の取得」の決まったこと・CLAUDE.md の「月のページ・記録帳からは文字のリンクだけ」）。楽天の商品はそろえる物のページだけ（CLAUDE.md）。物のページの「あわせて見る」はもう記録帳へリンクしている（src/pages/soroeru.mjs）ので、記録帳からも返す。二大テーマの両方に当たる（積み上がる記録と、季節の備えの買う理由。claude/site-principles.md の「買いに来る理由がある人を集める」）
+- 迷ったら：そろえる物のない月（3月・9月）は何も足さない。物の名前は kau.mjs の `t` のまま、なぜ今か（why）は足さない（月のページにあるため）。いまの .krel のリンクは1行いっぱいの形なので、テーマのリンクの下にそろえる物のリンクが行として並ぶ形でよい（新しい形は作らない）。ページの description は変えない。測る道具（温湿度計・照度計）は月がないので足さない
+- 読むファイル：CLAUDE.md、src/pages/kiroku.mjs、src/data/kau.mjs、src/pages/months.mjs（今月そろえる物の出し方）、src/pages/soroeru.mjs（あわせて見る）、scripts/verify-dist.mjs（楽天のページの点検）、tests/kau.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-10）
