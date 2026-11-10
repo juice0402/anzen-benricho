@@ -116,6 +116,33 @@
       Array.prototype.forEach.call(pfIn.querySelectorAll('input, textarea'), pfPut);
     }
   }
+  // 議事録の紙（#80）：書いた字を紙の欄に入れるだけ（送らない・保存しない）。月のテーマをえらぶと議題に、そのテーマの議題が入る
+  var pj = document.querySelector('.pj-in');
+  if (pj) {
+    var pjG = JSON.parse(document.querySelector('.pj-d').textContent);
+    var pjPut = function (f) {
+      var el = document.querySelector('[data-pj="' + f.id.slice(3) + '"]');
+      if (el) el.textContent = f.value;
+    };
+    var pjFields = function () { return pj.querySelectorAll('input, textarea'); };
+    var pjTheme = function (slug) {
+      var g = pjG[slug];
+      if (!g) return;
+      Array.prototype.forEach.call(pj.querySelectorAll('[id^="pj-g"]'), function (f, i) { f.value = g[i] || ''; pjPut(f); });
+    };
+    pj.addEventListener('input', function (e) { if (e.target.id && e.target.id.indexOf('pj-') === 0 && e.target.id !== 'pj-t') pjPut(e.target); });
+    var pjSel = document.getElementById('pj-t');
+    pjSel.addEventListener('change', function () { pjTheme(pjSel.value); });
+    pj.querySelector('.pj-clear').addEventListener('click', function () {
+      pjSel.value = '';
+      Array.prototype.forEach.call(pjFields(), function (f) { f.value = ''; pjPut(f); });
+    });
+    // 戻るボタンなどでブラウザが入力を残したときも、紙と合わせる
+    Array.prototype.forEach.call(pjFields(), pjPut);
+    // 月のページから ?t=<テーマ> で来たら、そのテーマをえらんだ形で開く
+    var pjQ = (location.search.match(/[?&]t=([a-z0-9-]+)/) || [])[1];
+    if (pjQ && pjG[pjQ]) { pjSel.value = pjQ; pjTheme(pjQ); }
+  }
   // 計算の道具（測る記録帳は sokutei.js が受けもつ）
   var tb = document.querySelector('.ktool:not([data-tool="sokutei"])');
   if (tb) {

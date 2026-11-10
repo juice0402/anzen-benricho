@@ -182,6 +182,39 @@ ${s.tally ? tallyPaper(p, ' data-psv="tally" hidden') : ''}`,
   };
 };
 
+// 議事録の紙（kind: 'minutes'。#80）：画面で書いた字を紙の欄に入れるだけ（送らない・保存しない）
+// 月のテーマをえらぶと、そのテーマの gidai（今月の委員会で話すこと）が議題に入る。/kihon/gijiroku/?t=<テーマ> でもえらんだ形で開く（月のページから）
+// 入力の id は「pj-」＋紙の欄の data-pj
+const minutesThemes = () => [...ALL_THEMES].sort((a, b) => a.month - b.month);
+const minutesPapers = (p) => {
+  const s = p.sheet;
+  const inp = (key, label, max) => `<label class="ks-date" for="pj-${key}">${esc(label)}<input id="pj-${key}" type="text" maxlength="${max}" autocomplete="off"></label>`;
+  const ctl = `<div class="ks-ctl pj-in np">
+<label for="pj-t">月のテーマ<select id="pj-t"><option value="">えらばない</option>${minutesThemes().map((t) => `<option value="${t.slug}">${t.month}月 ${esc(t.title)}</option>`).join('')}</select></label>
+<p class="ks-hint">えらぶと、そのテーマの議題が入ります</p>
+${s.head.map((k, i) => inp(`h${i}`, k, 12)).join('\n')}
+${inp('w', s.who.k, s.who.max)}
+<fieldset class="pj-fs"><legend>${esc(s.gidai.k)}</legend>${Array.from({ length: s.gidai.rows }, (_, i) => `<input id="pj-g${i}" type="text" maxlength="${s.gidai.max}" autocomplete="off" aria-label="${esc(s.gidai.k)} ${i + 1}">`).join('')}</fieldset>
+<label class="ks-date" for="pj-k">${esc(s.talk.k)}<textarea id="pj-k" rows="${s.talk.lines}" maxlength="${s.talk.max}" autocomplete="off"></textarea></label>
+${Array.from({ length: s.todo.rows }, (_, r) => `<fieldset class="pj-fs pj-fd"><legend>${esc(s.todo.k)} ${r + 1}</legend>${s.todo.cols.map((c, j) => `<label class="ks-date" for="pj-d${r}-${j}">${j ? esc(c) : '内容'}<input id="pj-d${r}-${j}" type="text" maxlength="${s.todo.max[j]}" autocomplete="off"></label>`).join('')}</fieldset>`).join('\n')}
+${s.tail.map((k, i) => inp(`e${i}`, k, i ? 9 : 25)).join('\n')}
+<p class="ks-hint">書いた字は紙に入るだけで、送らず残しません</p>
+<button type="button" class="ks-cal-b pj-clear">書いた字を消す</button>
+</div>
+<script type="application/json" class="pj-d">${json(Object.fromEntries(minutesThemes().map((t) => [t.slug, t.gidai || []])))}</script>`;
+  const cell = (key, k) => `<div><dt>${esc(k)}</dt><dd data-pj="${key}"></dd></div>`;
+  const paper = `<div class="psheet pj"><div class="ps-in">
+<p class="ps-title">${esc(s.title)}</p>
+<dl class="pg-f pj-f">${s.head.map((k, i) => cell(`h${i}`, k)).join('')}<div class="pj-w"><dt>${esc(s.who.k)}</dt><dd data-pj="w"></dd></div></dl>
+<div class="pj-b"><p class="pj-h">${esc(s.gidai.k)}</p><ol class="pj-g">${Array.from({ length: s.gidai.rows }, (_, i) => `<li data-pj="g${i}"></li>`).join('')}</ol></div>
+<div class="pj-b"><p class="pj-h">${esc(s.talk.k)}</p><p class="pj-l" style="--l:${s.talk.lines}" data-pj="k"></p></div>
+<table class="pg-t pj-t"><thead><tr>${s.todo.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${Array.from({ length: s.todo.rows }, (_, r) => `<tr>${s.todo.cols.map((_, j) => `<td data-pj="d${r}-${j}"></td>`).join('')}</tr>`).join('')}</tbody></table>
+<dl class="pg-f pj-f pj-e">${s.tail.map((k, i) => cell(`e${i}`, k)).join('')}</dl>
+${foot(p)}
+</div></div>`;
+  return { ctl, paper };
+};
+
 const sheetBlock = (p) => {
   const s = p.sheet;
   if (!s) return '';
@@ -208,6 +241,8 @@ ${foot(p)}
     ({ ctl, paper } = formPapers(p));
   } else if (s.kind === 'form') {
     paper = formPaper(p);
+  } else if (s.kind === 'minutes') {
+    ({ ctl, paper } = minutesPapers(p));
   } else if (s.kind === 'poster') {
     // 毎月のテーマの掲示と同じ形（決まり・確認欄・出典の1行）
     paper = `<div class="sheet"><div class="tora" aria-hidden="true"></div><div class="sheet-in">

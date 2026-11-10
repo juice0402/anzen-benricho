@@ -67,7 +67,7 @@
 - 読むファイル：CLAUDE.md、src/data/kihon/setsubi.mjs・hiyari.mjs（印刷する紙）、src/data/kanki.mjs、src/data/hourei.mjs（necchusho）、src/pages/kihon.mjs・kihon-tools.mjs、src/client/kihon.js、src/client/rec.mjs（端末の中の記録の形）、tests/kihon.test.mjs、src/data/kau.mjs
 - マージ：する
 
-### [ ] 委員会の議事録の紙
+### [x] 委員会の議事録の紙（#80）
 - やること：知識のページを1つ足す。`src/data/kihon/gijiroku.mjs`（index.mjs の junshi の次）・`/kihon/gijiroku/`。問いは「安全衛生の委員会の議事録は何を書き、何年残す？」。人数をえらぶ判定、決まりの表、A4 1枚の議事録の紙（日時・場所・出席者・議題・話したこと・決めたこと〔担当・いつまで〕・次の回・確認欄）。紙は画面で書いてそのまま印刷（入力した字は送らない・保存しない。ヒヤリハットの紙と同じ）。月をえらぶと、そのテーマの gidai（今月の委員会で話すこと）が議題に入る。月のページの「今月の委員会で話すこと」の下に、その月の議題が入った紙へのリンク
 - できあがりの条件：`npm run check` が緑（kihon のテストの決まり：答えは40字まで・判定と印刷がある・条文は e-Gov を出典に）。印刷が A4 1枚（Playwright で数える）。書いていない別の Claude が出典と照らして点検した
 - 決まったこと：URL `/kihon/gijiroku/`。50人以上の委員会の議事録は3年保存（安衛則23条）。50人未満は委員会の義務はなく、関係労働者の意見を聴くための機会を設ける（安衛則23条の2）。写真は付けない（ほかの知識のページと同じ）

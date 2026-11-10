@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { KIHON, BANDS } from '../src/data/kihon/index.mjs';
 import { GYOSHU } from '../src/data/gyoshu.mjs';
+import { ALL_THEMES } from '../src/data/themes.mjs';
 
 const G = GYOSHU.map((g) => g.key);
 const N = BANDS.map((b) => b.key);
@@ -40,7 +41,7 @@ for (const p of KIHON) {
     for (const r of p.result || []) { okWhen(r.when, '答え'); assert.ok(r.text && len(r.text) <= 60, `答えの行は60字まで：${r.text}`); }
     for (const r of rowsOf(p)) okWhen(r.when, `表 ${r.k}`);
     if (p.sheet) {
-      assert.ok(['keiji', 'form', 'grid', 'poster'].includes(p.sheet.kind));
+      assert.ok(['keiji', 'form', 'grid', 'poster', 'minutes'].includes(p.sheet.kind));
       if (p.sheet.kind === 'poster') assert.ok(p.sheet.rules.length >= 3 && p.sheet.rules.length <= 4, '掲示の決まりは3〜4つ');
       if (p.sheet.kind === 'keiji') for (const r of p.sheet.roles) assert.ok(r.name && r.duties.length >= 1 && r.duties.length <= 6, r.name);
     }
@@ -103,4 +104,19 @@ test('ヒヤリハット：記入例が4業種そろい、集計表の列と事�
   // 集計と委員会への報告は職場で決めること（法令の義務のように書かない）
   const it = p.check.flatMap((c) => c.items).find((x) => x.t.includes('委員会'));
   assert.equal(it && it.kb, 's');
+});
+
+// 議事録の紙（#80）：月のテーマの議題（gidai）が紙の議題の行に入る。行の数と字の数に収まる
+test('議事録：どのテーマの議題も紙の議題の行に収まる', () => {
+  const p = KIHON.find((x) => x.slug === 'gijiroku');
+  const g = p.sheet.gidai;
+  for (const t of ALL_THEMES) {
+    assert.ok(t.gidai && t.gidai.length >= 1 && t.gidai.length <= g.rows, `${t.slug} の議題は1〜${g.rows}つ`);
+    for (const x of t.gidai) assert.ok(len(x) <= g.max, `${t.slug}：${x} が議題の行に入らない`);
+  }
+  assert.equal(p.sheet.todo.cols.length, p.sheet.todo.max.length);
+  // 50人未満の意見を聴く機会は、厚労省の資料が義務と言い切っていないので区分を付けない
+  const r = p.table.rows.find((x) => x.law === '安衛則23条の2');
+  assert.equal(r.kb, '-');
+  assert.match(r.v, /労働基準監督署に確認/);
 });
