@@ -8,6 +8,7 @@ import { KIHON } from './data/kihon/index.mjs';
 import { YOMIMONO } from './data/yomimono/index.mjs';
 import { KAU_READY } from './data/kau.mjs';
 import { rail } from './rail.mjs';
+import { PACK } from './data/pack.mjs';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
 const read = (p) => readFileSync(join(SRC, p), 'utf8');
@@ -31,6 +32,8 @@ const minJs = (js) =>
 
 // 見た目は「職場の掲示板」（10/22 しょーくんが3案から決めた）
 export const css = () => minCss(read('styles/base.css') + read('styles/site.css') + read('styles/print.css'));
+// そのページだけの CSS（法人パック #82）。ほかのページには入れない
+export const pageCss = (name) => minCss(read(`styles/${name}.css`));
 export const script = (name) => minJs(read(`client/${name}.js`));
 // テストでも使う部品（src/client/<名前>.mjs）を、export を外してページのスクリプトの前に入れる
 export const clientLib = (name) => minJs(read(`client/${name}.mjs`).replace(/^export /gm, ''));
@@ -63,9 +66,12 @@ const FOOT_LINKS = [
   ['/privacy/', 'プライバシーポリシー'],
   ['/disclaimer/', '免責事項'],
   ...(SITE.contact ? [['/contact/', 'お問い合わせ']] : []),
+  // 法人パック（#82）：本番の支払いリンクが入ってから。表記はいつも
+  ...(PACK.link ? [['/pack/', '法人パック']] : []),
+  ['/tokushoho/', '特定商取引法に基づく表記'],
 ];
 
-export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false, noAds = false, noindex: forceNoindex = false, ogTitle = '', wide = false }) {
+export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false, noAds = false, noindex: forceNoindex = false, ogTitle = '', wide = false, head = '', moreCss = '' }) {
   const base = '';
   const url = SITE.url + path;
   const noindex = !SITE.launched || forceNoindex;
@@ -111,13 +117,13 @@ export function page({ title, description, path, corner, body, js = '', crumbs =
 <meta property="og:image:alt" content="${esc(SITE.name)}：緑の掲示板に、月ごとのポスター4枚">
 <meta name="twitter:card" content="summary_large_image">
 ${noindex ? '' : `<meta property="og:url" content="${url}">\n`}${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff">${head ? `\n${head}` : ''}
 <link rel="icon" href="/favicon.ico?v=${ICON_V.ico}" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=${ICON_V.svg}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=${ICON_V.apple}">
 <link rel="manifest" href="/manifest.webmanifest?v=${ICON_V.manifest}">
 ${ads ? ADSENSE_TAG() : ''}
-<style>${css()}</style>
+<style>${css()}${moreCss}</style>
 ${lds}
 </head>
 <body${corner ? ` data-corner="${corner}"` : ''}>

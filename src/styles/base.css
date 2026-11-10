@@ -41,6 +41,7 @@ button { font: inherit; color: inherit; }
 .doc-sec p, .doc-date { font-size: 15px; }
 .doc-tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 .doc-tbl th, .doc-tbl td { border: 1px solid var(--thin); padding: 6px; text-align: left; vertical-align: top; }
+.doc-kv th { width: 34%; }
 
 /* 広告の枠：「広告」と書き、ボタンから離す。中身が来なかった枠は消す */
 .ad { display: grid; gap: 4px; margin: 6px 0; min-height: 120px; }
