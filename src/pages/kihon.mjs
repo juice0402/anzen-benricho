@@ -1,6 +1,6 @@
 // 知識のページ：1ページで1つの問い。答え1行 → うちの職場（業種・人数）→ 道具 → 表 → チェック → A4の紙 → よくある質問 → 出典
 // 印刷は A4 の紙（.psheet）だけ。ほかの部分には np をつけて印刷に出さない
-import { page, esc, script, adSlot, fudaLabel } from '../layout.mjs';
+import { page, esc, script, clientLib, adSlot, fudaLabel } from '../layout.mjs';
 import { kihonHubDesc, kagakuHubDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead, gyoshuPath } from '../parts.mjs';
@@ -225,7 +225,8 @@ ${foot(p)}
 <p class="ps-title">${esc(s.title)}</p>
 ${s.note ? `<p class="ps-note">${esc(s.note)}</p>` : ''}
 ${s.fields ? `<dl class="pg-f">${s.fields.map((f) => `<div><dt>${esc(f)}</dt><dd></dd></div>`).join('')}</dl>` : ''}
-<table class="pg-t${s.fill === 'nenkan' ? ' pg-n' : ''}"><thead><tr>${s.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead>${s.fill === 'nenkan' ? nenkanBodies(s) : `<tbody>${Array.from({ length: s.rows }, (_, i) => `<tr>${s.cols.map((_, j) => `<td>${j === 0 && first[i] ? esc(first[i]) : ''}</td>`).join('')}</tr>`).join('')}</tbody>`}</table>
+<table class="pg-t${s.fill === 'nenkan' ? ' pg-n' : s.fill === 'sokutei' ? ' pg-s' : ''}"><thead><tr>${s.cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead>${s.fill === 'nenkan' ? nenkanBodies(s) : `<tbody>${Array.from({ length: s.rows }, (_, i) => `<tr>${s.cols.map((_, j) => `<td>${j === 0 && first[i] ? esc(first[i]) : ''}</td>`).join('')}</tr>`).join('')}</tbody>`}</table>
+${s.fill === 'sokutei' ? '<p class="ps-note sk-more" hidden></p>' : ''}
 ${foot(p)}
 </div></div>`;
   }
@@ -236,6 +237,15 @@ ${paper}
 <button class="btn print-btn" type="button">A4で印刷</button>
 </section>`;
 };
+
+// 何で測る？（#77）：何をどこで測るかを自分たちの言葉で1行、そのあとにそろえる物のページへ文字のリンク（楽天の商品はここに出さない）
+const douguBlock = (p) =>
+  p.dougu && p.dougu.length
+    ? `<section class="sec paper np" aria-labelledby="kd-h">
+<h2 class="sec-h" id="kd-h">何で測る？</h2>
+<dl class="ktbl">${p.dougu.map((d) => `<div><dt>${esc(d.t)}</dt><dd>${esc(d.v)}<a class="law" href="${esc(d.href)}">${esc(d.a)}</a></dd></div>`).join('')}</dl>
+</section>`
+    : '';
 
 const faqBlock = (p) =>
   p.faq && p.faq.length
@@ -271,6 +281,7 @@ ${pickBlock(p)}
 ${tool(p)}
 ${a8Block(p)}
 ${tableBlock(p)}
+${douguBlock(p)}
 ${checkBlock(p)}
 ${sheetBlock(p)}
 ${faqBlock(p)}
@@ -285,7 +296,7 @@ ${srcBlock(p)}`;
       path: p.path,
       corner: cornerFor(p),
       body,
-      js: script('kihon'),
+      js: p.tool === 'sokutei' ? `${clientLib('sokutei')}\n${script('kihon')}\n${script('sokutei')}` : script('kihon'),
       crumbs: crumbsFor(p),
     }),
   };

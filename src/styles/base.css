@@ -258,6 +258,27 @@ li[hidden], .ktbl div[hidden], .sec[hidden] { display: none; }
 .pg-f dt { font-size: 2.8cqw; font-weight: 700; padding-bottom: .6cqw; }
 .pg-f dd { margin: 0; }
 .pg-t td:first-child { width: 36%; }
+/* 職場の測定記録表（/kihon/sokutei/）：9つの列 */
+.pg-s th:nth-child(1) { width: 8.5%; }
+.pg-s th:nth-child(2) { width: 10.5%; }
+.pg-s th:nth-child(3) { width: 17%; }
+.pg-s th:nth-child(4), .pg-s th:nth-child(7) { width: 11.5%; }
+.pg-s th:nth-child(5), .pg-s th:nth-child(6), .pg-s th:nth-child(8) { width: 8.5%; }
+.pg-s th, .pg-s td { padding: .6cqw .6cqw; font-size: 2.4cqw; overflow: hidden; }
+.pg-s th { white-space: nowrap; }
+.pg-s { table-layout: fixed; }
+.pg-s td { height: 5cqw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 測る記録帳の入力と今年度の記録 */
+.kt-in input[type="text"] { font: inherit; font-size: 17px; min-height: 46px; padding: 6px 10px; border-radius: 0; width: 100%; max-width: 15em; }
+.sk-in { grid-template-columns: repeat(auto-fill, minmax(9.5em, 1fr)); }
+.sk-h { font-size: 15px; margin: 14px 0 4px; }
+.sk-h span { font-weight: 400; font-size: 13px; }
+.sk-wrap { overflow-x: auto; }
+.sk-wrap[hidden] { display: none; }
+.sk-t { border-collapse: collapse; font-size: 13px; width: 100%; }
+.sk-t th, .sk-t td { text-align: left; padding: 4px 3px; border-bottom: 1px solid #d5dade; white-space: nowrap; }
+.sk-t th { font-size: 12px; font-weight: 700; }
+.sk-t .sk-del { min-height: 36px; font-size: 14px; }
 /* 年間計画の紙（/anzen/nenkan/）：業種をえらぶと「うちの職場のテーマ」が埋まる */
 .pg-n td:first-child { width: 7%; white-space: nowrap; }
 .pg-n th:nth-child(2) { width: 30%; }
