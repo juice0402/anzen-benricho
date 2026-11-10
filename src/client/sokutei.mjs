@@ -45,7 +45,7 @@ export function sokRows(store, fy) {
   });
   return out;
 }
-// 決まりとくらべる。g は業種（jimusho は事務所則。ほかは照度が安衛則、空気と室温は事務所の数字を目安に）
+// 決まりとくらべる。g は業種（jimusho は事務所則。ほかの3業種〔清掃・ビルメンの作業場も〕は照度が安衛則、空気と室温は事務所の数字を目安に）
 // 返すのは [{ k: 項目, ok: 内か, text, law, meyasu }]。入れていない項目は出さない
 export function sokJudge(vals, g, std) {
   var jim = !g || g === 'jimusho';
@@ -55,8 +55,8 @@ export function sokJudge(vals, g, std) {
   var air = function (o) { o.meyasu = !jim; out.push(o); };
   if (co2 !== null) {
     var c = std.co2;
+    // 1000ppm は設備が送る空気の基準で、部屋で測った値とはくらべない（kanki.mjs 10/27 の直し）
     if (co2 > c.max) air({ k: '二酸化炭素', ok: false, text: c.max + 'ppmをこえている', law: c.law });
-    else if (co2 > c.sup) air({ k: '二酸化炭素', ok: true, text: c.max + 'ppm以下で内。設備が送る空気の基準' + c.sup + 'ppmより多い', law: c.law + '・' + c.supLaw });
     else air({ k: '二酸化炭素', ok: true, text: c.max + 'ppm以下で内', law: c.law });
   }
   if (temp !== null) {
@@ -91,7 +91,7 @@ export function sokJudge(vals, g, std) {
         hot: hot,
         text: hot
           ? '熱中症の報告の体制と手順の対象になる暑さ（1時間以上続くか、1日4時間をこえる作業）'
-          : 'WBGT' + e.wbgt + '度・気温' + e.temp + '度より下',
+          : (wbgt !== null ? 'WBGT' + e.wbgt + '度' : '') + (wbgt !== null && temp !== null ? '・' : '') + (temp !== null ? '気温' + e.temp + '度' : '') + 'より下。対象かを見ただけで、熱中症のおそれがないとは限らない',
         law: e.law,
         meyasu: false,
       });

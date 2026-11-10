@@ -61,7 +61,7 @@ const one = (vals, g, k) => sokJudge(vals, g, std).find((x) => x.k === k);
 test('事務所：二酸化炭素5000ppm・気温18〜28℃・湿度40〜70%・照度300と150', () => {
   assert.equal(one({ co2: 5000 }, 'jimusho', '二酸化炭素').ok, true);
   assert.equal(one({ co2: 5001 }, 'jimusho', '二酸化炭素').ok, false);
-  assert.match(one({ co2: 1500 }, 'jimusho', '二酸化炭素').text, /1000ppm/);
+  assert.doesNotMatch(one({ co2: 1500 }, 'jimusho', '二酸化炭素').text, /1000/, '部屋の値を設備が送る空気の基準とくらべない');
   assert.equal(one({ temp: 18 }, 'jimusho', '気温').ok, true);
   assert.equal(one({ temp: 28.5 }, 'jimusho', '気温').ok, false);
   assert.match(one({ temp: 10 }, 'jimusho', '気温').law, /4条1項/);
@@ -85,10 +85,24 @@ test('事務所でない作業場：照度は安衛則の3段、空気と室温�
 test('暑さ：WBGT28度以上か気温31度以上で報告の体制の対象。作業の重さごとの基準値は出さない', () => {
   assert.equal(one({ wbgt: 28 }, 'seizo', '暑さ').hot, true);
   assert.equal(one({ wbgt: 27.9 }, 'seizo', '暑さ').hot, false);
+  assert.doesNotMatch(one({ wbgt: 27.9 }, 'seizo', '暑さ').text, /気温/, 'WBGT だけなら気温の線は言わない');
+  assert.match(one({ wbgt: 27.9 }, 'seizo', '暑さ').text, /とは限らない/);
+  assert.match(one({ wbgt: 25, temp: 30 }, 'seizo', '暑さ').text, /WBGT28度・気温31度より下/);
   assert.equal(one({ temp: 31 }, 'jimusho', '暑さ').hot, true);
   assert.equal(one({ temp: 30 }, 'jimusho', '暑さ'), undefined, '気温だけで対象でないときは暑さの行を出さない');
   assert.equal(one({ wbgt: 30 }, 'inshoku', '暑さ').law, '安衛則612条の2');
   assert.ok(!JSON.stringify(p).includes('基準値'));
+});
+
+test('清掃・ビルメン：表・判定・結果文が setsubi と同じ割りあて（作業場は安衛則・事務所則の行は事務所だけ）', () => {
+  const rows = p.table.rows;
+  for (const r of rows.filter((x) => (x.law || '').startsWith('事務所則'))) assert.deepEqual(r.when.g, ['jimusho'], r.k);
+  const s604 = SETSUBI.table.rows.find((r) => r.law === '安衛則604条').when.g;
+  assert.deepEqual(rows.find((r) => r.law === '安衛則604条').when.g, s604);
+  assert.ok(rows.find((r) => r.kb === '-').when.g.includes('seisou'));
+  assert.equal(one({ lux: 100 }, 'seisou', '照度').law, '安衛則604条');
+  assert.equal(one({ co2: 800 }, 'seisou', '二酸化炭素').meyasu, true);
+  assert.match(p.result.find((r) => r.when && r.when.g.includes('seisou')).text, /安衛則/);
 });
 
 test('数字はサイトのほかのデータと同じ（setsubi・kanki・necchusho）', () => {

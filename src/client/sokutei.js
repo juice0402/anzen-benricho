@@ -35,7 +35,7 @@
     var meyasu = false;
     list.forEach(function (r) {
       if (r.meyasu) meyasu = true;
-      h += '<p class="' + (r.ok ? 'sk-ok' : 'sk-ng') + '"><b>' + esc(r.k) + '　' + (r.hot ? '対象' : r.ok ? '内' : '外') + (r.meyasu ? '（目安）' : '') + '</b><span>' + esc(r.text) + '・' + esc(r.law) + '</span></p>';
+      h += '<p class="' + (r.ok ? 'sk-ok' : 'sk-ng') + '"><b>' + esc(r.k) + '　' + (r.k === '暑さ' ? (r.hot ? '対象' : '対象の外') : r.ok ? '内' : '外') + (r.meyasu ? '（目安）' : '') + '</b><span>' + esc(r.text) + '・' + esc(r.law) + '</span></p>';
     });
     if (h && meyasu) h += '<p class="kt-law">' + esc(td.meyasu) + '</p>';
     if (h && !g) h += '<p class="kt-law">' + esc(td.noG) + '</p>';
@@ -71,12 +71,15 @@
     // A4 の測定記録表：年度と記録を入れ、あとの行は手書き用に空ける
     var f = document.querySelector('.psheet .pg-f dd');
     if (f) f.textContent = fy + '年度';
+    // 行は増やさない（A4 1枚のまま）。入りきらない分は紙の下に1行
     var pb = document.querySelector('.pg-s tbody');
     if (pb) {
       var trs = pb.querySelectorAll('tr');
-      var n = Math.max(trs.length, rows.length);
-      for (var i = trs.length; i < n; i++) pb.appendChild(trs[0].cloneNode(true));
-      trs = pb.querySelectorAll('tr');
+      var more = document.querySelector('.sk-more');
+      if (more) {
+        more.textContent = rows.length > trs.length ? 'ほかの' + (rows.length - trs.length) + '件は画面の今年度の記録で見る' : '';
+        more.hidden = rows.length <= trs.length;
+      }
       Array.prototype.forEach.call(trs, function (tr, i) {
         var x = rows[i];
         var t = x ? [x.r.m + '月', Number(x.r.d.slice(5, 7)) + '/' + Number(x.r.d.slice(8, 10)), x.r.p].concat(SOK_FIELDS.map(function (k) { return cell(x.r.v[k]); })).concat(['']) : [];
@@ -91,7 +94,7 @@
   });
   save.addEventListener('click', function () {
     var next = sokPut(store, dEl.value, pEl.value, vals());
-    if (next === store) { msg.textContent = '測った日と数字を入れてください'; return; }
+    if (next === store) { msg.textContent = /^\d{4}-\d{2}-\d{2}$/.test(dEl.value) ? '数字を1つ以上入れてください' : '測った日を入れてください'; return; }
     store = next;
     sokSave(store);
     var m = Number(dEl.value.slice(5, 7));

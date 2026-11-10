@@ -259,12 +259,15 @@ li[hidden], .ktbl div[hidden], .sec[hidden] { display: none; }
 .pg-f dd { margin: 0; }
 .pg-t td:first-child { width: 36%; }
 /* 職場の測定記録表（/kihon/sokutei/）：9つの列 */
-.pg-s td:first-child { width: 6%; white-space: nowrap; }
-.pg-s th:nth-child(3) { width: 22%; }
-.pg-s th:nth-child(9) { width: 13%; }
-.pg-s th, .pg-s td { padding: .6cqw .8cqw; font-size: 2.4cqw; }
+.pg-s th:nth-child(1) { width: 8.5%; }
+.pg-s th:nth-child(2) { width: 10.5%; }
+.pg-s th:nth-child(3) { width: 17%; }
+.pg-s th:nth-child(4), .pg-s th:nth-child(7) { width: 11.5%; }
+.pg-s th:nth-child(5), .pg-s th:nth-child(6), .pg-s th:nth-child(8) { width: 8.5%; }
+.pg-s th, .pg-s td { padding: .6cqw .6cqw; font-size: 2.4cqw; overflow: hidden; }
 .pg-s th { white-space: nowrap; }
-.pg-s td { height: 5.6cqw; }
+.pg-s { table-layout: fixed; }
+.pg-s td { height: 5cqw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* 測る記録帳の入力と今年度の記録 */
 .kt-in input[type="text"] { font: inherit; font-size: 17px; min-height: 46px; padding: 6px 10px; border-radius: 0; width: 100%; max-width: 15em; }
 .sk-in { grid-template-columns: repeat(auto-fill, minmax(9.5em, 1fr)); }
