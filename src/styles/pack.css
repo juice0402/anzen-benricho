@@ -55,3 +55,6 @@
 .pp-talk .pp-tx { font-size: 2.15cqw; }
 .pp-ii .pp-memo, .pp-ii .pp-ul, .pp-ii .pp-q, .pp-ii .pp-ch { font-size: 2.4cqw; }
 .pp-ii .pp-k { font-size: 2.6cqw; }
+/* 紙のすみのサイト名は1行のまま（出典が長いときは出典のほうを折り返す） */
+.ps-foot > span:first-child { min-width: 0; }
+.ps-foot > span:last-of-type { white-space: nowrap; flex-shrink: 0; }
