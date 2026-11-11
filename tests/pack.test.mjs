@@ -137,3 +137,17 @@ test('Functions は /pack/ の下だけ（/pack/ そのものは通らない）'
   assert.deepEqual(PACK_ROUTES.include, ['/pack/*']);
   assert.ok(PACK_ROUTES.exclude.includes('/pack/'));
 });
+
+test('/pack/ の下の URL の種類はデコードして決める（%2D などですり抜けない）', async () => {
+  const { packRoute } = await import('../src/pack-check.mjs');
+  assert.deepEqual(packRoute('/pack/'), { kind: 'sale' });
+  assert.deepEqual(packRoute('/pack/index.html'), { kind: 'sale' });
+  assert.deepEqual(packRoute('/pack/open/'), { kind: 'open' });
+  assert.deepEqual(packRoute('/pack/open'), { kind: 'open' });
+  for (const p of ['/pack/2026-12/', '/pack/2026-12', '/pack/2026-12/index.html', '/pack/2026%2D12/', '/pack/%32026-12/index.html']) {
+    assert.deepEqual(packRoute(p), { kind: 'month', month: '2026-12' }, p);
+  }
+  for (const p of ['/pack/2026-13/', '/pack/zzz/', '/pack/2026-12/x', '/pack/2026-12//', '/pack/%E0%A4%A/', '/pack/2026-12%2Findex.html%3F', '/pack/open/x']) {
+    assert.equal(packRoute(p).kind, 'bad', p);
+  }
+});

@@ -9,6 +9,18 @@ const SESSION_RE = /^cs_(live|test)_[A-Za-z0-9]{10,250}$/;
 // Functions を通る URL（dist/_routes.json）。/pack/ の売るページとほかのページは通らない
 export const PACK_ROUTES = { version: 1, include: ['/pack/*'], exclude: ['/pack/'] };
 
+// /pack/ の下の URL の種類（デコードした pathname で決める。%2D などで月の確かめをすり抜けないように）
+//   sale：/pack/ の売るページ。open：支払いのあとに戻る所。month：月のページ（YYYY-MM）。bad：ほか（開けない）
+export function packRoute(pathname) {
+  let p;
+  try { p = decodeURIComponent(pathname); } catch { return { kind: 'bad' }; }
+  if (/^\/pack\/(index\.html)?$/.test(p)) return { kind: 'sale' };
+  if (/^\/pack\/open\/?$/.test(p)) return { kind: 'open' };
+  const m = /^\/pack\/(\d{4}-\d{2})(\/(index\.html)?)?$/.exec(p);
+  if (m && MONTH_RE.test(m[1])) return { kind: 'month', month: m[1] };
+  return { kind: 'bad' };
+}
+
 export const packRef = (month) => `pack-${month}`;
 
 // id：?s= の値。month：ページの月（YYYY-MM）。/pack/open/ では null（月はセッションから取る）
