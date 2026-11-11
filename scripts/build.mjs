@@ -15,9 +15,11 @@ import monthPages from '../src/pages/months.mjs';
 import kirokuPage from '../src/pages/kiroku.mjs';
 import yomimonoPages from '../src/pages/yomimono.mjs';
 import soroeruPages from '../src/pages/soroeru.mjs';
+import packPages from '../src/pages/pack.mjs';
 import { PRODUCTS_PATH } from '../src/rakuten.mjs';
 import { SITE } from '../src/site.mjs';
 import { calendarIcs } from '../src/koyomi.mjs';
+import { PACK_ROUTES } from '../src/pack-check.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
@@ -38,7 +40,7 @@ const write = (path, html, name) => {
 };
 
 const ctx = { month: MONTH, themes: THEMES, allThemes: themesInOrder(), kaisei: nextKaisei() };
-const pages = [home(ctx), ...gyoshuPages(ctx), ...monthPages(ALL_THEMES, MONTH), kirokuPage(ALL_THEMES), ...ALL_THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...kihonPages(), ...yomimonoPages(), ...soroeruPages(ALL_THEMES, MONTH, products), ...infoPages()];
+const pages = [home(ctx), ...gyoshuPages(ctx), ...monthPages(ALL_THEMES, MONTH), kirokuPage(ALL_THEMES), ...ALL_THEMES.flatMap(theme), ...houreiPages(), ...shikakuPages(), ...kihonPages(), ...yomimonoPages(), ...soroeruPages(ALL_THEMES, MONTH, products), ...infoPages(), ...packPages()];
 
 for (const p of pages) write(p.path, p.html, p.file);
 // AdSense の運営者IDを入れたら ads.txt を置く（Google の決まった書き方）
@@ -46,11 +48,13 @@ if (SITE.adsense) writeFileSync(join(DIST, 'ads.txt'), `google.com, ${SITE.adsen
 if (existsSync(join(ROOT, 'public'))) cpSync(join(ROOT, 'public'), DIST, { recursive: true });
 // カレンダーの購読（毎月1日の◯月号・運動の期間・法改正の施行日。#42）
 writeFileSync(join(DIST, 'calendar.ics'), calendarIcs({ themes: ALL_THEMES }));
+// Pages Functions（functions/pack/_middleware.js）を動かすのは /pack/ の下だけ。/pack/ そのものと、ほかのページは静的なまま（#82）
+writeFileSync(join(DIST, '_routes.json'), JSON.stringify(PACK_ROUTES, null, 2) + '\n');
 // 公開したら sitemap.xml（404 はのぞく）。lastmod は作り直した日
 if (SITE.launched) {
   const day = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
   // lastmod は中身を確かめた日（データの checked）。ないページは作り直した日
-  const urls = pages.filter((p) => !p.file).map((p) => `<url><loc>${SITE.url}${p.path}</loc><lastmod>${p.lastmod || day}</lastmod></url>`);
+  const urls = pages.filter((p) => !p.file && !p.noSitemap).map((p) => `<url><loc>${SITE.url}${p.path}</loc><lastmod>${p.lastmod || day}</lastmod></url>`);
   writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
 }
 

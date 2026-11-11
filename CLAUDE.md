@@ -40,6 +40,7 @@ CLAUDE.md は1万字以内に保つ。経緯・くわしいことは docs/ へ�
 - 自動：毎月1日と15日 9:10 と毎日 5:41（楽天の商品の取りなおし）に本番を作り直す（`deploy.yml` の schedule）。毎週月曜 7:23 に出典のURLと確認日を点検し、問題があれば Issue「出典の点検」（`check-sources.yml`・`scripts/check-sources.mjs`。テーマ・法改正・資格・知識のページ）。`src/data` を変える PR でも同じ点検が動き、結果は check-run の注記に出る。WebFetch で開けても GitHub からは 404 の出典があるので、出典を足したら PR の注記で確かめる
 - 見張り（`mihari.yml`・`scripts/mihari.mjs`）：公開・作り直し・出典の点検の失敗と、毎朝の確認日の期限・国の発表（A〜G）を issue（mihari・night）にする。詳しくは `docs/mihari.md`
 - マージの印（`merge-ok.yml`・`scripts/merge-ok.mjs`）：司令塔が PR にラベル merge-ok を付けると、点検が通ったら squash でマージして公開を動かす。詳しくは `docs/merge-ok.md`
+- 法人パック（#82。1か月分500円）：`/pack/`（売る）・`/pack/<YYYY-MM>/`（買った人だけ。Pages Functions `functions/pack/_middleware.js` が Stripe に確かめる）・`/tokushoho/`（特定商取引法に基づく表記。いつもある）。`src/data/pack.mjs` の支払いリンクが null のあいだは /pack/ を作らない。Functions は /pack/ の下だけ（`dist/_routes.json`）。Stripe の鍵は Cloudflare の秘密の設定だけ。くわしくは docs/pack.md
 - 自動で育つしくみ（11/4 連絡 C-024）：予約タスク「読みもの書き」が水曜と日曜に `docs/yomimono-neta.md`（書き方とネタの山）から1本書いて自分でマージする。夜のまとめ作業は、夜の issue がない夜に `docs/sodateru.md`（育てる山）のいちばん上を1つ取って PR まで進める。どちらもしょーくんが OK したものだけ
 
 ## サイト作りの方針（しょーくんの方針・10/17）：迷ったら上から順に優先する

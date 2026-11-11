@@ -6,6 +6,26 @@ import { ALL_THEMES } from '../data/themes.mjs';
 import { KIHON } from '../data/kihon/index.mjs';
 import { HOUREI } from '../data/hourei.mjs';
 import { SITE } from '../site.mjs';
+import { PACK } from '../data/pack.mjs';
+
+// 特定商取引法に基づく表記（#82。11/11 しょーくんが決めた文。氏名のほかの住所・電話番号は「請求があれば遅滞なく開示」の形〔消費者庁の Q&A〕）
+// 運営者のほかのページ（このサイトについて）は名前を出さないまま
+const TOKUSHOHO = () => [
+  ['販売事業者', '森下祥太'],
+  ['運営統括責任者', '森下祥太'],
+  ['所在地', '請求があれば遅滞なく開示します'],
+  ['電話番号', '請求があれば遅滞なく開示します'],
+  ['メールアドレス', 'info@anzen-benricho.com'],
+  ['販売価格', `各商品のページに表示（安全衛生の法人パック 1か月分 ${PACK.price}円・税込）`],
+  ['商品代金以外の必要料金', 'なし（インターネットの通信料はお客様のご負担です）'],
+  ['支払方法', 'クレジットカード（Stripe）'],
+  ['支払時期', 'ご購入のときにお支払いが確定します'],
+  ['引渡時期', 'お支払いのあと、すぐにその月のページが開きます'],
+  ['返品・キャンセル', 'デジタルの商品のため、商品に不備がある場合を除き、お支払いのあとの返品・キャンセル・返金には応じません'],
+  ['不備がある場合', `ページが開かない・表示がおかしいなどの不備は、${SITE.contact ? '<a href="/contact/">お問い合わせ</a>のフォーム' : 'お問い合わせのフォーム'}か上のメールでご連絡ください。確かめて、ページが開くようにするか、返金します`],
+  ['動作環境', 'パソコン・スマートフォンのブラウザ（印刷は A4）'],
+  ['インボイス', '適格請求書発行事業者の登録はしていません'],
+];
 
 // ブラウザに保存するもの（プライバシーポリシーの一覧と説明文で使う）
 const STORED = ['えらんだ業種と人数の帯', '法改正の一覧でつけた「うちの職場」の印', '資格の更新の期限でえらんだ資格と、入れた修了証書の日付', '業種のページの「今月の実施」で押した記録（年度・月・テーマ・業種と、押した日付）', '職場を測る記録帳で記録にした数字（測った日・場所と、二酸化炭素・気温・湿度・照度・WBGT）'];
@@ -22,15 +42,16 @@ const established = () => (SITE.established ? `<p class="doc-date">制定日 ${y
 const sec = (h, body) => `<section class="doc-sec"><h2>${h}</h2>${body}</section>`;
 const ext = (href, text) => `<a href="${href}" rel="noopener">${text}</a>`;
 
-function info(path, h1, description, body) {
+function info(path, h1, description, body, { noAds = false, noDate = false } = {}) {
   return {
     path,
     html: page({
       title: `${h1}｜${SITE.name}`,
       description,
       path,
-      body: `<article class="doc"><h1 class="doc-h">${h1}</h1>${body}${established()}</article>`,
+      body: `<article class="doc"><h1 class="doc-h">${h1}</h1>${body}${noDate ? '' : established()}</article>`,
       crumbs: [{ name: h1 }],
+      noAds,
     }),
   };
 }
@@ -76,11 +97,14 @@ ${sec('広告', `<p>当サイトは、第三者配信の広告サービス「Goo
 <p>パーソナライズ広告は、Googleの${ext('https://adssettings.google.com/', '広告設定')}で無効にできます。また、${ext('https://www.aboutads.info/', 'www.aboutads.info')}で、パーソナライズ広告に使われる第三者配信事業者のCookieを無効にできます。</p>
 <p>Googleによる広告でのCookieの使い方は、${ext('https://policies.google.com/technologies/ads?hl=ja', 'Googleの広告に関するページ')}をご覧ください。</p>`)}
 ${sec('アフィリエイト', `<p>当サイトは、楽天アフィリエイトを利用することがあります。商品のリンクから楽天市場に移ると、楽天グループのCookieが使われることがあります。くわしくは${ext('https://privacy.rakuten.co.jp/', '楽天グループのプライバシーポリシー')}をご覧ください。</p><p>そろえる物のページ（/soroeru/）には、楽天ウェブサービスのAPIで取った楽天市場の商品を載せています。商品の画像は楽天のサーバーから読みこみます。そのほかのページには楽天の商品を載せません。</p><p>講座などの広告には、A8.net（株式会社ファンコミュニケーションズ）のアフィリエイトプログラムを利用しています。広告のあるページを開いたときやリンクを押したときに、成果を数えるための情報がA8.netに送られることがあります。</p>`)}
+${sec('法人パックのお支払い', `<p>法人パックのお支払いは Stripe（Stripe, Inc.）で行い、カードの情報はこのサイトでは受け取りません。お支払いのときに入力されたメールアドレスなどは Stripe が扱い、このサイトは保存しません。くわしくは${ext('https://stripe.com/privacy', 'Stripeのプライバシーポリシー')}をご覧ください。</p>
+<p>パックのページを開くときに、Stripe にお支払いの記録を問い合わせます。会社名の欄に入れた文字は、お使いのブラウザの中だけで使い、送信・保存しません。</p>`)}
 ${sec('外部への情報の送信', `<p>当サイトのページを開くと、次の会社にお使いの端末の情報が送られることがあります。</p>
 <table class="doc-tbl"><thead><tr><th>送り先</th><th>送る情報</th><th>使い方</th></tr></thead><tbody>
 <tr><td>Google LLC（Google AdSense）</td><td>Cookieの識別子、見たページのURL、IPアドレス、ブラウザの種類</td><td>広告の表示と効果の測定</td></tr>
 <tr><td>Cloudflare, Inc.（Cloudflare Web Analytics）</td><td>見たページのURL、参照元、ブラウザと端末の種類、表示の速さ</td><td>アクセス解析</td></tr>
 <tr><td>楽天グループ株式会社（そろえる物のページの商品の画像）</td><td>見たページのURL、IPアドレス、ブラウザの種類</td><td>商品の画像の表示</td></tr>
+<tr><td>Stripe, Inc.（法人パックのお支払い）</td><td>お支払いのページで入力したカードの情報・メールアドレスなど。パックのページを開くときは、お支払いの番号</td><td>お支払いと、お支払いの確認</td></tr>
 <tr><td>株式会社ファンコミュニケーションズ（A8.net）</td><td>Cookieの識別子、見たページのURL、IPアドレス、ブラウザの種類</td><td>広告の成果の測定</td></tr>
 </tbody></table>`)}
 ${contactPrivacy}
@@ -101,6 +125,13 @@ ${sec('ここでは答えられないこと', `<p>職場が法令の義務にあ
           ),
         ]
       : []),
+    info(
+      '/tokushoho/',
+      '特定商取引法に基づく表記',
+      `${SITE.name}の特定商取引法に基づく表記。販売するのは安全衛生の法人パック（1か月分${PACK.price}円・税込）で、お支払いはクレジットカード（Stripe）。払うとすぐその月のページが開きます。返品・返金の決まりも。`,
+      `<table class="doc-tbl doc-kv"><tbody>${TOKUSHOHO().map(([k, v]) => `<tr><th scope="row">${k}</th><td>${v}</td></tr>`).join('')}</tbody></table>`,
+      { noAds: true, noDate: true },
+    ),
     info(
       '/disclaimer/',
       '免責事項',

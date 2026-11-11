@@ -7,6 +7,8 @@ import { SITE } from '../src/site.mjs';
 import { descLen, DESC_MIN, DESC_MAX } from '../src/describe.mjs';
 import { RAKUTEN_CREDIT, RAKUTEN_PR, SHOW, minShowOf } from '../src/rakuten.mjs';
 import { KAU } from '../src/data/kau.mjs';
+import { PACK } from '../src/data/pack.mjs';
+import { PACK_ROUTES } from '../src/pack-check.mjs';
 const descs = new Map();
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -70,6 +72,22 @@ for (const file of htmlFiles) {
     const canon = (html.match(/<link rel="canonical" href="([^"]+)">/) || [])[1];
     if (canon !== SITE.url + rel) fail(rel, `canonical がちがう: ${canon}`);
   }
+
+  // 法人パック（#82）：/pack/・月のページ・特定商取引法に基づく表記には広告（AdSense・A8・楽天）を置かない
+  const packMonth = /^\/pack\/\d{4}-\d{2}\/$/.test(rel);
+  if (rel === '/pack/' || packMonth || rel === '/tokushoho/') {
+    if (/adsbygoogle|a8\.net|rakuten/.test(html)) fail(rel, '法人パック・表記のページに広告がある');
+  }
+  // 月のページは買った人だけ：noindex・リファラーを送らない・サイトの QR なし
+  if (packMonth) {
+    if (!noindex) fail(rel, '法人パックの月のページに noindex がない');
+    if (!html.includes('<meta name="referrer" content="no-referrer">')) fail(rel, '法人パックの月のページに referrer の meta がない');
+    if (html.includes('<svg class="qr"')) fail(rel, '法人パックの月のページにサイトの QR がある');
+  }
+  // 本番の支払いリンクが入るまでは /pack/ を検索に出さない・どこからもリンクしない（しょーくんのテストのため）
+  if (rel === '/pack/' && !PACK.link && !noindex) fail(rel, '本番の支払いリンクがないのに noindex がない');
+  if (!PACK.link && rel !== '/pack/' && !rel.startsWith('/pack/') && /href="\/pack\//.test(html)) fail(rel, '本番の支払いリンクがないのに /pack/ へのリンクがある');
+  if (!html.includes('href="/tokushoho/"')) fail(rel, '特定商取引法に基づく表記へのリンクがない');
 
   // 楽天の商品（#66）：そろえる物のページ /soroeru/<key>/ だけ。楽天から取った情報（商品名・URL）はログに出さない（規約 第10条9号。公開リポジトリのログは誰でも見られる）
   const kauPage = /^\/soroeru\/[a-z0-9-]+\/$/.test(rel);
@@ -178,11 +196,21 @@ for (const file of htmlFiles) {
   }
 }
 
+// 法人パック（#82）：表記はいつもある。支払いリンクがないときは /pack/ を作らない。Functions は /pack/ の下だけ（_routes.json）
+if (!existsSync(join(DIST, 'tokushoho', 'index.html'))) fail('/tokushoho/', 'ない');
+if (!PACK.link && !PACK.testLink && existsSync(join(DIST, 'pack'))) fail('/pack/', '支払いリンクがないのに /pack/ がある');
+{
+  let rt = null;
+  try { rt = JSON.parse(readFileSync(join(DIST, '_routes.json'), 'utf8')); } catch { fail('/_routes.json', 'ないか JSON が壊れている'); }
+  if (rt && (JSON.stringify(rt) !== JSON.stringify(PACK_ROUTES) || rt.include.some((r) => !r.startsWith('/pack/')))) fail('/_routes.json', `Functions が /pack/ の下だけになっていない: ${JSON.stringify(rt)}`);
+}
+
 // 公開したら sitemap.xml の URL がすべてページになっているか
 if (SITE.launched) {
   const sm = existsSync(join(DIST, 'sitemap.xml')) ? readFileSync(join(DIST, 'sitemap.xml'), 'utf8') : '';
   if (!sm) fail('/sitemap.xml', 'ない');
   for (const m of sm.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    if (/\/pack\/\d{4}-\d{2}\/$/.test(m[1]) || (!PACK.link && m[1] === `${SITE.url}/pack/`)) fail('/sitemap.xml', `法人パックのページが入っている: ${m[1]}`);
     if (!m[1].startsWith(SITE.url + '/') || !resolves(m[1].slice(SITE.url.length))) fail('/sitemap.xml', `ページがない: ${m[1]}`);
   }
   if (!readFileSync(join(DIST, 'robots.txt'), 'utf8').includes(`Sitemap: ${SITE.url}/sitemap.xml`)) fail('/robots.txt', 'Sitemap の行がない');

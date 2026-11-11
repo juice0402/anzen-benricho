@@ -3,3 +3,4 @@ node_modules/
 .DS_Store
 art/poster/*/_sheet.png
 data/rakuten/
+.wrangler/
