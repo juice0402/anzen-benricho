@@ -1,4 +1,5 @@
 // 今月の1問の問題集：前に正解した問いは答えを出しておき、正解したら覚えて数と月の丸を直す（quiz.js のあと、quiz.mjs を前に入れる。送らない）
+// 順序の決まり：quiz.js が先にボタンへクリックを付け（答えを出す）、このファイルがあとから付ける（正解を覚える）。data-got で1回だけ
 (function () {
   var qs = document.querySelectorAll('.qz[data-s]');
   var all = [];

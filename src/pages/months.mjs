@@ -7,7 +7,7 @@ import { SITE } from '../site.mjs';
 import { bandHead, monthHead, themePath, gyoshuPath, titleHtml, photo } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { HOUREI, houreiPath, fmtDate } from '../data/hourei.mjs';
-import { monthDesc, monthsDesc } from '../describe.mjs';
+import { monthDesc, monthsDesc, quizDesc } from '../describe.mjs';
 import { kauOfMonth, kauPath } from '../data/kau.mjs';
 import { packLineMonth } from '../pack-line.mjs';
 import { REC_MONTHS } from '../client/rec.mjs';
@@ -147,7 +147,7 @@ ${ts.map((t) => qzItem(t, true, true)).join('\n')}
     path,
     html: page({
       title: `安全衛生の問題集（3択・全${n}問）｜今月の1問を12か月分｜${SITE.name}`,
-      description: `安全衛生の今月の1問を、4月から3月まで12か月分・${n}問まとめて解ける3択の問題集。答えると正解と解説と出典が出ます。正解した問いと月の丸は、この端末の中だけに残ります。朝礼の小テストに。`,
+      description: quizDesc(ms),
       path,
       corner: 'anzen',
       body,
