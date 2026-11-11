@@ -9,6 +9,7 @@ import { GYOSHU } from '../data/gyoshu.mjs';
 import { HOUREI, houreiPath, fmtDate } from '../data/hourei.mjs';
 import { monthDesc, monthsDesc } from '../describe.mjs';
 import { kauOfMonth, kauPath } from '../data/kau.mjs';
+import { packLineMonth } from '../pack-line.mjs';
 
 // 今月の1問（テーマごとに1問）。押すと正解・解説・出典が出る（src/client/quiz.js。結果は保存しない・送らない）
 const KANA = ['ア', 'イ', 'ウ'];
@@ -31,12 +32,13 @@ ${qs.length > 1 ? `<p class="qz-t">${esc(t.title)}</p>` : ''}<p class="qz-q">${e
 };
 
 // 今月の委員会で話すこと（テーマごとに議題の例3つ。印刷には出さない）。テーマごとに、その議題が入った議事録の紙（/kihon/gijiroku/?t=<テーマ>。#80）へ
-const gidaiHtml = (ts) => {
+const gidaiHtml = (ts, m) => {
   const gs = ts.filter((t) => t.gidai);
   if (!gs.length) return '';
   return `<section class="sec gd-s np" aria-labelledby="gd-h">
 <h2 class="sec-h" id="gd-h">今月の委員会で話すこと</h2>
 <p class="pg-lead">運営者が委員会の資料に使う議題の立て方です</p>
+${packLineMonth(m)}
 ${gs.map((t) => `${gs.length > 1 ? `<h3 class="gd-t">${esc(t.title)}</h3>` : ''}<ul class="gd">${t.gidai.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>
 <p class="gd-a"><a href="/kihon/gijiroku/?t=${t.slug}">この議題が入った議事録の紙（A4）</a></p>`).join('\n')}
 <p class="u-note">委員会のない職場は、朝礼や打ち合わせの議題に</p>
@@ -69,7 +71,7 @@ ${ts
 ${kau ? `<section class="sec paper" aria-labelledby="mk-h"><h2 class="sec-h" id="mk-h">今月そろえる物</h2><ul class="krel mk"><li><a href="${kauPath(kau.key)}">${esc(kau.t)}</a><p>${esc(kau.why)}</p></li></ul></section>` : ''}
 ${koyomiHtml(m)}
 ${quizHtml(ts)}
-${gidaiHtml(ts)}
+${gidaiHtml(ts, m)}
 ${laws.length ? `<section class="sec paper" aria-labelledby="ml-h"><h2 class="sec-h" id="ml-h">${m}月に施行の法改正</h2><ul class="krel">${laws.map((h) => `<li><a href="${houreiPath(h)}">${fmtDate(h.date)} ${esc(h.title)}</a></li>`).join('')}</ul></section>` : ''}
 ${adSlot('end')}`;
   const names = ts.map((t) => t.seoName || t.title).join('・');

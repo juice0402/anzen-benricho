@@ -7,6 +7,7 @@ import { bandHead, photo } from '../parts.mjs';
 import { fmtDate } from '../data/hourei.mjs';
 import { YOMIMONO, yomimonoPath } from '../data/yomimono/index.mjs';
 import { yomimonoHubDesc } from '../describe.mjs';
+import { packLineReading } from '../pack-line.mjs';
 
 const CRUMB = { name: '読みもの', href: '/yomimono/' };
 
@@ -31,7 +32,7 @@ ${s.table ? table(s.table) : ''}
     : '';
   const links = `<section class="sec paper" aria-labelledby="ym-l">
 <h2 class="sec-h" id="ym-l">職場で確かめる</h2>
-<ul class="krel">${y.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.t)}<span class="ym-d">${esc(l.d)}</span></a></li>`).join('')}</ul>
+<ul class="krel">${y.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.t)}<span class="ym-d">${esc(l.d)}</span></a></li>`).join('')}${packLineReading(y.slug)}</ul>
 </section>`;
   const src = `<section class="sec sec-src" aria-labelledby="src-h">
 <h2 class="sec-h" id="src-h">出典</h2>
