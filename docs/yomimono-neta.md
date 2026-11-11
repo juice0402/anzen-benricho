@@ -76,7 +76,7 @@ export default {
 
 - [x] 冬の安全衛生ネタ 12〜2月の朝礼で話せること（PR #60・2026-11-04）
 - [x] 加湿器の手入れとレジオネラ 冬の事務所で毎日・毎月すること（PR #72・2026-11-08）
-- [ ] 凍った床と雪の日の出入口（清掃・ビルメンの転倒）— 雪や凍結の朝、入口と通路をどう整えるか／出典 https://jsite.mhlw.go.jp/nagano-roudoukyoku/content/contents/touki_tentousaigaiboushi-leaflet202312.pdf ・ https://jsite.mhlw.go.jp/ishikawa-roudoukyoku/content/contents/002477015.pdf ・ https://anzeninfo.mhlw.go.jp/yougo/yougo94_1.html ／つなぐ先 /anzen/theme/tentou/seisou/
+- [x] 凍った床と雪の日の出入口 清掃・ビルメンが朝に整えること（PR #84・2026-11-11）
 - [ ] インフルエンザで休ませるのは法令の決まり？ — 法令の区分では就業禁止（安衛則61条）に当たるか、休ませるかは職場で決めることか／出典 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/infulenza/QA2026.html ・ https://www.mhlw.go.jp/bunya/kenkou/kekkaku-kansenshou04/21.html （平成21年の新型インフルエンザの Q&A。季節性と同じとは書かない）。61条の言い方は労働局の資料か安全衛生情報センターでもう1つ確かめ、2つで一致しなければ飛ばす／つなぐ先 /anzen/theme/kansen/
 - [ ] 50人未満の職場の委員会の進め方 — 委員会の義務がない職場で、関係労働者の意見を聴く機会（安衛則23条の2）をどう回すか／出典 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/1.html ・ https://www.mhlw.go.jp/content/11303000/001576427.pdf ／つなぐ先 月のページの「今月の委員会で話すこと」（/anzen/<月>/）・ /kihon/ninzu/ ・ /kihon/hozon/ ／経験：運営者の職場（50人以下）では安全衛生推進委員会を毎月1回ひらき、運営者が毎月1テーマの資料を作って配り、説明している
 - [ ] 指差し呼称とタッチ・アンド・コールは何のため？ — 2つの目的のちがい（指差呼称は確かめの誤りを減らす、タッチ・アンド・コールはチームの一体感）／出典 https://anzeninfo.mhlw.go.jp/yougo/yougo72_1.html ・ https://www.mhlw.go.jp/new-info/kobetu/roudou/gyousei/anzen/dl/shakai_e_Part2.pdf ／つなぐ先 /kihon/ky/
