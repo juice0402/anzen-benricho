@@ -1,33 +1,38 @@
 // 月ごとのテーマ
 //   /anzen/        月の一覧（今月から先の月の順）
 //   /anzen/<月>/   その月の運動・テーマ（業種ごとの掲示と朝礼へ）・その月に施行される法改正
-import { page, esc, adSlot, script } from '../layout.mjs';
+import { page, esc, adSlot, script, clientLib } from '../layout.mjs';
 import { koyomiHtml } from '../koyomi.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead, monthHead, themePath, gyoshuPath, titleHtml, photo } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { HOUREI, houreiPath, fmtDate } from '../data/hourei.mjs';
-import { monthDesc, monthsDesc } from '../describe.mjs';
+import { monthDesc, monthsDesc, quizDesc } from '../describe.mjs';
 import { kauOfMonth, kauPath } from '../data/kau.mjs';
 import { packLineMonth } from '../pack-line.mjs';
+import { REC_MONTHS } from '../client/rec.mjs';
 
-// 今月の1問（テーマごとに1問）。押すと正解・解説・出典が出る（src/client/quiz.js。結果は保存しない・送らない）
+// 今月の1問（テーマごとに1問）。押すと正解・解説・出典が出る（src/client/quiz.js。月のページでは結果を保存しない・送らない）
+export const QUIZ_PATH = '/anzen/quiz/';
 const KANA = ['ア', 'イ', 'ウ'];
 const srcOf = (t, u) => [...t.common, ...t.gyoshu.flatMap((g) => g.src)].find((s) => s.u === u);
+// 1問の部品（月のページと問題集で使う）。slug を渡すと data-s（問題集で正解を覚える印）
+const qzItem = (t, title, slug = false) => {
+  const q = t.quiz;
+  const s = srcOf(t, q.src);
+  return `<div class="qz" data-a="${q.answer}"${slug ? ` data-s="${t.slug}"` : ''}>
+${title ? `<p class="qz-t">${esc(t.title)}</p>` : ''}<p class="qz-q">${esc(q.q)}</p>
+<ol class="q-ch">${q.choices.map((c, i) => `<li><button type="button" data-i="${i}"><i>${KANA[i]}</i><span>${esc(c)}</span></button></li>`).join('')}</ol>
+<div class="qz-r" hidden><p class="qz-ok"></p><p>${esc(q.why)}</p><div class="qz-src"><p class="u-note">出典</p><ol class="src"><li><a href="${esc(q.src)}" rel="noopener">${esc(s ? s.t : q.src)}</a></li></ol></div></div>
+</div>`;
+};
 const quizHtml = (ts) => {
   const qs = ts.filter((t) => t.quiz);
   if (!qs.length) return '';
   return `<section class="sec qz-s" aria-labelledby="qz-h">
 <h2 class="sec-h" id="qz-h">今月の1問</h2>
-${qs.map((t) => {
-    const q = t.quiz;
-    const s = srcOf(t, q.src);
-    return `<div class="qz" data-a="${q.answer}">
-${qs.length > 1 ? `<p class="qz-t">${esc(t.title)}</p>` : ''}<p class="qz-q">${esc(q.q)}</p>
-<ol class="q-ch">${q.choices.map((c, i) => `<li><button type="button" data-i="${i}"><i>${KANA[i]}</i><span>${esc(c)}</span></button></li>`).join('')}</ol>
-<div class="qz-r" hidden><p class="qz-ok"></p><p>${esc(q.why)}</p><div class="qz-src"><p class="u-note">出典</p><ol class="src"><li><a href="${esc(q.src)}" rel="noopener">${esc(s ? s.t : q.src)}</a></li></ol></div></div>
-</div>`;
-  }).join('\n')}
+${qs.map((t) => qzItem(t, qs.length > 1)).join('\n')}
+<p class="u-note"><a href="${QUIZ_PATH}">12か月分の1問をまとめて解く（問題集）</a></p>
 </section>`;
 };
 
@@ -99,6 +104,7 @@ function index(themes, from) {
 <ul class="rows">${ms.map((m) => { const ts = themes.filter((t) => t.month === m); return `<li><a href="/anzen/${m}/">${photo(ts[0].slug, { sizes: '128px', cls: 'ph ph-s' })}<span><b>${m}月</b><span>${ts.map((t) => esc(t.title)).join('・')}</span></span></a></li>`; }).join('')}</ul>
 <p class="u-note"><a href="/anzen/nenkan/">1年の計画は、安全衛生の年間計画の表（A4）へ</a></p>
 <p class="u-note"><a href="/anzen/kiroku/">1年の実施記録の表（A4）へ</a></p>
+<p class="u-note"><a href="${QUIZ_PATH}">12か月分の今月の1問をまとめて解く（問題集）</a></p>
 </section>
 ${adSlot('end')}`;
   return {
@@ -114,6 +120,44 @@ ${adSlot('end')}`;
   };
 }
 
+// 今月の1問の問題集 /anzen/quiz/（#88）：全テーマの1問を4月から3月の順に。正解した問いと12か月のスタンプは端末の中だけ
+// （src/client/quiz.mjs の anzen-quiz-v1。送らない）。スタンプはその月の問いが全部正解で1つ
+function quizPage(themes) {
+  const path = QUIZ_PATH;
+  const ms = REC_MONTHS.map((m) => [m, themes.filter((t) => t.month === m && t.quiz)]).filter(([, ts]) => ts.length);
+  const n = ms.reduce((a, [, ts]) => a + ts.length, 0);
+  const stp = `<div class="stp">${ms
+    .map(([m, ts]) => `<div data-m="${m}" data-ss="${ts.map((t) => t.slug).join(' ')}" role="group" aria-label="${m}月"><span class="m">${m}月</span><span class="dots" aria-hidden="true">${ts.map(() => '<i></i>').join('')}</span></div>`)
+    .join('')}</div>`;
+  const body = `${bandHead('月ごとのテーマ', '今月の1問の問題集', '<p class="pg-lead">12か月分の1問を、4月から月の順に</p>')}
+<section class="sec paper qs-top" aria-labelledby="qs-h">
+<h2 class="sec-h" id="qs-h">正解した問い</h2>
+<p class="kr-run">${n}問中<b class="qs-n">0</b>問正解</p>
+${stp}
+<p class="u-note">月の問いが全部正解で丸。この端末だけに残る</p>
+</section>
+${ms
+    .map(([m, ts]) => `<section class="sec qz-s" aria-labelledby="qm-${m}">
+<h2 class="sec-h" id="qm-${m}">${m}月</h2>
+${ts.map((t) => qzItem(t, true, true)).join('\n')}
+<p class="u-note"><a href="/anzen/${m}/">${m}月号へ</a></p>
+</section>`)
+    .join('\n')}`;
+  return {
+    path,
+    html: page({
+      title: `安全衛生の問題集（3択・全${n}問）｜今月の1問を12か月分｜${SITE.name}`,
+      description: quizDesc(ms),
+      path,
+      corner: 'anzen',
+      body,
+      js: `${script('quiz')}\n${clientLib('quiz')}\n${script('quiz-shu')}`,
+      crumbs: [{ name: '月ごとのテーマ', href: '/anzen/' }, { name: '今月の1問の問題集' }],
+    }),
+    lastmod: themes.map((t) => t.checked).sort().pop(),
+  };
+}
+
 export default function monthPages(themes, from) {
-  return [index(themes, from), ...monthsOf(themes, from).map((m) => monthPage(m, themes))];
+  return [index(themes, from), ...monthsOf(themes, from).map((m) => monthPage(m, themes)), quizPage(themes)];
 }

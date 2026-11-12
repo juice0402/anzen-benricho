@@ -67,6 +67,16 @@ export const monthsDesc = (ms, themes) =>
     `どのテーマも、A4の掲示1枚と1分で話せる朝礼の文、出典をつけています。`,
   ]);
 
+// 今月の1問の問題集：/anzen/quiz/（#88）。ms は [月, その月のテーマ] を4月からの順に
+export const quizDesc = (ms) => {
+  const n = ms.reduce((a, [, ts]) => a + ts.length, 0);
+  const many = ms.filter(([, ts]) => ts.length > 1).map(([m, ts]) => `${m}月は${ts.length}問`).join('・');
+  const head = `安全衛生の今月の1問を、${ms[0][0]}月から${ms[ms.length - 1][0]}月まで${ms.length}か月分・${n}問まとめて解ける3択の問題集。`;
+  const ans = '答えると正解と解説と出典が出ます。';
+  const keep = '正解した問いと月の丸は、この端末の中だけに残ります。';
+  return fit([head, ans, keep, many ? `${many}です。` : ''], [head, ans, keep], [head, keep]);
+};
+
 // 業種の入口：/anzen/gyoshu/<業種>/
 export const gyoshuDesc = (g, month, themes, others) => {
   const head = `${g.name}の職場向けに、${month}月の安全衛生テーマ${themes.length}本（${themes.map((t) => t.title).join('・')}）の掲示と朝礼の文。`;
