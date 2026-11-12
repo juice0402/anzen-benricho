@@ -15,6 +15,13 @@ const table = (t) => `<div class="ym-tw"><table class="doc-tbl ym-t"><thead><tr>
   .map((r) => `<tr>${r.map((c, i) => (i ? `<td>${esc(c)}</td>` : `<th scope="row">${esc(c)}</th>`)).join('')}</tr>`)
   .join('')}</tbody></table></div>`;
 
+// ほかの読みもの（C-027 案A）：ならびで前後の2本（新しい順のならびの、ひとつ前とひとつあと。はしは折り返す）
+export const otherReadings = (slug, list = YOMIMONO) => {
+  const i = list.findIndex((y) => y.slug === slug);
+  if (i < 0 || list.length < 2) return [];
+  const pick = [list[(i + 1) % list.length], list[(i - 1 + list.length) % list.length]];
+  return pick.filter((y, k) => y.slug !== slug && pick.findIndex((z) => z.slug === y.slug) === k);
+};
 function article(y) {
   const path = yomimonoPath(y);
   const secs = y.sections
@@ -34,6 +41,13 @@ ${s.table ? table(s.table) : ''}
 <h2 class="sec-h" id="ym-l">職場で確かめる</h2>
 <ul class="krel">${y.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.t)}<span class="ym-d">${esc(l.d)}</span></a></li>`).join('')}${packLineReading(y.slug)}</ul>
 </section>`;
+  const others = otherReadings(y.slug);
+  const more = others.length
+    ? `<section class="sec paper np" aria-labelledby="ym-o">
+<h2 class="sec-h" id="ym-o">ほかの読みもの</h2>
+<ul class="krel">${others.map((o) => `<li><a href="${yomimonoPath(o)}">${esc(o.h1)}<span class="ym-d">${esc(o.d)}</span></a></li>`).join('')}</ul>
+</section>`
+    : '';
   const src = `<section class="sec sec-src" aria-labelledby="src-h">
 <h2 class="sec-h" id="src-h">出典</h2>
 <ol class="src">${y.src.map((s) => `<li><a href="${esc(s.url)}" rel="noopener">${esc(s.t)}</a></li>`).join('')}</ol>
@@ -43,6 +57,7 @@ ${s.table ? table(s.table) : ''}
 ${secs}
 ${voice}
 ${links}
+${more}
 ${adSlot('end')}
 ${src}`;
   return {

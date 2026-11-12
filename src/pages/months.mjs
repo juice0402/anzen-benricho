@@ -52,6 +52,17 @@ ${gs.map((t) => `${gs.length > 1 ? `<h3 class="gd-t">${esc(t.title)}</h3>` : ''}
 
 const monthsOf = (themes, from) => [...new Set(themes.map((t) => t.month))].sort((a, b) => ((a - from + 12) % 12) - ((b - from + 12) % 12));
 
+// ほかの号（C-027 案A）：前の号と次の号（テーマのない月はとばす）
+export const monthNeighbors = (m, themes) => {
+  const has = (n) => themes.some((t) => t.month === n);
+  const step = (d) => { for (let k = 1; k <= 12; k++) { const n = ((m - 1 + d * k + 120) % 12) + 1; if (has(n)) return n; } return m; };
+  return [step(-1), step(1)].map((n, i) => ({ n, d: `${i ? '次の号' : '前の号'}：${themes.filter((t) => t.month === n).map((t) => t.title).join('・')}` }));
+};
+const neighborsHtml = (m, themes) => `<section class="sec paper np" aria-labelledby="mo-h">
+<h2 class="sec-h" id="mo-h">ほかの号</h2>
+<ul class="krel">${monthNeighbors(m, themes).map((x) => `<li><a href="/anzen/${x.n}/">${x.n}月号<span class="ym-d">${esc(x.d)}</span></a></li>`).join('')}</ul>
+</section>`;
+
 function monthPage(m, themes) {
   const ts = themes.filter((t) => t.month === m);
   const path = `/anzen/${m}/`;
@@ -78,6 +89,7 @@ ${koyomiHtml(m)}
 ${quizHtml(ts)}
 ${gidaiHtml(ts, m)}
 ${laws.length ? `<section class="sec paper" aria-labelledby="ml-h"><h2 class="sec-h" id="ml-h">${m}月に施行の法改正</h2><ul class="krel">${laws.map((h) => `<li><a href="${houreiPath(h)}">${fmtDate(h.date)} ${esc(h.title)}</a></li>`).join('')}</ul></section>` : ''}
+${neighborsHtml(m, themes)}
 ${adSlot('end')}`;
   const names = ts.map((t) => t.seoName || t.title).join('・');
   return {
