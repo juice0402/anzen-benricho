@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { icsLimit } from '../src/client/ics.mjs';
-import { SHIKAKU, KOUSHIN_PAGES, SHIKAKU_CHECKED, BOUKA_CHECKED, koushinPath } from '../src/data/shikaku.mjs';
+import { SHIKAKU, KOUSHIN_PAGES, SHIKAKU_CHECKED, BOUKA_CHECKED, NITTEI_CHECKED, koushinPath } from '../src/data/shikaku.mjs';
 import shikakuPages from '../src/pages/shikaku.mjs';
 
 const day = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -68,4 +68,43 @@ test('入口：4つの資格をえらべて、各ページへリンクし、題�
   for (const p of KOUSHIN_PAGES) assert.ok(hub.html.includes(`href="${koushinPath(p.page)}"`), p.page);
   assert.match(hub.html, /<title>清掃作業監督者・病院清掃受託責任者/);
   assert.ok(!hub.html.includes('講義のまとめの小テスト'), '経験の文は byouin のページへ');
+});
+
+test('再講習の日程と受講料：4項目（いつ・どこで・受講料・申し込み）と主催・出典・確認日がそろい、計算のすぐ下にある', () => {
+  assert.ok(within90(NITTEI_CHECKED), `確認日 ${NITTEI_CHECKED}`);
+  const pages = shikakuPages();
+  for (const p of KOUSHIN_PAGES) {
+    const n = p.nittei;
+    assert.ok(n, `${p.page} に日程と受講料がない`);
+    for (const f of ['shusai', 'itsu', 'doko', 'ryokin', 'moushikomi', 'desc']) assert.ok(n[f] && n[f].trim(), `${p.page} の ${f}`);
+    assert.match(n.ryokin, /[\d,]+円/, `${p.page} の受講料に額がない`);
+    assert.ok(n.src.length >= 1, `${p.page} の日程の出典`);
+    for (const s of n.src) assert.match(s.u, /^https:\/\//, s.t);
+    assert.ok(within90(n.checked), `${p.page} の日程の確認日`);
+    const text = JSON.stringify(n);
+    for (const w of NG) assert.ok(!text.includes(w), `${p.page} の日程に「${w}」`);
+    const main = pages.find((x) => x.path === koushinPath(p.page)).html.split('<main')[1];
+    const at = main.indexOf('id="nt-h"');
+    assert.ok(at > main.indexOf('id="ks-h"') && at < main.indexOf('id="rule-h"'), `${p.page} の表は計算のすぐ下`);
+    for (const k of ['主催', 'いつ', 'どこで（形）', '受講料', '申し込み', '出典', '確認日']) assert.ok(main.includes(`<dt>${k}</dt>`), `${p.page} の表に ${k}`);
+    for (const s of n.src) assert.ok(main.includes(`href="${s.u}"`), `${p.page} の表に出典のリンク`);
+    assert.ok(!JSON.stringify(p.kata).includes('年度で変わるので'), `${p.page} の申し込みの文`);
+  }
+  // 入口：4つの資格を1行ずつ
+  const hub = pages[0].html.split('<main')[1];
+  const nt = hub.slice(hub.indexOf('id="nt-h"'), hub.indexOf('</section>', hub.indexOf('id="nt-h"')));
+  assert.equal((nt.match(/<dt>/g) || []).length, SHIKAKU.length);
+  for (const s of SHIKAKU) assert.ok(s.ichi && /円/.test(s.ichi) && nt.includes(s.ichi.replace(/&/g, '&amp;')), `${s.name} の1行`);
+  assert.ok(hub.indexOf('id="nt-h"') > hub.indexOf('id="ks-h"') && hub.indexOf('id="nt-h"') < hub.indexOf('id="rule-h"'), '入口の表は計算のすぐ下');
+});
+
+test('題と説明文：はじめに日程・受講料のことがある', () => {
+  for (const pg of shikakuPages()) {
+    const title = pg.html.match(/<title>([^<]*)/)[1];
+    const desc = pg.html.match(/<meta name="description" content="([^"]*)">/)[1];
+    assert.match(title, /再講習｜/, pg.path);
+    assert.match(title, /受講料/, pg.path);
+    assert.match(desc.split('。')[0] + desc.split('。')[1], /[\d,]+円/, `${pg.path} のはじめに受講料`);
+    assert.match(desc, /日付から.*期限を計算します。/, pg.path);
+  }
 });
