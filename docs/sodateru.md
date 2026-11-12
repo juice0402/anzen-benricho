@@ -84,6 +84,39 @@
 - 読むファイル：CLAUDE.md、src/client/quiz.js、src/client/rec.mjs・rec.js（スタンプ帳）、src/pages/months.mjs、src/pages/home.mjs、src/pages/info.mjs（プライバシーポリシー）、tests/koyomi.test.mjs・tests/rec.test.mjs
 - マージ：する
 
+### [ ] テーマのページと問題集から、そろえる物へ1行（買う理由・その4）
+- やること：テーマの入口 `/anzen/theme/<slug>/` と業種のページ `/anzen/theme/<slug>/<業種>/` の「あわせて見る」（src/pages/theme.mjs の `links()`）の最後に、そのテーマのそろえる物へ「そろえる物：<物の名前>」の文字のリンクを1行足す。物は src/data/kau.mjs の `theme` がそのテーマの slug で、ページがあり（points がある）、`monthLink` が false でないもの。今月の1問の問題集 `/anzen/quiz/`（src/pages/months.mjs の `quizPage`）の月の節の「◯月号へ」の行の下にも、その月のそろえる物（`kauOfMonth`）へ同じ形の1行（u-note）を足す。テストは tests/kau.test.mjs に
+- 順番：「今月の1問の問題集」（PR #89）のあと（マージ待ちなら、そのブランチの上に積む）
+- できあがりの条件：`npm run check` が緑。テスト（dist を読む）で、そろえる物のある各テーマの入口と4業種のページに、その物の /soroeru/<key>/ へのリンクがある・kanki（co2 は monthLink: false）のページにはない・問題集の月の節にその月の物へのリンクがある・これらのページに楽天の商品とクレジットがなく、AdSense のコードは今までどおりある、を見る。業種のページの印刷が A4 1枚のまま（「あわせて見る」は np で印刷に出ない）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：楽天の商品はそろえる物のページだけ。ほかのページからは文字のリンクだけで、AdSense はそのまま（CLAUDE.md・この山の「そろえる物のページと楽天の取得」の決まったこと）。テーマの掲示・やること・朝礼につながる行がない物は月のリンクを出さない（kau.mjs の monthLink: false・この山の「そろえる物のページの残り」の迷ったら）。遊びに来た人に、いまの買う理由を渡すもの（両方に当たるもの）を先に作る（claude/site-principles.md の「買いに来る理由がある人を集める」）
+- 迷ったら：物の名前は kau.mjs の `t` のまま、なぜ今か（why）は足さない（月のページにあるため）。テーマが2つある月は、物の `theme` のテーマのページにだけ出す（問題集は月の節に1行）。測る道具（温湿度計・照度計。month と theme がない）は出さない。掲示・朝礼・やること・ボタンのそばには置かず、「あわせて見る」の中と問題集の月の節の下だけ。1年の実施記録（/anzen/kiroku/）はこの山の別の項目なので、さわらない。新しい見た目の形は作らない（いまの .krel と .u-note）
+- 読むファイル：CLAUDE.md、src/pages/theme.mjs（links）、src/pages/months.mjs（quizPage・「今月そろえる物」の出し方）、src/data/kau.mjs（kauOfMonth・monthLink）、tests/kau.test.mjs、scripts/verify-dist.mjs（楽天のページの点検）
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-12）
+
+### [ ] 読みものから、つないだページへ戻るリンク
+- やること：読みものの「職場で確かめる」（データの `links`）でつないだサイトの中のページに、その読みものへ戻るリンクを自動で出す。`src/data/yomimono/index.mjs` の `YOMIMONO` から、`links` の href がそのページのパスと同じ読みものをさがす部品を1つ（例 `yomiBack(path)`。src/parts.mjs に）作り、テーマの入口と業種のページ（theme.mjs の links）・知識のページ（kihon.mjs）・資格のページ（shikaku.mjs の2か所）・法改正のページ（hourei.mjs）の「あわせて見る」の最後に「読みもの：<h1>」の文字のリンクで足す。「あわせて見る」の節がないページ（月のページ /anzen/<月>/・業種の入口など）は、読みものがあるときだけ同じ形の節（h2.sec-h「あわせて見る」と ul.krel）を広告の枠 adSlot('end') の前（広告の枠がないページはいちばん下）に足す。読みもの書きが記事を足すと、つないだページにも自動で出る
+- 順番：「テーマのページと問題集から、そろえる物へ1行」のあと（同じ theme.mjs の links をさわる。マージ待ちなら、そのブランチの上に積む）。前の項目がまだ PR になっていなければ、この項目は取らずに止める
+- できあがりの条件：`npm run check` が緑。tests/yomimono.test.mjs に、どの読みものの links の先のページ（/ から始まるもの）にも、その読みもの /yomimono/<slug>/ へのリンクがある（dist を読む）・読みものがつないでいないページには出ない、を足した。いまの3本で /anzen/12/・/anzen/1/・/anzen/2/・/anzen/theme/kanki/・/kihon/setsubi/・/anzen/theme/tentou/・/anzen/theme/tentou/seisou/ に出る。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：連絡 C-026（11/6 しょーくん「読み物を拡充、答えに関する読み物とか、記事のボリューム、自分で計算できるなどの来る理由を継続していくことが大切」）のやること2の「答えのページと読みものを相互にリンクする」（claude/common-tasks.md）。内部リンクでたどれるようにする（claude/site-principles.md の「楽しさで、わざわざ来てもらう」の入口の検索）。読みものの書き方（docs/yomimono-neta.md）は変えない（予約タスクがそのまま書ける）
+- 迷ったら：1ページに出す読みものは新しい順に2本まで。パスはそのまま比べる（入口 /anzen/theme/tentou/ と業種のページ /anzen/theme/tentou/seisou/ は別のページ）。サイトの外（サクッと計算など）への links は数えない。トップと読みもののページには出さない。リンクの文字は h1 のまま（灰色の1行 d は足さない）。月のページの「あわせて見る」は広告の枠の前・法改正の節のあと。新しい見た目の形は作らない（いまの .krel）
+- 読むファイル：CLAUDE.md、docs/yomimono-neta.md（ひな形の links）、src/data/yomimono/index.mjs、src/parts.mjs、src/pages/theme.mjs・kihon.mjs・shikaku.mjs・hourei.mjs・months.mjs・gyoshu.mjs、tests/yomimono.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-12）
+
+### [ ] このテーマを深く（「あわせて見る」に理由の1行・同じテーマのほかの月・道具）
+- やること：テーマの入口と業種のページ（src/pages/theme.mjs の links）・資格のページ（src/pages/shikaku.mjs の「あわせて見る」）で、並べるリンクにそれぞれ理由の1行（`.ym-d` の灰色の1行。いまの読みもの・「続けて準備する」と同じ形）をつけ、次の2つを足す。①同じテーマのほかの月（下の組）②そのテーマで使う道具・知識のページ（src/data/kihon/ の判定・記録・用紙）。つなぎ方は新しいデータ `src/data/kanren.mjs`（テーマの slug → [{ href, t, d }]。資格は koushin のページの key → 同じ形）にまとめ、いまのテーマのデータの `related`（法改正など）は残して、表示のときに読みもの（前の項目の部品）→ 同じテーマのほかの月 → 道具・知識 → 同じ月のほかのテーマ → related の順に、1ページ5本まで
+- 順番：「読みものから、つないだページへ戻るリンク」のあと（同じ theme.mjs の links をさわる。マージ待ちなら、そのブランチの上に積む。前の項目がまだ PR になっていなければ、この項目は取らずに止める）
+- できあがりの条件：`npm run check` が緑。tests/ に、kanren.mjs の href がどれも dist にあるページ・自分のページへのリンクなし・1ページ5本まで・どの行にも d がある（全角30字まで）、を足した。tentou/seisou・necchu/seisou・kasai・/shikaku/koushin/bouka/ のスマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：連絡 C-027「サイトの中の沼」（claude/common-tasks.md）の案B「このテーマを深く（テーマの道）」。しょーくんが 11/12 に見本を見て「両方（Aは今、Bは夜）」に決めた（案A「続けて準備する・ほかの号・ほかの読みもの」は PR #91）。読み終えた人が「戻る」を押さずに、関係の理由が分かる次のページへ進めるように。数はしぼる・並べるだけにしない・水増ししない
+  - ①同じテーマのほかの月の組（両方向に出す。理由の1行の例）：冬の転倒（1月）↔ 高年齢の人の安全（4月）「転倒は高年齢の人に多い」／熱中症の準備（5月）↔ 熱中症を見つけたら（7月）「準備と、見つけたとき」／夏の感電と電気の火事（8月）↔ 職場の火事に備える（11月）「電気からの火事」／心の健康（3月）↔ 働きすぎを防ぐ（11月）↔ ハラスメントとカスハラ（12月）「心の健康につながる」／冬の感染症（12月）↔ 職場の空気と換気（10月）「換気で感染を減らす」／暖房と一酸化炭素（1月）↔ 職場の空気と換気（10月）「換気」。組のないテーマには足さない（無理に作らない）
+  - ②道具・知識のページの例：冬の転倒 → ヒヤリハットの報告書（/kihon/hiyari/）「すべった・つまずいたを書いて残す」・KY（/kihon/ky/）／熱中症の準備・見つけたら → 職場を測る記録帳（/kihon/sokutei/）「WBGT を測って残す」／職場の空気と換気 → 職場を測る記録帳「CO2 を測って残す」／年末の大掃除 → まぜると危ない（/kagaku/mazenai/）「洗剤を2つ使う前に」。ほかのテーマは、そのテーマの掲示・やることに出てくる道具のページだけ（なければ足さない）
+  - 資格のページ：清掃作業監督者 ↔ 病院清掃受託責任者「同じ全国ビルメンテナンス協会の再講習」、甲種防火管理・防災管理 → 職場の火事に備える（11月・/anzen/theme/kasai/）「防火管理者が月のテーマで話すこと」、病院清掃受託責任者 → 冬の感染症（清掃・ビルメン）「おう吐物の処理」。講習の日程と受講料の表（#87）のあるページは、表の下の「申し込みの前に」の1行はそのまま
+- 迷ったら：理由の1行は、リンクの先に何があるかを書く（「おすすめ」「便利」など使わない言葉は使わない）。1ページ5本をこえるときは related（法改正）を後ろから落とす。業種のページの組の先は同じ業種のページ（/anzen/theme/<slug>/<業種>/）、テーマの入口の組の先はテーマの入口。月のページ・読みもの・トップはさわらない
+- 読むファイル：CLAUDE.md、src/pages/theme.mjs（links・nextLinks）、src/pages/shikaku.mjs、src/data/themes.mjs、src/data/kihon/index.mjs、tests/numa.test.mjs、claude/site-principles.md
+- マージ：する
+- 足した：連絡 C-027（11/12 しょーくん「両方（Aは今、Bは夜）」）
+
 ### [ ] 資格の期限を何人分も残す台帳（資格の更新・その1：記録と表）
 - やること：資格の更新の期限 `/shikaku/koushin/` で出した期限を、職場の何人分でも端末の中に残せるようにする。期限の結果の下に「台帳に残す」のボタンと呼び名の欄（入れなくてもよい・`inputmode="text"`・`maxlength="10"`）。入口のページの計算の下に「資格の期限の台帳」の節を足し、呼び名・資格・修了日・期限・あと何日を期限の近い順の表に出す（1行ずつ消せる。期限が過ぎた行は「期限切れ」と出して残す）。記録は localStorage の新しいキー `anzen-shikaku-v1`（送らない。いまの `koushin` のキーはそのまま残す）。期限の計算はいまの koushin.js と `icsLimit`（ics.mjs）を使い、足す・消す・並べかえは新しい部品 `src/client/daicho.mjs`（sokutei.mjs と同じく、ページでは export を外して入れる）。プライバシーポリシーの「ブラウザに保存する情報」（info.mjs の `STORED`）に1行。印刷の紙と資格ごとのページへの足しは次の項目
 - できあがりの条件：`npm run check` が緑。tests/shikaku.test.mjs にテストを足した（キーの名前・送らない〔fetch・sendBeacon・XMLHttpRequest がない〕・期限の近い順・同じ呼び名と資格は上書き・防火・防災の4月1日の数え方が台帳でも同じ）。計算の部分はいままでどおりスマホの1画面（390×660）に入る。呼び名に `<b>` などを入れても HTML にならない（エスケープ）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
@@ -128,26 +161,6 @@
 - 決まったこと：CLAUDE.md は1万字以内に保ち、経緯・くわしいことは docs/ へ書く（CLAUDE.md の頭）。前に夜 #73（PR #74）で 11,877字 → 9,086字にした形と同じく、くわしい行は docs/shikumi.md へ（claude/reports/anzen.md の 2026-11-09「夜の作業」）。scripts/mihari.mjs の夜のメモと予約タスクが「リポジトリの CLAUDE.md」を読むので、ファイルの名前と場所は変えない
 - 迷ったら：CLAUDE.md の「サイト作りの方針」「中身の決まり」「しくみ」の節にある決まり（送らない・外部を読まない・楽天は物のページだけ・AdSense を置かないページ・使わない言葉・出典と確認日・印刷は A4 1枚・マージの流れ・秘密）は CLAUDE.md に短く残し、経緯・日付・連絡の番号・細かいファイル名を docs へ移す。ファイルの表は残す。移すときは言いかえず、文をそのまま。docs/shikumi.md が2万字をこえそうなら、docs/ に新しいファイル（例 docs/kokoku.md）を作り、CLAUDE.md の「くわしいことは docs/ の」の行に名前を足す。1万字に届かないときは、届くまで「いまの状態」の行を docs へ回す（決まりの行は削らない）
 - 読むファイル：CLAUDE.md、docs/shikumi.md、docs/pack.md、docs/mihari.md、scripts/mihari.mjs（CLAUDE.md を指す行）、プロジェクトの資料 claude/reports/anzen.md の 2026-11-09「夜 #73」の行
-- マージ：する
-- 足した：育てる山の補充（自動・2026-11-12）
-
-### [ ] テーマのページと問題集から、そろえる物へ1行（買う理由・その4）
-- やること：テーマの入口 `/anzen/theme/<slug>/` と業種のページ `/anzen/theme/<slug>/<業種>/` の「あわせて見る」（src/pages/theme.mjs の `links()`）の最後に、そのテーマのそろえる物へ「そろえる物：<物の名前>」の文字のリンクを1行足す。物は src/data/kau.mjs の `theme` がそのテーマの slug で、ページがあり（points がある）、`monthLink` が false でないもの。今月の1問の問題集 `/anzen/quiz/`（src/pages/months.mjs の `quizPage`）の月の節の「◯月号へ」の行の下にも、その月のそろえる物（`kauOfMonth`）へ同じ形の1行（u-note）を足す。テストは tests/kau.test.mjs に
-- 順番：「今月の1問の問題集」（PR #89）のあと（マージ待ちなら、そのブランチの上に積む）
-- できあがりの条件：`npm run check` が緑。テスト（dist を読む）で、そろえる物のある各テーマの入口と4業種のページに、その物の /soroeru/<key>/ へのリンクがある・kanki（co2 は monthLink: false）のページにはない・問題集の月の節にその月の物へのリンクがある・これらのページに楽天の商品とクレジットがなく、AdSense のコードは今までどおりある、を見る。業種のページの印刷が A4 1枚のまま（「あわせて見る」は np で印刷に出ない）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
-- 決まったこと：楽天の商品はそろえる物のページだけ。ほかのページからは文字のリンクだけで、AdSense はそのまま（CLAUDE.md・この山の「そろえる物のページと楽天の取得」の決まったこと）。テーマの掲示・やること・朝礼につながる行がない物は月のリンクを出さない（kau.mjs の monthLink: false・この山の「そろえる物のページの残り」の迷ったら）。遊びに来た人に、いまの買う理由を渡すもの（両方に当たるもの）を先に作る（claude/site-principles.md の「買いに来る理由がある人を集める」）
-- 迷ったら：物の名前は kau.mjs の `t` のまま、なぜ今か（why）は足さない（月のページにあるため）。テーマが2つある月は、物の `theme` のテーマのページにだけ出す（問題集は月の節に1行）。測る道具（温湿度計・照度計。month と theme がない）は出さない。掲示・朝礼・やること・ボタンのそばには置かず、「あわせて見る」の中と問題集の月の節の下だけ。1年の実施記録（/anzen/kiroku/）はこの山の別の項目なので、さわらない。新しい見た目の形は作らない（いまの .krel と .u-note）
-- 読むファイル：CLAUDE.md、src/pages/theme.mjs（links）、src/pages/months.mjs（quizPage・「今月そろえる物」の出し方）、src/data/kau.mjs（kauOfMonth・monthLink）、tests/kau.test.mjs、scripts/verify-dist.mjs（楽天のページの点検）
-- マージ：する
-- 足した：育てる山の補充（自動・2026-11-12）
-
-### [ ] 読みものから、つないだページへ戻るリンク
-- やること：読みものの「職場で確かめる」（データの `links`）でつないだサイトの中のページに、その読みものへ戻るリンクを自動で出す。`src/data/yomimono/index.mjs` の `YOMIMONO` から、`links` の href がそのページのパスと同じ読みものをさがす部品を1つ（例 `yomiBack(path)`。src/parts.mjs に）作り、テーマの入口と業種のページ（theme.mjs の links）・知識のページ（kihon.mjs）・資格のページ（shikaku.mjs の2か所）・法改正のページ（hourei.mjs）の「あわせて見る」の最後に「読みもの：<h1>」の文字のリンクで足す。「あわせて見る」の節がないページ（月のページ /anzen/<月>/・業種の入口など）は、読みものがあるときだけ同じ形の節（h2.sec-h「あわせて見る」と ul.krel）を広告の枠 adSlot('end') の前（広告の枠がないページはいちばん下）に足す。読みもの書きが記事を足すと、つないだページにも自動で出る
-- 順番：「テーマのページと問題集から、そろえる物へ1行」のあと（同じ theme.mjs の links をさわる。マージ待ちなら、そのブランチの上に積む）。前の項目がまだ PR になっていなければ、この項目は取らずに止める
-- できあがりの条件：`npm run check` が緑。tests/yomimono.test.mjs に、どの読みものの links の先のページ（/ から始まるもの）にも、その読みもの /yomimono/<slug>/ へのリンクがある（dist を読む）・読みものがつないでいないページには出ない、を足した。いまの3本で /anzen/12/・/anzen/1/・/anzen/2/・/anzen/theme/kanki/・/kihon/setsubi/・/anzen/theme/tentou/・/anzen/theme/tentou/seisou/ に出る。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
-- 決まったこと：連絡 C-026（11/6 しょーくん「読み物を拡充、答えに関する読み物とか、記事のボリューム、自分で計算できるなどの来る理由を継続していくことが大切」）のやること2の「答えのページと読みものを相互にリンクする」（claude/common-tasks.md）。内部リンクでたどれるようにする（claude/site-principles.md の「楽しさで、わざわざ来てもらう」の入口の検索）。読みものの書き方（docs/yomimono-neta.md）は変えない（予約タスクがそのまま書ける）
-- 迷ったら：1ページに出す読みものは新しい順に2本まで。パスはそのまま比べる（入口 /anzen/theme/tentou/ と業種のページ /anzen/theme/tentou/seisou/ は別のページ）。サイトの外（サクッと計算など）への links は数えない。トップと読みもののページには出さない。リンクの文字は h1 のまま（灰色の1行 d は足さない）。月のページの「あわせて見る」は広告の枠の前・法改正の節のあと。新しい見た目の形は作らない（いまの .krel）
-- 読むファイル：CLAUDE.md、docs/yomimono-neta.md（ひな形の links）、src/data/yomimono/index.mjs、src/parts.mjs、src/pages/theme.mjs・kihon.mjs・shikaku.mjs・hourei.mjs・months.mjs・gyoshu.mjs、tests/yomimono.test.mjs
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-12）
 
