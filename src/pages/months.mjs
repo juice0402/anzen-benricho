@@ -134,6 +134,11 @@ ${adSlot('end')}`;
 
 // 今月の1問の問題集 /anzen/quiz/（#88）：全テーマの1問を4月から3月の順に。正解した問いと12か月のスタンプは端末の中だけ
 // （src/client/quiz.mjs の anzen-quiz-v1。送らない）。スタンプはその月の問いが全部正解で1つ
+// 問題集の月の節の下に、その月のそろえる物へ1行（文字のリンクだけ。#94）
+const kauLine = (m) => {
+  const k = kauOfMonth(m);
+  return k ? `\n<p class="u-note"><a href="${kauPath(k.key)}">そろえる物：${esc(k.t)}</a></p>` : '';
+};
 function quizPage(themes) {
   const path = QUIZ_PATH;
   const ms = REC_MONTHS.map((m) => [m, themes.filter((t) => t.month === m && t.quiz)]).filter(([, ts]) => ts.length);
@@ -152,7 +157,7 @@ ${ms
     .map(([m, ts]) => `<section class="sec qz-s" aria-labelledby="qm-${m}">
 <h2 class="sec-h" id="qm-${m}">${m}月</h2>
 ${ts.map((t) => qzItem(t, true, true)).join('\n')}
-<p class="u-note"><a href="/anzen/${m}/">${m}月号へ</a></p>
+<p class="u-note"><a href="/anzen/${m}/">${m}月号へ</a></p>${kauLine(m)}
 </section>`)
     .join('\n')}`;
   return {

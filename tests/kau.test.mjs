@@ -1,10 +1,12 @@
 // そろえる物のデータ（#66）
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { KAU, KAU_MONTH, KAU_READY, kauOfMonth } from '../src/data/kau.mjs';
+import { KAU, KAU_MONTH, KAU_READY, kauOfMonth, kauOfTheme } from '../src/data/kau.mjs';
 import { ALL_THEMES } from '../src/data/themes.mjs';
 import soroeruPages from '../src/pages/soroeru.mjs';
 import monthPages from '../src/pages/months.mjs';
+import themePages from '../src/pages/theme.mjs';
+import { GYOSHU } from '../src/data/gyoshu.mjs';
 import SETSUBI from '../src/data/kihon/setsubi.mjs';
 
 const NG = ['おすすめ', 'お得', '最安', '今すぐ', 'しましょう', 'ぜひ', '便利', '簡単', '安心', 'ポイント', 'コツ', '定価', '手遅れ'];
@@ -95,4 +97,55 @@ test('月のページ：物のある月に「今月そろえる物」（文字�
   }
   // 10月は CO2モニターとつながる行がテーマにないのでリンクを出さない（monthLink: false）
   for (const m of [3, 9, 10]) assert.ok(!pages.find((p) => p.path === `/anzen/${m}/`).html.includes('今月そろえる物'), `${m}月`);
+});
+
+// #94：テーマのページと問題集から、そろえる物へ1行（文字のリンクだけ。AdSense はそのまま）
+const relOf = (html) => html.match(/<section class="sec paper np" aria-labelledby="rel-h">[\s\S]*?<\/section>/)?.[0] ?? '';
+const noShop = (html, at) => {
+  assert.ok(!html.includes('rakuten') && !html.includes('楽天アフィリエイトを利用') && !html.includes('Rakuten Developers') && !html.includes('rows shop'), `${at}：楽天の商品やクレジットがある`);
+  assert.ok(html.includes('adsbygoogle'), `${at}：AdSense のコードがない`);
+};
+
+test('テーマの入口と4業種のページ：あわせて見るの最後に、そのテーマのそろえる物へ1行', () => {
+  const withKau = new Set(KAU_READY.filter((k) => k.theme && k.monthLink !== false).map((k) => k.theme));
+  for (const t of ALL_THEMES) {
+    const k = kauOfTheme(t.slug);
+    assert.equal(Boolean(k), withKau.has(t.slug), t.slug);
+    const pages = themePages(t);
+    assert.equal(pages.length, 1 + GYOSHU.length, t.slug);
+    for (const p of pages) {
+      const rel = relOf(p.html);
+      if (k) {
+        const li = `<li><a href="/soroeru/${k.key}/">そろえる物：${k.t}</a></li></ul>`;
+        assert.ok(rel.includes(li), `${p.path}：あわせて見るの最後に ${k.key} がない`);
+        assert.equal(p.html.split(`href="/soroeru/${k.key}/"`).length - 1, 1, `${p.path}：リンクは1つだけ`);
+      } else {
+        assert.ok(!/href="\/soroeru\/[a-z0-9]+\/"/.test(p.html), `${p.path}：物のないテーマにそろえる物のリンクがある`);
+      }
+      noShop(p.html, p.path);
+    }
+  }
+  // 10月の空気と換気（CO2モニターは monthLink: false）には出さない
+  assert.equal(KAU.co2.monthLink, false);
+  assert.equal(kauOfTheme('kanki'), null);
+  // 測る道具（theme なし）は、どのテーマにも出ない
+  for (const t of ALL_THEMES) for (const key of ['ondo', 'shodo']) if (KAU[key]) assert.ok(!themePages(t).some((p) => p.html.includes(`/soroeru/${key}/`)), `${t.slug}：${key}`);
+});
+
+test('問題集：月の節の「◯月号へ」の下に、その月のそろえる物へ1行', () => {
+  const q = monthPages(ALL_THEMES, 12).find((p) => p.path === '/anzen/quiz/');
+  assert.ok(q, '問題集のページがない');
+  const secs = [...q.html.matchAll(/<section class="sec qz-s" aria-labelledby="qm-(\d+)">[\s\S]*?<\/section>/g)];
+  assert.ok(secs.length > 0);
+  for (const [sec, m] of secs) {
+    const k = kauOfMonth(Number(m));
+    const line = k ? `<p class="u-note"><a href="/anzen/${m}/">${m}月号へ</a></p>\n<p class="u-note"><a href="/soroeru/${k.key}/">そろえる物：${k.t}</a></p>\n</section>` : null;
+    if (k) assert.ok(sec.includes(line), `${m}月：そろえる物の1行がない`);
+    else assert.ok(!sec.includes('/soroeru/'), `${m}月：物のない月にリンクがある`);
+  }
+  // 物のある月（10月は monthLink: false でなし）のうち、問題集にある月はすべて出る
+  const shown = secs.map(([, m]) => Number(m)).filter((m) => kauOfMonth(m));
+  assert.ok(shown.length >= 9, `そろえる物の1行のある月が ${shown.length}`);
+  assert.ok(!secs.some(([s, m]) => m === '10' && s.includes('/soroeru/')));
+  noShop(q.html, '/anzen/quiz/');
 });

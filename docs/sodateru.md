@@ -84,7 +84,7 @@
 - 読むファイル：CLAUDE.md、src/client/quiz.js、src/client/rec.mjs・rec.js（スタンプ帳）、src/pages/months.mjs、src/pages/home.mjs、src/pages/info.mjs（プライバシーポリシー）、tests/koyomi.test.mjs・tests/rec.test.mjs
 - マージ：する
 
-### [ ] テーマのページと問題集から、そろえる物へ1行（買う理由・その4）
+### [x] テーマのページと問題集から、そろえる物へ1行（買う理由・その4）（#94）
 - やること：テーマの入口 `/anzen/theme/<slug>/` と業種のページ `/anzen/theme/<slug>/<業種>/` の「あわせて見る」（src/pages/theme.mjs の `links()`）の最後に、そのテーマのそろえる物へ「そろえる物：<物の名前>」の文字のリンクを1行足す。物は src/data/kau.mjs の `theme` がそのテーマの slug で、ページがあり（points がある）、`monthLink` が false でないもの。今月の1問の問題集 `/anzen/quiz/`（src/pages/months.mjs の `quizPage`）の月の節の「◯月号へ」の行の下にも、その月のそろえる物（`kauOfMonth`）へ同じ形の1行（u-note）を足す。テストは tests/kau.test.mjs に
 - 順番：「今月の1問の問題集」（PR #89）のあと（マージ待ちなら、そのブランチの上に積む）
 - できあがりの条件：`npm run check` が緑。テスト（dist を読む）で、そろえる物のある各テーマの入口と4業種のページに、その物の /soroeru/<key>/ へのリンクがある・kanki（co2 は monthLink: false）のページにはない・問題集の月の節にその月の物へのリンクがある・これらのページに楽天の商品とクレジットがなく、AdSense のコードは今までどおりある、を見る。業種のページの印刷が A4 1枚のまま（「あわせて見る」は np で印刷に出ない）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした

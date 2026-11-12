@@ -277,3 +277,8 @@ export const kauOfMonth = (m) => {
   const key = KAU_MONTH[m];
   return key && KAU[key].points?.length && KAU[key].monthLink !== false ? { key, ...KAU[key] } : null;
 };
+// そのテーマのページの「あわせて見る」に出す物（ページがあり、月のリンクを出す物。#94）
+export const kauOfTheme = (slug) => {
+  const key = Object.keys(KAU).find((k) => KAU[k].theme === slug);
+  return key && KAU[key].points?.length && KAU[key].monthLink !== false ? { key, ...KAU[key] } : null;
+};
