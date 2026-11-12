@@ -106,7 +106,8 @@ const noShop = (html, at) => {
   assert.ok(html.includes('adsbygoogle'), `${at}：AdSense のコードがない`);
 };
 
-test('テーマの入口と4業種のページ：あわせて見るの最後に、そのテーマのそろえる物へ1行', () => {
+// そろえる物のあとは、このページをつないだ読みもの（#98）だけ
+test('テーマの入口と4業種のページ：あわせて見るの最後（読みものの前）に、そのテーマのそろえる物へ1行', () => {
   const withKau = new Set(KAU_READY.filter((k) => k.theme && k.monthLink !== false).map((k) => k.theme));
   for (const t of ALL_THEMES) {
     const k = kauOfTheme(t.slug);
@@ -114,7 +115,7 @@ test('テーマの入口と4業種のページ：あわせて見るの最後に�
     const pages = themePages(t);
     assert.equal(pages.length, 1 + GYOSHU.length, t.slug);
     for (const p of pages) {
-      const rel = relOf(p.html);
+      const rel = relOf(p.html).replace(/<li><a href="\/yomimono\/[a-z0-9-]+\/">読みもの：[^<]*<\/a><\/li>/g, '');
       if (k) {
         const li = `<li><a href="/soroeru/${k.key}/">そろえる物：${k.t}</a></li></ul>`;
         assert.ok(rel.includes(li), `${p.path}：あわせて見るの最後に ${k.key} がない`);

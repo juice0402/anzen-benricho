@@ -3,7 +3,7 @@
 //   /hourei/<改正>/   改正ごと：施行日・義務か努力義務か・対象、何が変わるか、職場ですること、出典
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
-import { bandHead } from '../parts.mjs';
+import { bandHead, yomiBackLi, yomiBackSec } from '../parts.mjs';
 import { HOUREI, HOUREI_CHECKED, CONDS, houreiPath, fmtDate, inForce, todayJst } from '../data/hourei.mjs';
 import { houreiDesc, houreiListDesc } from '../describe.mjs';
 
@@ -69,7 +69,7 @@ ${h.todokede ? `<div><dt>届出</dt><dd>${esc(h.todokede)}</dd></div>` : ''}
 <h2 class="sec-h" id="todo-h">職場ですること</h2>
 <ul class="todo">${h.todo.map((s, j) => `<li><label for="c-${j}"><input type="checkbox" id="c-${j}"><span>${esc(s)}</span></label></li>`).join('')}</ul>
 </section>
-${h.related && h.related.length ? `<section class="sec paper" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel">${h.related.map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('')}</ul>\n</section>` : ''}
+${h.related && h.related.length ? `<section class="sec paper" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel">${h.related.map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('')}${yomiBackLi(path)}</ul>\n</section>` : yomiBackSec(path)}
 ${adSlot('mid')}
 ${srcBlock(h.src)}
 <p class="back"><a href="/hourei/">法改正の一覧</a></p>`;

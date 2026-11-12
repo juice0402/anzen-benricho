@@ -3,7 +3,7 @@
 import { page, esc, script, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
-import { gyoshuPath, entrancePath, fuda, monthHead, titleHtml, photo, SAKUTTO_SEISOU, SAKUTTO_GENBA } from '../parts.mjs';
+import { gyoshuPath, entrancePath, fuda, monthHead, titleHtml, photo, SAKUTTO_SEISOU, SAKUTTO_GENBA, yomiBackLi, yomiBackSec } from '../parts.mjs';
 import { gyoshuDesc } from '../describe.mjs';
 
 function entrance(month, themes, g, allThemes) {
@@ -22,7 +22,7 @@ function entrance(month, themes, g, allThemes) {
 ${fuda(entrancePath, g.key)}
 ${items.join('\n')}
 ${others.length ? `<section class="sec paper" aria-labelledby="oth-h">\n<h2 class="sec-h" id="oth-h">ほかの月のテーマ</h2>\n<ul class="khub oth">${others.map((t) => `<li><a href="${gyoshuPath(t, g)}"><b>${t.month}月 ${esc(t.title)}</b><span>${esc(t.gyoshu.find((x) => x.key === g.key).rules[0][0])}</span></a></li>`).join('')}</ul>\n</section>` : ''}
-${g.key === 'seisou' ? `<section class="sec paper" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel"><li><a href="/shikaku/koushin/">清掃作業監督者などの更新の期限</a></li><li>${SAKUTTO_SEISOU}</li><li>${SAKUTTO_GENBA}</li></ul>\n</section>` : ''}
+${g.key === 'seisou' ? `<section class="sec paper" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel"><li><a href="/shikaku/koushin/">清掃作業監督者などの更新の期限</a></li><li>${SAKUTTO_SEISOU}</li><li>${SAKUTTO_GENBA}</li>${yomiBackLi(path)}</ul>\n</section>` : yomiBackSec(path)}
 ${adSlot('end')}`;
   return {
     path,

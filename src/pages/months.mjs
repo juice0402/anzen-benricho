@@ -4,7 +4,7 @@
 import { page, esc, adSlot, script, clientLib } from '../layout.mjs';
 import { koyomiHtml } from '../koyomi.mjs';
 import { SITE } from '../site.mjs';
-import { bandHead, monthHead, themePath, gyoshuPath, titleHtml, photo } from '../parts.mjs';
+import { bandHead, monthHead, themePath, gyoshuPath, titleHtml, photo, yomiBackSec } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { HOUREI, houreiPath, fmtDate } from '../data/hourei.mjs';
 import { monthDesc, monthsDesc, quizDesc } from '../describe.mjs';
@@ -90,6 +90,7 @@ ${quizHtml(ts)}
 ${gidaiHtml(ts, m)}
 ${laws.length ? `<section class="sec paper" aria-labelledby="ml-h"><h2 class="sec-h" id="ml-h">${m}月に施行の法改正</h2><ul class="krel">${laws.map((h) => `<li><a href="${houreiPath(h)}">${fmtDate(h.date)} ${esc(h.title)}</a></li>`).join('')}</ul></section>` : ''}
 ${neighborsHtml(m, themes)}
+${yomiBackSec(path)}
 ${adSlot('end')}`;
   const names = ts.map((t) => t.seoName || t.title).join('・');
   return {
