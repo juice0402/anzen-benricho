@@ -4,7 +4,7 @@ import { page, esc, script, clientLib, adSlot } from '../layout.mjs';
 import { koushinDesc, koushinPageDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead, SAKUTTO_SEISOU, SAKUTTO_GENBA } from '../parts.mjs';
-import { SHIKAKU, SHIKAKU_CHECKED, KOUSHIN_PAGES, koushinPath } from '../data/shikaku.mjs';
+import { SHIKAKU, SHIKAKU_CHECKED, NITTEI_CHECKED, KOUSHIN_PAGES, koushinPath } from '../data/shikaku.mjs';
 import { fmtDate } from '../data/hourei.mjs';
 
 const memoOf = (s) => `${s.rule.split('。')[0]}。再講習：${s.when}`;
@@ -36,6 +36,13 @@ const srcBlock = (list, checked, tail) => `<section class="sec sec-src" aria-lab
 <p class="src-note">確認日 ${fmtDate(checked)}。${tail}</p>
 </section>`;
 
+// 再講習の日程・形・受講料（期限の計算のすぐ下。知識のページの表 .ktbl を使う）
+const NT_ROWS = [['主催', 'shusai'], ['いつ', 'itsu'], ['どこで（形）', 'doko'], ['受講料', 'ryokin'], ['申し込み', 'moushikomi']];
+const nitteiBlock = (n) => `<section class="sec paper" aria-labelledby="nt-h">
+<h2 class="sec-h" id="nt-h">再講習の日程と受講料</h2>
+<dl class="ktbl">${NT_ROWS.map(([k, f]) => `<div><dt>${k}</dt><dd>${esc(n[f])}</dd></div>`).join('')}<div><dt>出典</dt><dd>${n.src.map((s) => `<a class="law" href="${esc(s.u)}" rel="noopener">${esc(s.t)}</a>`).join('')}</dd></div><div><dt>確認日</dt><dd>${fmtDate(n.checked)}</dd></div></dl>
+</section>`;
+
 const js = () => `${clientLib('ics')}\n${script('koushin')}`;
 
 function entrance() {
@@ -49,6 +56,11 @@ function entrance() {
   const uniq = [...new Map(SHIKAKU.flatMap((s) => s.src).map((s) => [s.u, s])).values()];
   const body = `${bandHead('講習・資格', '清掃作業監督者などの更新の期限', '<p class="pg-lead">修了証書の日付から、次の期限が出ます</p>', 'shikaku')}
 ${form(path)}
+<section class="sec paper" aria-labelledby="nt-h">
+<h2 class="sec-h" id="nt-h">再講習の日程と受講料</h2>
+<dl class="ktbl">${SHIKAKU.map((s) => `<div><dt><a href="${koushinPath(s.page)}">${esc(s.name)}</a></dt><dd>${esc(s.ichi)}</dd></div>`).join('')}</dl>
+<p class="ks-note">確認日 ${fmtDate(NITTEI_CHECKED)}。出典は資格ごとのページに</p>
+</section>
 ${table}
 <section class="sec paper" aria-labelledby="memo-h">
 <h2 class="sec-h" id="memo-h">資格ごとのページ</h2>
@@ -64,15 +76,15 @@ ${adSlot('end')}`;
   return {
     path,
     html: page({
-      title: `清掃作業監督者・病院清掃受託責任者の更新の期限と再講習の時期｜${SITE.name}`,
-      description: koushinDesc(SHIKAKU),
+      title: `清掃作業監督者・病院清掃受託責任者の再講習｜期限・日程・受講料｜${SITE.name}`,
+      description: koushinDesc(SHIKAKU, KOUSHIN_PAGES),
       path,
       corner: 'kyotsu',
       body,
       js: js(),
       crumbs: [{ name: '資格の更新の期限' }],
     }),
-    lastmod: [SHIKAKU_CHECKED, ...pages.map((p) => p.checked)].sort().pop(),
+    lastmod: [SHIKAKU_CHECKED, NITTEI_CHECKED, ...pages.map((p) => p.checked)].sort().pop(),
   };
 }
 
@@ -87,6 +99,7 @@ function detail(p) {
   const rel = p.related.map((r) => `<li>${r.sakutto ? `${SAKUTTO_SEISOU}</li><li>${SAKUTTO_GENBA}` : `<a href="${r.href}">${esc(r.t)}</a>`}</li>`).join('');
   const body = `${bandHead('講習・資格', p.h1, `<p class="pg-lead">${esc(p.lead)}</p>`, p.photo)}
 ${form(path, { pick: false, fixed: { s, keys }, paper: p.paper, note: p.note || '' })}
+${nitteiBlock(p.nittei)}
 ${rules}
 <section class="sec paper" aria-labelledby="kata-h">
 <h2 class="sec-h" id="kata-h">再講習の形と申し込み</h2>
@@ -117,7 +130,7 @@ ${adSlot('end')}`;
       js: js(),
       crumbs: [{ name: '資格の更新の期限', href: '/shikaku/koushin/' }, { name: p.h1 }],
     }),
-    lastmod: p.checked,
+    lastmod: [p.checked, p.nittei.checked].sort().pop(),
   };
 }
 

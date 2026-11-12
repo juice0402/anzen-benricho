@@ -2,7 +2,7 @@
 // 問題があれば Markdown を出して終了コード1（ワークフローが Issue にする）。Claude の使用量は使わない
 import { ALL_THEMES as THEMES } from '../src/data/themes.mjs';
 import { HOUREI, HOUREI_CHECKED } from '../src/data/hourei.mjs';
-import { SHIKAKU, SHIKAKU_CHECKED } from '../src/data/shikaku.mjs';
+import { SHIKAKU, SHIKAKU_CHECKED, KOUSHIN_PAGES, NITTEI_CHECKED } from '../src/data/shikaku.mjs';
 import { KIHON } from '../src/data/kihon/index.mjs';
 import { YOMIMONO } from '../src/data/yomimono/index.mjs';
 import { KAU_READY } from '../src/data/kau.mjs';
@@ -15,6 +15,7 @@ for (const t of THEMES) {
 }
 for (const h of HOUREI) for (const s of h.src) add(s, `法改正・${h.title}`);
 for (const k of SHIKAKU) for (const s of k.src) add(s, `資格・${k.name}`);
+for (const p of KOUSHIN_PAGES) for (const s of p.nittei.src) add(s, `資格・${p.name}の日程と受講料`);
 // 知識のページ（2026-10-26 から点検に入れた）
 for (const p of KIHON) for (const s of p.src) add(s, `知識・${p.h1}`);
 // 読みもの（#59）。URL だけ点検し、確認日の期限は見ない（記事に「◯年◯月◯日に確かめた内容」と出る）
@@ -47,6 +48,7 @@ const old = [
   ...THEMES.map((t) => [t.title, t.checked]),
   ['法改正', HOUREI_CHECKED],
   ['資格の更新の期限', SHIKAKU_CHECKED],
+  ['資格の再講習の日程と受講料', NITTEI_CHECKED],
   ...KIHON.map((p) => [`知識・${p.h1}`, p.checked]),
   ...KAU_READY.map((k) => [`そろえる物・${k.t}`, k.checked]),
 ].filter(([, d]) => days(d) >= 76).map(([n, d]) => `- ${n}：確認日 ${d} から ${days(d)} 日（90日でテストが止まり、公開できなくなる）`);
