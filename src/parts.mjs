@@ -55,7 +55,7 @@ export const yomiBack = (path) =>
     .map((y) => ({ t: `読みもの：${y.h1}`, href: yomimonoPath(y) }));
 export const yomiBackLi = (path) => yomiBack(path).map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('');
 // 「あわせて見る」の節がないページ用。読みものがないときは何も出さない
-export const yomiBackSec = (path, np = '') => {
+export const yomiBackSec = (path, np = 'np') => {
   const li = yomiBackLi(path);
   return li ? `<section class="sec paper${np ? ' np' : ''}" aria-labelledby="yb-h">\n<h2 class="sec-h" id="yb-h">あわせて見る</h2>\n<ul class="krel">${li}</ul>\n</section>` : '';
 };
