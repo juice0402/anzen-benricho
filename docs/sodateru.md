@@ -120,3 +120,42 @@
 - 読むファイル：CLAUDE.md、src/pages/kiroku.mjs、src/data/kau.mjs、src/pages/months.mjs（今月そろえる物の出し方）、src/pages/soroeru.mjs（あわせて見る）、scripts/verify-dist.mjs（楽天のページの点検）、tests/kau.test.mjs
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-10）
+
+### [ ] CLAUDE.md を1万字以内に戻す（問題集と資格の日程は docs/shikumi.md へ）
+- やること：CLAUDE.md（2026-11-12 の main で `wc -m` が 19,343。決まりは1万字以内）を1万字以内に戻す。「いまの状態」の長い行（AdSense・A8・お問い合わせ・検索結果での見え方・法人パック・自動で育つしくみ・そろえる物 など）は、くわしい所を docs/shikumi.md の節（なければ新しい節）か docs/pack.md へ文のまま移し、CLAUDE.md には1行と「くわしくは docs/shikumi.md の「◯◯」」だけ残す。あわせて、今月の1問の問題集（PR #89。/anzen/quiz/・localStorage `anzen-quiz-v1`）を docs/shikumi.md の「◯月号」の節に、資格の再講習の日程と受講料（PR #87）が docs/shikumi.md の「資格の更新の期限」にあるかを確かめ、ないものを足す
+- 順番：PR #87・#89 のマージのあと（どちらも docs/shikumi.md か同じ話にかかる。まだ開いていれば main の上に作り、PR の本文に「#87・#89 のあとにマージ」と書く）
+- できあがりの条件：`wc -m CLAUDE.md` が 10000 以下。`npm run check` が緑（コードは変えない）。CLAUDE.md から外した文が、すべて docs/ のどこかにある（PR の本文に、移した行と移した先の表）。書いていない別の Claude が、前と後の CLAUDE.md と docs をくらべて、なくなった決めごとがないかを点検した
+- 決まったこと：CLAUDE.md は1万字以内に保ち、経緯・くわしいことは docs/ へ書く（CLAUDE.md の頭）。前に夜 #73（PR #74）で 11,877字 → 9,086字にした形と同じく、くわしい行は docs/shikumi.md へ（claude/reports/anzen.md の 2026-11-09「夜の作業」）。scripts/mihari.mjs の夜のメモと予約タスクが「リポジトリの CLAUDE.md」を読むので、ファイルの名前と場所は変えない
+- 迷ったら：CLAUDE.md の「サイト作りの方針」「中身の決まり」「しくみ」の節にある決まり（送らない・外部を読まない・楽天は物のページだけ・AdSense を置かないページ・使わない言葉・出典と確認日・印刷は A4 1枚・マージの流れ・秘密）は CLAUDE.md に短く残し、経緯・日付・連絡の番号・細かいファイル名を docs へ移す。ファイルの表は残す。移すときは言いかえず、文をそのまま。docs/shikumi.md が2万字をこえそうなら、docs/ に新しいファイル（例 docs/kokoku.md）を作り、CLAUDE.md の「くわしいことは docs/ の」の行に名前を足す。1万字に届かないときは、届くまで「いまの状態」の行を docs へ回す（決まりの行は削らない）
+- 読むファイル：CLAUDE.md、docs/shikumi.md、docs/pack.md、docs/mihari.md、scripts/mihari.mjs（CLAUDE.md を指す行）、プロジェクトの資料 claude/reports/anzen.md の 2026-11-09「夜 #73」の行
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-12）
+
+### [ ] テーマのページと問題集から、そろえる物へ1行（買う理由・その4）
+- やること：テーマの入口 `/anzen/theme/<slug>/` と業種のページ `/anzen/theme/<slug>/<業種>/` の「あわせて見る」（src/pages/theme.mjs の `links()`）の最後に、そのテーマのそろえる物へ「そろえる物：<物の名前>」の文字のリンクを1行足す。物は src/data/kau.mjs の `theme` がそのテーマの slug で、ページがあり（points がある）、`monthLink` が false でないもの。今月の1問の問題集 `/anzen/quiz/`（src/pages/months.mjs の `quizPage`）の月の節の「◯月号へ」の行の下にも、その月のそろえる物（`kauOfMonth`）へ同じ形の1行（u-note）を足す。テストは tests/kau.test.mjs に
+- 順番：「今月の1問の問題集」（PR #89）のあと（マージ待ちなら、そのブランチの上に積む）
+- できあがりの条件：`npm run check` が緑。テスト（dist を読む）で、そろえる物のある各テーマの入口と4業種のページに、その物の /soroeru/<key>/ へのリンクがある・kanki（co2 は monthLink: false）のページにはない・問題集の月の節にその月の物へのリンクがある・これらのページに楽天の商品とクレジットがなく、AdSense のコードは今までどおりある、を見る。業種のページの印刷が A4 1枚のまま（「あわせて見る」は np で印刷に出ない）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：楽天の商品はそろえる物のページだけ。ほかのページからは文字のリンクだけで、AdSense はそのまま（CLAUDE.md・この山の「そろえる物のページと楽天の取得」の決まったこと）。テーマの掲示・やること・朝礼につながる行がない物は月のリンクを出さない（kau.mjs の monthLink: false・この山の「そろえる物のページの残り」の迷ったら）。遊びに来た人に、いまの買う理由を渡すもの（両方に当たるもの）を先に作る（claude/site-principles.md の「買いに来る理由がある人を集める」）
+- 迷ったら：物の名前は kau.mjs の `t` のまま、なぜ今か（why）は足さない（月のページにあるため）。テーマが2つある月は、物の `theme` のテーマのページにだけ出す（問題集は月の節に1行）。測る道具（温湿度計・照度計。month と theme がない）は出さない。掲示・朝礼・やること・ボタンのそばには置かず、「あわせて見る」の中と問題集の月の節の下だけ。1年の実施記録（/anzen/kiroku/）はこの山の別の項目なので、さわらない。新しい見た目の形は作らない（いまの .krel と .u-note）
+- 読むファイル：CLAUDE.md、src/pages/theme.mjs（links）、src/pages/months.mjs（quizPage・「今月そろえる物」の出し方）、src/data/kau.mjs（kauOfMonth・monthLink）、tests/kau.test.mjs、scripts/verify-dist.mjs（楽天のページの点検）
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-12）
+
+### [ ] 読みものから、つないだページへ戻るリンク
+- やること：読みものの「職場で確かめる」（データの `links`）でつないだサイトの中のページに、その読みものへ戻るリンクを自動で出す。`src/data/yomimono/index.mjs` の `YOMIMONO` から、`links` の href がそのページのパスと同じ読みものをさがす部品を1つ（例 `yomiBack(path)`。src/parts.mjs に）作り、テーマの入口と業種のページ（theme.mjs の links）・知識のページ（kihon.mjs）・資格のページ（shikaku.mjs の2か所）・法改正のページ（hourei.mjs）の「あわせて見る」の最後に「読みもの：<h1>」の文字のリンクで足す。「あわせて見る」の節がないページ（月のページ /anzen/<月>/・業種の入口など）は、読みものがあるときだけ同じ形の節（h2.sec-h「あわせて見る」と ul.krel）を広告の枠 adSlot('end') の前（広告の枠がないページはいちばん下）に足す。読みもの書きが記事を足すと、つないだページにも自動で出る
+- 順番：「テーマのページと問題集から、そろえる物へ1行」のあと（同じ theme.mjs の links をさわる。マージ待ちなら、そのブランチの上に積む）。前の項目がまだ PR になっていなければ、この項目は取らずに止める
+- できあがりの条件：`npm run check` が緑。tests/yomimono.test.mjs に、どの読みものの links の先のページ（/ から始まるもの）にも、その読みもの /yomimono/<slug>/ へのリンクがある（dist を読む）・読みものがつないでいないページには出ない、を足した。いまの3本で /anzen/12/・/anzen/1/・/anzen/2/・/anzen/theme/kanki/・/kihon/setsubi/・/anzen/theme/tentou/・/anzen/theme/tentou/seisou/ に出る。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：連絡 C-026（11/6 しょーくん「読み物を拡充、答えに関する読み物とか、記事のボリューム、自分で計算できるなどの来る理由を継続していくことが大切」）のやること2の「答えのページと読みものを相互にリンクする」（claude/common-tasks.md）。内部リンクでたどれるようにする（claude/site-principles.md の「楽しさで、わざわざ来てもらう」の入口の検索）。読みものの書き方（docs/yomimono-neta.md）は変えない（予約タスクがそのまま書ける）
+- 迷ったら：1ページに出す読みものは新しい順に2本まで。パスはそのまま比べる（入口 /anzen/theme/tentou/ と業種のページ /anzen/theme/tentou/seisou/ は別のページ）。サイトの外（サクッと計算など）への links は数えない。トップと読みもののページには出さない。リンクの文字は h1 のまま（灰色の1行 d は足さない）。月のページの「あわせて見る」は広告の枠の前・法改正の節のあと。新しい見た目の形は作らない（いまの .krel）
+- 読むファイル：CLAUDE.md、docs/yomimono-neta.md（ひな形の links）、src/data/yomimono/index.mjs、src/parts.mjs、src/pages/theme.mjs・kihon.mjs・shikaku.mjs・hourei.mjs・months.mjs・gyoshu.mjs、tests/yomimono.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-12）
+
+### [ ] 法改正のページに、よくある質問
+- やること：法改正のページ `/hourei/<改正>/`（src/data/hourei.mjs の9つ）のデータに `faq: [{ q, a }]` を2〜3つずつ足し、src/pages/hourei.mjs の detail で「職場ですること」の下・「あわせて見る」の上に「よくある質問」の節を出す（知識のページの faqBlock と同じ形の dl.faq・印刷に出さない np）。問いは、その改正で担当者が聞きそうなこと（うちは対象か・いつの分から・何を用意するか・50人未満はどうか など）と、claude/search-data-anzen.md の検索語（「健康診断 項目変更 2027」「2023年に安全衛生法が改正されますが」など）。答えは1〜2文
+- できあがりの条件：`npm run check` が緑。tests/hourei.test.mjs に、faq は0〜3つ・問いは「？」で終わる・答えは全角120字まで・同じ問いがほかの改正のページと重ならない、を足した。PR の check-run の出典の点検が通った（src/data を変えるので動く）。書いていない別の Claude が、各ページのデータの出典（src）と照らして点検し、直した
+- 決まったこと：連絡 C-026 の②「ページ・記事のボリューム（水増しはしない）」を、クリックの多い /hourei/（claude/search-data-anzen.md の 11/11 の回で 6ページ・34表示・2クリック。/hourei/kagaku-2027/ は 3.3位で2クリック、/hourei/kenshin-2027/ は 11表示・16.5位・0クリック）に。答えはそのページのデータの出典にあることだけで、2つ以上で一致したもの（CLAUDE.md の中身の決まり）。罰則・届出は2つ以上の公的な資料で確かめたものだけ（CLAUDE.md の法改正の行）なので、データの bassoku・todokede にないことは FAQ にも書かない。言葉は「法令の義務」「努力義務」「職場で決めること」（claude/anzen-handoff.md の「義務の区別」）
+- 迷ったら：2つの出典で一致しない問いは入れない（FAQ が0〜1つのページがあってよい）。新しい出典は足さない。施行日がまだ先で、国の Q&A が出ていないことは書かない。title・説明文（describe）・確認日（HOUREI_CHECKED）は変えない（全部の行を確かめ直したわけではないため）。読みもののネタの山にある題（2027年4月のまとめ・カスハラ・ストレスチェックの準備）とは重なってよいが、FAQ では長く説明せず1〜2文で答える。区分に迷う業種は「労働基準監督署に確認」。FAQPage の構造化データは作らない（知識のページにもないため）。時間が足りなければ、検索に出ている kagaku-2027・kenshin-2027 のページから先に書き、残りのページは PR の本文に「残り」と書く。
+- 読むファイル：CLAUDE.md、src/data/hourei.mjs、src/pages/hourei.mjs、src/pages/kihon.mjs（faqBlock）、tests/hourei.test.mjs、scripts/check-sources.mjs、プロジェクトの資料 claude/anzen-handoff.md の「義務の区別」
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-12）
