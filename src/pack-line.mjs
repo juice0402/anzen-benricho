@@ -22,3 +22,9 @@ export const packLineReading = (slug, iso = todayJst()) => {
   if (!m || !(PACK_READINGS[slug] || []).includes(m)) return '';
   return `<li><a href="/pack/">法人パック ${m}月号（${yen()}）<span class="ym-d">${m}月の掲示・朝礼・委員会の資料・記録表を会社名入りでまとめて印刷</span></a></li>`;
 };
+
+// 掲示のページ（業種のページ・テーマの入口）の「続けて準備する」の最後の行。月のページと同じく、売っている号の月だけ
+export const packLiMonth = (m, iso = todayJst()) =>
+  nowMonth(iso) === m
+    ? `<li><a href="/pack/">法人パック ${m}月号（${yen()}）<span class="ym-d">${m}月の掲示・朝礼・委員会の資料・記録表を会社名入りでまとめて印刷</span></a></li>`
+    : '';
