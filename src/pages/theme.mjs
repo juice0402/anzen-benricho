@@ -11,6 +11,7 @@ import { ALL_THEMES } from '../data/themes.mjs';
 import { qrSvg } from '../qr.mjs';
 import { themeDesc, themeGyoshuDesc } from '../describe.mjs';
 import { packLiMonth } from '../pack-line.mjs';
+import { kauOfTheme, kauPath } from '../data/kau.mjs';
 
 const seo = (t) => t.seoName || t.title;
 // 続けて準備する（C-027 案A「来月の準備へ」11/12 しょーくん）：来月のテーマ（同じ業種）・この月の号・法人パック（売っている号のとき）
@@ -35,10 +36,11 @@ const nextHtml = (t, g) => `<section class="sec paper np" aria-labelledby="nx-h"
 <ul class="krel">${nextLinks(t, g).map((r) => `<li><a href="${r.href}">${esc(r.t)}<span class="ym-d">${esc(r.d)}</span></a></li>`).join('')}${packLiMonth(t.month)}</ul>
 </section>`;
 
-// 同じ月のほかのテーマと、関係するページ（法改正・基本の決まり）
+// 同じ月のほかのテーマと、関係するページ（法改正・基本の決まり）、最後にそのテーマのそろえる物（文字のリンクだけ。#94）
 const links = (t, g) => {
   const sib = ALL_THEMES.filter((x) => x.month === t.month && x.slug !== t.slug).map((x) => ({ t: `${t.month}月 ${x.title}`, href: g ? gyoshuPath(x, g) : themePath(x) }));
-  const all = [...sib, ...(t.related || [])];
+  const k = kauOfTheme(t.slug);
+  const all = [...sib, ...(t.related || []), ...(k ? [{ t: `そろえる物：${k.t}`, href: kauPath(k.key) }] : [])];
   return all.length ? `<section class="sec paper np" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel">${all.map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('')}</ul>\n</section>` : '';
 };
 
