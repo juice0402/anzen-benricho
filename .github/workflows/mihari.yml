@@ -2,6 +2,8 @@ name: 見張り
 
 # 見張り（Claude の予約タスクの代わり。Claude の使用量は使わない）。何もなければ何もしない。中身は scripts/mihari.mjs
 #   公開・作り直し・出典の点検（main）が失敗 → issue（ラベル mihari。朝の確認がしょーくんに知らせる）。成功 → 同じ題の issue を閉じる
+#   3時間ごと（毎時53分）と手で動かしたとき：見張る workflow ごとに main のいちばん新しい完了した実行を同じ判定に通す（node scripts/mihari.mjs latest）
+#     マージの印（merge-ok.yml）などが GITHUB_TOKEN で動かした公開は、終わっても workflow_run が来ないため（GitHub の決まり。2026-11-13）
 #   毎朝 5:41（日本時間）：確認日の期限（C）と国の発表（A・B1・D〜G。見る期間のものだけ）→ issue（ラベル night。夜のまとめ作業が進める）
 #   手で試す：Actions の「見張り」→ Run workflow。dry_run（はじめから入っている）なら issue を作らず、作るはずの題と本文をログに出す。today で日付を変えて試せる
 
@@ -11,7 +13,8 @@ on:
     types: [completed]
     branches: [main]
   schedule:
-    - cron: '41 20 * * *'
+    - cron: '41 20 * * *'   # 毎朝の見張り（watch）。1日1回だけ
+    - cron: '53 */3 * * *'  # いちばん新しい実行（latest）
   workflow_dispatch:
     inputs:
       dry_run:
@@ -29,7 +32,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: mihari-${{ github.event.workflow_run.path || 'watch' }}
+  group: mihari-${{ github.event.workflow_run.path || github.event.schedule || 'watch' }}
   cancel-in-progress: false
 
 jobs:
@@ -51,8 +54,32 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/mihari.mjs notify
 
+  # 見張る workflow は、上の workflow_run の workflows: と同じ（scripts/mihari.mjs の RUNS。テストが見る）
+  latest:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'schedule' && github.event.schedule == '53 */3 * * *')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: scripts
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: いちばん新しい実行を見る（失敗なら issue、成功なら閉じる）
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+        run: node scripts/mihari.mjs latest
+
   watch:
-    if: github.event_name != 'workflow_run'
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'schedule' && github.event.schedule == '41 20 * * *')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

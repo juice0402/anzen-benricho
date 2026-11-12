@@ -1,6 +1,8 @@
 // 見張り（.github/workflows/mihari.yml から動く。Node の標準だけ・依存なし。Claude の使用量は使わない）
 // 何もなければ何もしない。何かあったときだけ issue を作る
 //   node scripts/mihari.mjs notify … 公開・作り直し・出典の点検が失敗 → issue（mihari）。成功 → 同じ題の開いた issue を閉じる
+//   node scripts/mihari.mjs latest … 3時間ごと・手で動かしたとき：見張る workflow ごとに main のいちばん新しい完了した実行を notify と同じ判定に通す
+//                                    （マージの印などが GITHUB_TOKEN で動かした公開は、終わっても workflow_run が来ないため。2026-11-13）
 //   node scripts/mihari.mjs watch  … 毎朝：確認日の期限（C）と国の発表（A・B1・D〜G）→ issue（night。夜のまとめ作業が進める）
 // 環境変数：GH_TOKEN・GITHUB_REPOSITORY・GITHUB_RUN_ID（Actions が入れる）、DRY_RUN=true で issue を作らずログに出す、TODAY で日付を変える（dry_run のときだけ）
 import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
@@ -283,6 +285,15 @@ export function decide(issues, title, label) {
   return { act: 'create' };
 }
 export const withFooter = (body) => `${body}\n\n${FOOTER}`;
+// その日（日本時間）もう知らせたか：その日に作った issue か、その日の「まだ続いている」
+export function notedToday(issue, comments, today) {
+  const day = (iso) => (iso ? jstToday(new Date(iso)) : '');
+  return day(issue.created_at) === today || comments.some((c) => c.body.startsWith('まだ続いている') && day(c.created_at) === today);
+}
+// その実行が終わったあとに閉じた同じ題の issue（知らせたあと、だれかが閉じた）。3時間ごとに同じ失敗で作り直さない
+export function closedAfter(issues, title, endedAt) {
+  return issues.find((i) => !i.pull_request && i.title === title && i.closed_at && Date.parse(i.closed_at) >= Date.parse(endedAt)) || null;
+}
 
 export function github({ token, repo, fetchImpl = fetch }) {
   const call = async (method, path, body) => {
@@ -315,6 +326,8 @@ export function github({ token, repo, fetchImpl = fetch }) {
     comment: (n, body) => call('POST', `${R}/issues/${n}/comments`, { body }),
     close: (n) => call('PATCH', `${R}/issues/${n}`, { state: 'closed', state_reason: 'completed' }),
     jobs: (runId) => call('GET', `${R}/actions/runs/${runId}/jobs?per_page=100`),
+    runs: (path) => call('GET', `${R}/actions/workflows/${path.split('/').pop()}/runs?branch=main&status=completed&exclude_pull_requests=true&per_page=30`),
+    closedMihari: () => call('GET', `${R}/issues?state=closed&labels=mihari&sort=updated&per_page=100`),
     annotations: (checkRunId) => call('GET', `${R}/check-runs/${checkRunId}/annotations?per_page=50`),
   };
 }
@@ -330,7 +343,7 @@ export function reporter({ api, issues, dry, runUrl, today, log = console.log })
         const msg = `まだ続いている（${runUrl}）`;
         if (dry) return log(`[dry_run] #${d.issue.number} にコメント（その日まだなら）：${msg}`);
         const cs = await api.comments(d.issue.number, startOfDay);
-        if (cs.some((c) => c.body.startsWith('まだ続いている') && Date.parse(c.created_at) >= Date.parse(startOfDay))) return log(`今日はコメント済み：#${d.issue.number}`);
+        if (notedToday(d.issue, cs, today)) return log(`今日はもう知らせた：#${d.issue.number}`);
         await api.comment(d.issue.number, msg);
         return log(`コメントした：#${d.issue.number} ${title}`);
       }
@@ -338,7 +351,7 @@ export function reporter({ api, issues, dry, runUrl, today, log = console.log })
       if (dry) return log(`[dry_run] 作る（ラベル ${label}）：${title}\n${full}\n---`);
       await api.ensureLabel(label);
       const i = await api.create(title, full, label);
-      issues.push({ number: i.number, title, state: 'open' });
+      issues.push({ number: i.number, title, state: 'open', created_at: new Date().toISOString() });
       log(`作った：#${i.number} ${title}`);
     },
     async resolve(title, url = runUrl) {
@@ -388,16 +401,26 @@ export const failedSteps = (jobs) => jobs.filter((j) => ['failure', 'timed_out']
   return s.length ? s : [`ジョブ「${j.name}」`];
 });
 
-async function notify(env, log) {
-  const ev = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8')).workflow_run;
+// 3時間ごと・手で動かしたとき：main のいちばん新しい完了した実行（cancelled・skipped は飛ばしてその前の実行。見張るきっかけ events のものだけ。PR の CI は見ない）
+export function pickLatest(runs, def) {
+  return runs
+    .filter((r) => r.head_branch === 'main' && r.status === 'completed' && def.events.includes(r.event) && classify(r.conclusion) !== 'ignore')
+    .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at) || b.id - a.id)[0] || null;
+}
+
+// 1つの実行を判定する（workflow_run といちばん新しい実行で同じ）：成功 → 同じ題の issue を閉じる、失敗 → issue（開いていればその日1回「まだ続いている」）
+// latest のときは、その実行のあとに閉じた同じ題の issue があれば作り直さない
+export async function judge(ev, { api, issues, dry = false, latest = false, log = console.log }) {
   const def = RUNS[ev.path] || Object.values(RUNS).find((d) => d.name === ev.name);
   const kind = classify(ev.conclusion);
-  log(`${ev.name}（${ev.event}・${ev.head_branch}）：${ev.conclusion}`);
+  log(`${ev.name}（${ev.event}・${ev.head_branch}）：${ev.conclusion}${latest ? `（いちばん新しい実行・${jstStamp(ev.updated_at || ev.created_at)}・${ev.html_url}）` : ''}`);
   if (!def || !def.events.includes(ev.event) || ev.head_branch !== 'main' || kind === 'ignore') return log('見張る対象ではないので何もしない');
-  const api = github({ token: env.GH_TOKEN, repo: env.GITHUB_REPOSITORY });
-  const issues = await api.issues('open');
-  const rep = reporter({ api, issues, dry: false, runUrl: ev.html_url, today: jstToday(), log });
+  const rep = reporter({ api, issues, dry, runUrl: ev.html_url, today: jstToday(), log });
   if (kind === 'ok') return rep.resolve(def.title, ev.html_url);
+  if (latest && !issues.some((i) => i.title === def.title && i.state === 'open')) {
+    const done = closedAfter(await api.closedMihari(), def.title, ev.updated_at || ev.created_at);
+    if (done) return log(`この実行のあとに #${done.number} が閉じられたので作り直さない：${def.title}`);
+  }
   let steps = [];
   const notes = [];
   try {
@@ -410,6 +433,32 @@ async function notify(env, log) {
     }
   } catch (e) { log(`ジョブを読めなかった：${e.message}`); }
   await rep.open({ title: def.title, label: 'mihari', body: failBody({ what: def.what(ev.event), when: jstStamp(ev.updated_at || ev.run_started_at || new Date().toISOString()), url: ev.html_url, steps, notes }) });
+}
+
+async function notify(env, log) {
+  const ev = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8')).workflow_run;
+  const api = github({ token: env.GH_TOKEN, repo: env.GITHUB_REPOSITORY });
+  await judge(ev, { api, issues: await api.issues('open'), log });
+}
+
+// ---------- 3時間ごと・手で動かしたとき：いちばん新しい実行 ----------
+async function latest(env, log) {
+  const dry = env.DRY_RUN === 'true';
+  const api = github({ token: env.GH_TOKEN, repo: env.GITHUB_REPOSITORY });
+  const issues = await api.issues('open');
+  log(`見張る workflow ごとに main のいちばん新しい実行を見る${dry ? '（dry_run）' : ''}`);
+  let failed = 0;
+  for (const [path, def] of Object.entries(RUNS)) {
+    try {
+      const run = pickLatest((await api.runs(path)).workflow_runs || [], def);
+      if (!run) { log(`${def.name}：main の完了した実行がない`); continue; }
+      await judge(run, { api, issues, dry, latest: true, log });
+    } catch (e) {
+      failed++;
+      log(`::warning title=見張り（${def.name}）::${e.message}`);
+    }
+  }
+  if (failed) process.exitCode = 1;
 }
 
 // ---------- 毎朝：C と A〜G ----------
@@ -467,7 +516,7 @@ async function watch(env, log) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const cmd = process.argv[2];
   const log = (s) => console.log(s);
-  const run = cmd === 'notify' ? notify : cmd === 'watch' ? watch : null;
-  if (!run) { console.error('使い方：node scripts/mihari.mjs notify|watch'); process.exit(2); }
+  const run = cmd === 'notify' ? notify : cmd === 'latest' ? latest : cmd === 'watch' ? watch : null;
+  if (!run) { console.error('使い方：node scripts/mihari.mjs notify|latest|watch'); process.exit(2); }
   run(process.env, log).catch((e) => { console.error(e.stack || e.message); process.exit(1); });
 }
