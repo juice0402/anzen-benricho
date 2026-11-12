@@ -10,8 +10,31 @@ import { themePath, gyoshuPath, fuda, monthHead, titleHtml, undoLine } from '../
 import { ALL_THEMES } from '../data/themes.mjs';
 import { qrSvg } from '../qr.mjs';
 import { themeDesc, themeGyoshuDesc } from '../describe.mjs';
+import { packLiMonth } from '../pack-line.mjs';
 
 const seo = (t) => t.seoName || t.title;
+// 続けて準備する（C-027 案A「来月の準備へ」11/12 しょーくん）：来月のテーマ（同じ業種）・この月の号・法人パック（売っている号のとき）
+const nextMonth = (m) => {
+  for (let k = 1; k <= 12; k++) {
+    const n = ((m - 1 + k) % 12) + 1;
+    if (ALL_THEMES.some((x) => x.month === n)) return n;
+  }
+  return m;
+};
+export const nextLinks = (t, g) => {
+  const n = nextMonth(t.month);
+  const nx = ALL_THEMES.filter((x) => x.month === n).map((x) => ({
+    t: g ? `${n}月 ${x.title}（${g.name}）` : `${n}月 ${x.title}`,
+    d: g ? '来月の掲示と朝礼を先に用意する' : '来月のテーマ',
+    href: g ? gyoshuPath(x, g) : themePath(x),
+  }));
+  return [...nx, { t: `${t.month}月号`, d: `${t.month}月のテーマ・暦・今月の1問・委員会で話すこと`, href: `/anzen/${t.month}/` }];
+};
+const nextHtml = (t, g) => `<section class="sec paper np" aria-labelledby="nx-h">
+<h2 class="sec-h" id="nx-h">続けて準備する</h2>
+<ul class="krel">${nextLinks(t, g).map((r) => `<li><a href="${r.href}">${esc(r.t)}<span class="ym-d">${esc(r.d)}</span></a></li>`).join('')}${packLiMonth(t.month)}</ul>
+</section>`;
+
 // 同じ月のほかのテーマと、関係するページ（法改正・基本の決まり）
 const links = (t, g) => {
   const sib = ALL_THEMES.filter((x) => x.month === t.month && x.slug !== t.slug).map((x) => ({ t: `${t.month}月 ${x.title}`, href: g ? gyoshuPath(x, g) : themePath(x) }));
@@ -57,6 +80,7 @@ ${fuda((g) => gyoshuPath(t, g))}
 ${srcList([...t.common, ...t.gyoshu.map((g) => g.src[0])])}
 <p class="src-note">確認日 ${fmtDate(t.checked)}。${esc(t.note)}</p>
 </section>
+${nextHtml(t)}
 ${links(t)}
 ${adSlot('end')}`;
   return {
@@ -107,6 +131,7 @@ ${srcList([...t.common, ...g.src])}
 ${t.undo ? undoLine(t.month, t.undo).replace('class="th-undo"', 'class="th-undo src-note"') : ''}
 <p class="src-note">確認日 ${fmtDate(t.checked)}。${esc(t.note)}</p>
 </section>
+${nextHtml(t, g)}
 ${links(t, g)}`;
   return {
     path,
