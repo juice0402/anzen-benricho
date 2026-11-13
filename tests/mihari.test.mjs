@@ -1,13 +1,14 @@
 // 見張り（scripts/mihari.mjs）の判定。外のページと GitHub にはつながない
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
   jstToday, addDays, daysBetween, inPeriod, recentMonths, norm, htmlText, pageLinks, decodeBody, getPage, makeCtx,
   CHECKED_RE, oldestChecked, watchC, isA, titleA, isB1, isD, titleE, isE, titleF, isF, isFCampaign, pickG,
   WATCHES, decide, reporter, RUNS, classify, cut, failBody, failedSteps, updateState, longFails, runWatches, FOOTER,
+  notedToday, closedAfter, pickLatest, judge,
 } from '../scripts/mihari.mjs';
 
 const W = Object.fromEntries(WATCHES.map((w) => [w.id, w]));
@@ -200,7 +201,7 @@ test('issue：同じ題があれば作らない（night は閉じたものも）
   const rep = reporter({ api, issues, dry: false, runUrl: 'https://github.com/r/actions/runs/1', today: '2026-11-02', log: () => {} });
   await rep.open({ title: 'V', body: 'B', label: 'night' });
   assert.deepEqual(calls.slice(0, 2), [['label', 'night'], ['create', 'V', `B\n\n${FOOTER}`, 'night']]);
-  await rep.open({ title: 'V', body: 'B', label: 'night' }); // 作ったばかりの issue にはコメント
+  await rep.open({ title: 'V', body: 'B', label: 'night' }); // 作った日（created_at）が today とちがえばコメント
   assert.deepEqual(calls[2], ['comment', 9, 'まだ続いている（https://github.com/r/actions/runs/1）']);
   comments = [{ body: 'まだ続いている（x）', created_at: '2026-11-01T21:00:00Z' }];
   await rep.open({ title: 'U', body: 'B', label: 'mihari' });
@@ -251,4 +252,89 @@ test('毎朝の見張り：期間外のページは取りに行かない・出�
   assert.equal(opened[0].title, '【夜】確認日の確かめ直し（2027-01-20 まで）');
   assert.equal(opened[0].label, 'night');
   assert.deepEqual(asked, ['https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei36/18.html']);
+});
+
+test('いちばん新しい実行：main の完了した実行だけ・cancelled などは飛ばしてその前・見張るきっかけ（events）のものだけ', () => {
+  const def = RUNS['.github/workflows/deploy.yml'];
+  const run = (id, conclusion, created, more = {}) => ({ id, conclusion, status: 'completed', head_branch: 'main', event: 'push', created_at: created, ...more });
+  const runs = [
+    run(7, 'failure', '2026-11-13T03:30:00Z', { head_branch: 'claude/x' }),
+    run(6, 'failure', '2026-11-13T03:00:00Z', { event: 'pull_request' }),
+    run(5, null, '2026-11-13T02:30:00Z', { status: 'in_progress' }),
+    run(4, 'cancelled', '2026-11-13T02:00:00Z'),
+    run(3, 'skipped', '2026-11-13T01:30:00Z'),
+    run(2, 'failure', '2026-11-13T01:00:00Z', { event: 'workflow_dispatch' }),
+    run(1, 'success', '2026-11-12T22:00:00Z'),
+  ];
+  assert.equal(pickLatest(runs, def).id, 2);
+  assert.equal(pickLatest([...runs].reverse(), def).id, 2);
+  assert.equal(pickLatest(runs.slice(6), def).id, 1);
+  assert.equal(pickLatest(runs.slice(0, 5), def), null);
+  assert.equal(pickLatest([run(8, 'failure', '2026-11-13T04:00:00Z')], RUNS['.github/workflows/check-sources.yml']), null); // 出典の点検は push を見ない
+});
+
+test('その日もう知らせたか：その日に作った issue・その日の「まだ続いている」', () => {
+  const old = { created_at: '2026-11-10T01:00:00Z' };
+  assert.equal(notedToday({ created_at: '2026-11-12T16:00:00Z' }, [], '2026-11-13'), true); // 日本時間 11/13 1:00
+  assert.equal(notedToday(old, [], '2026-11-13'), false);
+  assert.equal(notedToday(old, [{ body: 'まだ続いている（u）', created_at: '2026-11-13T00:20:00Z' }], '2026-11-13'), true);
+  assert.equal(notedToday(old, [{ body: 'まだ続いている（u）', created_at: '2026-11-12T14:00:00Z' }], '2026-11-13'), false); // 日本時間 11/12 23:00
+  assert.equal(notedToday(old, [{ body: '直った（u）', created_at: '2026-11-13T00:20:00Z' }], '2026-11-13'), false);
+  assert.equal(notedToday({}, [], '2026-11-13'), false);
+  const t = RUNS['.github/workflows/deploy.yml'].title;
+  const closed = [{ number: 9, title: t, closed_at: '2026-11-13T05:00:00Z' }, { number: 8, title: 'ほか', closed_at: '2026-11-13T06:00:00Z' }];
+  assert.equal(closedAfter(closed, t, '2026-11-13T04:00:00Z').number, 9);
+  assert.equal(closedAfter(closed, t, '2026-11-13T05:30:00Z'), null);
+});
+
+test('判定（workflow_run といちばん新しい実行で同じ）：成功なら閉じる・失敗なら作る・今日もう知らせたら何もしない・閉じられたら作り直さない', async () => {
+  const t = RUNS['.github/workflows/deploy.yml'].title;
+  const ev = (conclusion, more = {}) => ({ id: 1, name: 'Build and Deploy', path: '.github/workflows/deploy.yml', event: 'workflow_dispatch', head_branch: 'main', conclusion, html_url: 'https://github.com/r/actions/runs/1', updated_at: '2026-11-13T03:00:00Z', ...more });
+  const fake = (closed = []) => {
+    const calls = [];
+    return {
+      calls,
+      jobs: async () => ({ jobs: [] }),
+      annotations: async () => [],
+      comments: async () => [],
+      comment: async (n, b) => calls.push(['comment', n, b]),
+      close: async (n) => calls.push(['close', n]),
+      ensureLabel: async () => {},
+      create: async (title, body, label) => { calls.push(['create', title, label]); return { number: 20 }; },
+      closedMihari: async () => closed,
+    };
+  };
+  const log = () => {};
+  let api = fake();
+  await judge(ev('success'), { api, issues: [{ number: 3, title: t, state: 'open' }], latest: true, log });
+  assert.deepEqual(api.calls, [['comment', 3, '直った（https://github.com/r/actions/runs/1）'], ['close', 3]]);
+  api = fake();
+  await judge(ev('failure'), { api, issues: [], latest: true, log });
+  assert.deepEqual(api.calls, [['create', t, 'mihari']]);
+  api = fake();
+  await judge(ev('failure'), { api, issues: [{ number: 3, title: t, state: 'open', created_at: new Date().toISOString() }], latest: true, log });
+  assert.deepEqual(api.calls, [], '今日作った issue にはコメントしない');
+  api = fake();
+  await judge(ev('failure'), { api, issues: [{ number: 3, title: t, state: 'open', created_at: '2026-11-01T00:00:00Z' }], latest: true, log });
+  assert.deepEqual(api.calls, [['comment', 3, 'まだ続いている（https://github.com/r/actions/runs/1）']]);
+  api = fake([{ number: 4, title: t, closed_at: '2026-11-13T05:00:00Z' }]);
+  await judge(ev('failure'), { api, issues: [], latest: true, log });
+  assert.deepEqual(api.calls, [], '失敗のあとに閉じられたら作り直さない');
+  api = fake();
+  await judge(ev('cancelled'), { api, issues: [], latest: true, log });
+  await judge(ev('failure', { head_branch: 'claude/x' }), { api, issues: [], log });
+  assert.deepEqual(api.calls, []);
+});
+
+test('mihari.yml：3時間ごとにも見る（毎朝の見張りは1日1回のまま）・見張る workflow は RUNS と同じ', () => {
+  const wf = readFileSync(new URL('../.github/workflows/mihari.yml', import.meta.url), 'utf8');
+  assert.match(wf, /^\s*schedule:\n\s*- cron: '41 20 \* \* \*'.*\n\s*- cron: '53 \*\/3 \* \* \*'/m);
+  const job = (name) => wf.split(/\n {2}(?=[a-z]+:\n)/).find((b) => b.startsWith(`${name}:`)) || '';
+  assert.match(job('latest'), /github\.event\.schedule == '53 \*\/3 \* \* \*'/);
+  assert.match(job('latest'), /node scripts\/mihari\.mjs latest/);
+  assert.match(job('watch'), /github\.event\.schedule == '41 20 \* \* \*'/);
+  assert.doesNotMatch(job('watch'), /\*\/3/);
+  assert.match(job('watch'), /node scripts\/mihari\.mjs watch/);
+  const listed = wf.match(/workflows: \[(.+)\]/)[1].split(',').map((x) => x.trim().replace(/^'|'$/g, ''));
+  assert.deepEqual(listed.sort(), Object.values(RUNS).map((d) => d.name).sort());
 });
