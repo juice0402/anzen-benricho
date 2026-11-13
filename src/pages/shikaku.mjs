@@ -3,7 +3,8 @@
 import { page, esc, script, clientLib, adSlot } from '../layout.mjs';
 import { koushinDesc, koushinPageDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
-import { bandHead, SAKUTTO_SEISOU, SAKUTTO_GENBA, yomiBackLi } from '../parts.mjs';
+import { bandHead, SAKUTTO_SEISOU, SAKUTTO_GENBA, yomiBackLi, yomiBack } from '../parts.mjs';
+import { KOUSHIN_KANREN, relKey, relD, SAKUTTO_D, MAX_KANREN } from '../data/kanren.mjs';
 import { SHIKAKU, SHIKAKU_CHECKED, NITTEI_CHECKED, KOUSHIN_PAGES, koushinPath } from '../data/shikaku.mjs';
 import { fmtDate } from '../data/hourei.mjs';
 
@@ -88,6 +89,24 @@ ${adSlot('end')}`;
   };
 }
 
+// あわせて見る（#100）：読みもの → 資格どうし・テーマ（src/data/kanren.mjs）→ related。どの行にも理由の1行・5本まで
+export const koushinRel = (p) => {
+  const all = [
+    ...yomiBack(koushinPath(p.page)),
+    ...(KOUSHIN_KANREN[p.page] || []),
+    ...p.related.flatMap((r) => (r.sakutto
+      ? [{ a: SAKUTTO_SEISOU, href: 'sakutto:seisou', d: SAKUTTO_D.seisou }, { a: SAKUTTO_GENBA, href: 'sakutto:genba', d: SAKUTTO_D.genba }]
+      : [{ ...r, d: r.d || relD(r.href) }])),
+  ];
+  const seen = new Set([koushinPath(p.page)]);
+  return all.filter((r) => {
+    const key = relKey(r.href);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, MAX_KANREN);
+};
+
 function detail(p) {
   const path = koushinPath(p.page);
   const s = SHIKAKU.find((x) => x.key === p.calc);
@@ -96,7 +115,7 @@ function detail(p) {
 <h2 class="sec-h" id="rule-h">更新の決まり</h2>
 <dl class="ks-rules">${p.rules.map((r) => `<dt>${esc(r.h)}</dt><dd>${r.p.map((t) => `<p>${esc(t)}</p>`).join('')}</dd>`).join('')}</dl>
 </section>`;
-  const rel = p.related.map((r) => `<li>${r.sakutto ? `${SAKUTTO_SEISOU}</li><li>${SAKUTTO_GENBA}` : `<a href="${r.href}">${esc(r.t)}</a>`}</li>`).join('');
+  const rel = koushinRel(p).map((r) => `<li>${r.a ? r.a.replace('</a>', `<span class="ym-d">${esc(r.d)}</span></a>`) : `<a href="${r.href}">${esc(r.t)}<span class="ym-d">${esc(r.d)}</span></a>`}</li>`).join('');
   const body = `${bandHead('講習・資格', p.h1, `<p class="pg-lead">${esc(p.lead)}</p>`, p.photo)}
 ${form(path, { pick: false, fixed: { s, keys }, paper: p.paper, note: p.note || '' })}
 ${nitteiBlock(p.nittei)}
@@ -115,7 +134,7 @@ ${p.memo.map((t) => `<p>${esc(t)}</p>`).join('\n')}
 </section>
 <section class="sec paper" aria-labelledby="sr-h">
 <h2 class="sec-h" id="sr-h">あわせて見る</h2>
-<ul class="krel">${rel}${yomiBackLi(path)}</ul>
+<ul class="krel">${rel}</ul>
 </section>
 ${srcBlock(p.src, p.checked, p.calc === 'kouhou' ? '時間と形は、建物のある地域の消防本部の案内で確認してください。' : '講習の日程と申し込みは、協会の公式ページで確認してください。')}
 ${adSlot('end')}`;

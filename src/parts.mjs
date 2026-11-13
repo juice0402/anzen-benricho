@@ -52,7 +52,7 @@ export const yomiBack = (path) =>
   YOMIMONO.filter((y) => y.links.some((l) => l.href === path))
     .sort((a, b) => b.published.localeCompare(a.published))
     .slice(0, 2)
-    .map((y) => ({ t: `読みもの：${y.h1}`, href: yomimonoPath(y) }));
+    .map((y) => ({ t: `読みもの：${y.h1}`, href: yomimonoPath(y), d: y.d }));
 export const yomiBackLi = (path) => yomiBack(path).map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('');
 // 「あわせて見る」の節がないページ用。読みものがないときは何も出さない
 export const yomiBackSec = (path, np = 'np') => {
