@@ -1,7 +1,9 @@
 // 資格の更新：資格ごとの3ページ・期限の計算・出典と確認日
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { icsLimit } from '../src/client/ics.mjs';
+import { DAI_KEY, daiPut, daiDel, daiRows, daiLeft, daiName } from '../src/client/daicho.mjs';
 import { SHIKAKU, KOUSHIN_PAGES, SHIKAKU_CHECKED, BOUKA_CHECKED, NITTEI_CHECKED, koushinPath } from '../src/data/shikaku.mjs';
 import shikakuPages from '../src/pages/shikaku.mjs';
 
@@ -107,4 +109,77 @@ test('題と説明文：はじめに日程・受講料のことがある', () =>
     assert.match(desc.split('。')[0] + desc.split('。')[1], /[\d,]+円/, `${pg.path} のはじめに受講料`);
     assert.match(desc, /日付から.*期限を計算します。/, pg.path);
   }
+});
+
+// 資格の期限の台帳（#102）
+const q = (key) => {
+  const s = SHIKAKU.find((x) => x.key === key);
+  return { k: s.key, s: s.name, years: s.years, count: s.count };
+};
+
+test('台帳：キーは anzen-shikaku-v1。いまの koushin のキーとはべつ', () => {
+  assert.equal(DAI_KEY, 'anzen-shikaku-v1');
+  assert.notEqual(DAI_KEY, 'koushin');
+  const js = readFileSync(new URL('../src/client/koushin.js', import.meta.url), 'utf8');
+  assert.ok(js.includes("localStorage.setItem('koushin'"), 'koushin のキーはそのまま');
+});
+
+test('台帳：入れたものを送らない（通信の関数を使わない）', () => {
+  for (const f of ['src/client/daicho.mjs', 'src/client/daicho.js']) {
+    const js = readFileSync(new URL(`../${f}`, import.meta.url), 'utf8');
+    for (const w of ['fetch(', 'XMLHttpRequest', 'sendBeacon', 'WebSocket', 'navigator.share', '.submit(', 'new Image', 'innerHTML']) assert.ok(!js.includes(w), `${f} に ${w}`);
+  }
+});
+
+test('台帳：期限の近い順。過ぎた行は「期限切れ」で残る。消せる', () => {
+  let l = daiPut([], 'Aさん', q('kantoku'), '2024-04-15');
+  l = daiPut(l, 'Bさん', q('byouin'), '2023-02-28');
+  l = daiPut(l, 'Cさん', q('byouin'), '2019-05-01');
+  const today = new Date(2026, 10, 14);
+  const rows = daiRows(l, today);
+  assert.deepEqual(rows.map((x) => x.who), ['Cさん', 'Bさん', 'Aさん']);
+  assert.deepEqual(rows.map((x) => x.r.lim), ['2023-05-01', '2027-02-28', '2030-04-15']);
+  assert.ok(rows[0].left < 0);
+  assert.equal(daiLeft(rows[0].left), '期限切れ');
+  assert.equal(daiLeft(0), '今日まで');
+  assert.equal(daiLeft(rows[1].left), '106日');
+  const left = daiDel(l, rows[0].r.id);
+  assert.deepEqual(daiRows(left, today).map((x) => x.who), ['Bさん', 'Aさん']);
+});
+
+test('台帳：同じ呼び名・同じ資格は上書き。資格がちがえば足す。呼び名が空の行は足して番号で出す', () => {
+  let l = daiPut([], 'Aさん', q('kantoku'), '2020-04-15');
+  l = daiPut(l, 'Aさん', q('kantoku'), '2024-04-15');
+  assert.equal(l.length, 1);
+  assert.equal(l[0].lim, '2030-04-15');
+  l = daiPut(l, 'Aさん', q('byouin'), '2024-04-15');
+  assert.equal(l.length, 2);
+  l = daiPut(l, '', q('kantoku'), '2025-01-10');
+  l = daiPut(l, ' ', q('kantoku'), '2025-02-10');
+  assert.equal(l.length, 4);
+  const who = daiRows(l, new Date(2026, 10, 14)).filter((x) => !x.r.n).map((x) => x.who);
+  assert.deepEqual(who, ['1人目', '2人目']);
+  assert.equal(daiPut(l, 'Dさん', q('kantoku'), ''), l, '日付がなければ足さない');
+  assert.equal(daiName('あいうえおかきくけこさ'), 'あいうえおかきくけこ');
+});
+
+test('台帳：防火・防災の4月1日の数え方が計算と同じ', () => {
+  for (const k of ['kouhou', 'bousai']) {
+    for (const [d, want] of [['2020-10-01', '2026-03-31'], ['2020-04-01', '2025-03-31'], ['2021-03-31', '2026-03-31'], ['2020-04-02', '2026-03-31']]) {
+      const [y, m, dd] = d.split('-').map(Number);
+      assert.equal(daiPut([], 'X', q(k), d)[0].lim, want, `${k} ${d}`);
+      assert.equal(lim(k, y, m, dd), want);
+    }
+  }
+});
+
+test('台帳：入口だけに節とボタン。呼び名の欄は text・10字まで。0件は見出しと1行', () => {
+  const [hub, ...rest] = shikakuPages();
+  const main = hub.html.split('<main')[1];
+  assert.ok(main.includes('id="db-h"') && main.indexOf('id="db-h"') > main.indexOf('id="ks-h"') && main.indexOf('id="db-h"') < main.indexOf('id="nt-h"'));
+  assert.match(main, /<input id="k-who" type="text" inputmode="text" maxlength="10"/);
+  assert.ok(main.includes('id="k-save"'));
+  assert.ok(hub.html.includes('anzen-shikaku-v1'), 'ページに台帳の部品');
+  assert.ok(!hub.html.includes('import {'), 'import の行はページに入れない');
+  for (const p of rest) assert.ok(!p.html.includes('id="db-h"') && !p.html.includes('anzen-shikaku-v1'), `${p.path} には台帳を入れない`);
 });
