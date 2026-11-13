@@ -52,7 +52,7 @@ const js = (dai = false) => `${clientLib('ics')}\n${script('koushin')}${dai ? `\
 const daichoBlock = () => `<section class="sec paper ks-db" aria-labelledby="db-h">
 <h2 class="sec-h" id="db-h">資格の期限の台帳</h2>
 <div class="sk-wrap db-wrap" hidden><table class="sk-t db-t"><thead><tr><th>呼び名</th><th>資格</th><th>期限</th><th>あと</th><th></th></tr></thead><tbody class="db-body"></tbody></table></div>
-<p class="ks-hint db-none">期限を出して「台帳に残す」を押すと、ここに並びます</p>
+<p class="ks-hint db-none">「台帳に残す」を押すと、ここに並びます</p>
 </section>`;
 
 function entrance() {
