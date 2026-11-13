@@ -106,8 +106,8 @@ const noShop = (html, at) => {
   assert.ok(html.includes('adsbygoogle'), `${at}：AdSense のコードがない`);
 };
 
-// そろえる物のあとは、このページをつないだ読みもの（#98）だけ
-test('テーマの入口と4業種のページ：あわせて見るの最後（読みものの前）に、そのテーマのそろえる物へ1行', () => {
+// #100 から、あわせて見るの並びは 読みもの → 同じテーマのほかの月・道具 → そろえる物 → 同じ月のテーマ → related（5本まで。そろえる物は落とさない）
+test('テーマの入口と4業種のページ：あわせて見るに、そのテーマのそろえる物へ1行', () => {
   const withKau = new Set(KAU_READY.filter((k) => k.theme && k.monthLink !== false).map((k) => k.theme));
   for (const t of ALL_THEMES) {
     const k = kauOfTheme(t.slug);
@@ -115,10 +115,10 @@ test('テーマの入口と4業種のページ：あわせて見るの最後（�
     const pages = themePages(t);
     assert.equal(pages.length, 1 + GYOSHU.length, t.slug);
     for (const p of pages) {
-      const rel = relOf(p.html).replace(/<li><a href="\/yomimono\/[a-z0-9-]+\/">読みもの：[^<]*<\/a><\/li>/g, '');
+      const rel = relOf(p.html);
       if (k) {
-        const li = `<li><a href="/soroeru/${k.key}/">そろえる物：${k.t}</a></li></ul>`;
-        assert.ok(rel.includes(li), `${p.path}：あわせて見るの最後に ${k.key} がない`);
+        const li = `<li><a href="/soroeru/${k.key}/">そろえる物：${k.t}<span class="ym-d">`;
+        assert.ok(rel.includes(li), `${p.path}：あわせて見るに ${k.key} がない`);
         assert.equal(p.html.split(`href="/soroeru/${k.key}/"`).length - 1, 1, `${p.path}：リンクは1つだけ`);
       } else {
         assert.ok(!/href="\/soroeru\/[a-z0-9]+\/"/.test(p.html), `${p.path}：物のないテーマにそろえる物のリンクがある`);

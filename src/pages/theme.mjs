@@ -12,6 +12,7 @@ import { qrSvg } from '../qr.mjs';
 import { themeDesc, themeGyoshuDesc } from '../describe.mjs';
 import { packLiMonth } from '../pack-line.mjs';
 import { kauOfTheme, kauPath } from '../data/kau.mjs';
+import { THEME_KANREN, relKey, relD, MAX_KANREN } from '../data/kanren.mjs';
 
 const seo = (t) => t.seoName || t.title;
 // 続けて準備する（C-027 案A「来月の準備へ」11/12 しょーくん）：来月のテーマ（同じ業種）・この月の号・法人パック（売っている号のとき）
@@ -36,12 +37,40 @@ const nextHtml = (t, g) => `<section class="sec paper np" aria-labelledby="nx-h"
 <ul class="krel">${nextLinks(t, g).map((r) => `<li><a href="${r.href}">${esc(r.t)}<span class="ym-d">${esc(r.d)}</span></a></li>`).join('')}${packLiMonth(t.month)}</ul>
 </section>`;
 
-// 同じ月のほかのテーマと、関係するページ（法改正・基本の決まり）、そのテーマのそろえる物（文字のリンクだけ。#94）、最後にこのページをつないだ読みもの（#98）
-const links = (t, g) => {
-  const sib = ALL_THEMES.filter((x) => x.month === t.month && x.slug !== t.slug).map((x) => ({ t: `${t.month}月 ${x.title}`, href: g ? gyoshuPath(x, g) : themePath(x) }));
+// あわせて見る（#100 このテーマを深く）：どの行にも理由の1行（.ym-d）。1ページ5本まで
+//   読みもの（#98）→ 同じテーマのほかの月・道具と知識（src/data/kanren.mjs）→ そろえる物（#94）→ 同じ月のほかのテーマ → related（法改正など）
+//   同じページ（テーマは業種をとわず slug）を2回出さない。5本をこえたら後ろから落とす
+export const relLinks = (t, g) => {
+  const sib = ALL_THEMES.filter((x) => x.month === t.month && x.slug !== t.slug).map((x) => ({ t: `${t.month}月 ${x.title}`, d: `同じ${t.month}月の掲示と朝礼`, href: g ? gyoshuPath(x, g) : themePath(x) }));
+  const toG = (r) => {
+    const m = g && r.href.match(/^\/anzen\/theme\/([^/]+)\/$/);
+    const x = m && ALL_THEMES.find((y) => y.slug === m[1]);
+    return x ? { ...r, href: gyoshuPath(x, g) } : r;
+  };
   const k = kauOfTheme(t.slug);
-  const all = [...sib, ...(t.related || []), ...(k ? [{ t: `そろえる物：${k.t}`, href: kauPath(k.key) }] : []), ...yomiBack(g ? gyoshuPath(t, g) : themePath(t))];
-  return all.length ? `<section class="sec paper np" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel">${all.map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('')}</ul>\n</section>` : '';
+  const all = [
+    ...yomiBack(g ? gyoshuPath(t, g) : themePath(t)),
+    ...(THEME_KANREN[t.slug] || []).map(toG),
+    ...(k ? [{ t: `そろえる物：${k.t}`, d: '選ぶときに見る所と、そろえる理由', href: kauPath(k.key) }] : []),
+    ...sib,
+    ...(t.related || []).map((r) => toG({ ...r, d: r.d || relD(r.href) })),
+  ];
+  const seen = new Set([relKey(themePath(t))]);
+  const uniq = all.filter((r) => {
+    const key = relKey(r.href);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  // そろえる物（#94）は5本をこえても落とさない：入らなければ5本めと入れかえる
+  const top = uniq.slice(0, MAX_KANREN);
+  const kau = uniq.find((r) => r.href.startsWith('/soroeru/'));
+  if (kau && !top.includes(kau)) top[MAX_KANREN - 1] = kau;
+  return top;
+};
+const links = (t, g) => {
+  const all = relLinks(t, g);
+  return all.length ? `<section class="sec paper np" aria-labelledby="rel-h">\n<h2 class="sec-h" id="rel-h">あわせて見る</h2>\n<ul class="krel">${all.map((r) => `<li><a href="${r.href}">${esc(r.t)}<span class="ym-d">${esc(r.d)}</span></a></li>`).join('')}</ul>\n</section>` : '';
 };
 
 const fmtDate = (iso) => {
