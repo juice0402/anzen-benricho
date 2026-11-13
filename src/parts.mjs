@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { esc, fudaLabel } from './layout.mjs';
 import { GYOSHU } from './data/gyoshu.mjs';
 import { PHOTO, photoBase } from './data/photos.mjs';
+import { YOMIMONO, yomimonoPath } from './data/yomimono/index.mjs';
 
 // 写真（16:9）。ファイルがまだない名前は何も出さない。1画面目の写真は first で先に読む
 const PUB = new URL('../public', import.meta.url).pathname;
@@ -45,3 +46,16 @@ ${extra}
 export const SAKUTTO_SEISOU = `<a href="https://sakutto-keisan.com/seisou-jikan/">清掃の作業時間の計算（サクッと計算）</a>`;
 // サクッと計算の現場手帳（C-021。清掃の現場の記録と見積もりの目安）
 export const SAKUTTO_GENBA = `<a href="https://sakutto-keisan.com/genba/">清掃の現場手帳（サクッと計算）</a>`;
+
+// 読みものから戻るリンク（#98）：読みものの links でこのページ（パスがそのまま同じ）をつないだ読みもの、新しい順に2本まで
+export const yomiBack = (path) =>
+  YOMIMONO.filter((y) => y.links.some((l) => l.href === path))
+    .sort((a, b) => b.published.localeCompare(a.published))
+    .slice(0, 2)
+    .map((y) => ({ t: `読みもの：${y.h1}`, href: yomimonoPath(y) }));
+export const yomiBackLi = (path) => yomiBack(path).map((r) => `<li><a href="${r.href}">${esc(r.t)}</a></li>`).join('');
+// 「あわせて見る」の節がないページ用。読みものがないときは何も出さない
+export const yomiBackSec = (path, np = 'np') => {
+  const li = yomiBackLi(path);
+  return li ? `<section class="sec paper${np ? ' np' : ''}" aria-labelledby="yb-h">\n<h2 class="sec-h" id="yb-h">あわせて見る</h2>\n<ul class="krel">${li}</ul>\n</section>` : '';
+};

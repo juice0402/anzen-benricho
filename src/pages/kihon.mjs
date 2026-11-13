@@ -3,7 +3,7 @@
 import { page, esc, script, clientLib, adSlot, fudaLabel } from '../layout.mjs';
 import { kihonHubDesc, kagakuHubDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
-import { bandHead, gyoshuPath } from '../parts.mjs';
+import { bandHead, gyoshuPath, yomiBackLi } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { KIHON, BANDS } from '../data/kihon/index.mjs';
 import { fmtDate, HOUREI, todayJst } from '../data/hourei.mjs';
@@ -289,13 +289,16 @@ const faqBlock = (p) =>
 </section>`
     : '';
 
-const relatedBlock = (p) =>
-  p.related && p.related.length
+// 最後にこのページをつないだ読みもの（#98）
+const relatedBlock = (p) => {
+  const li = (p.related || []).map((r) => `<li><a href="${esc(r.href)}">${esc(r.t)}</a></li>`).join('') + yomiBackLi(p.path);
+  return li
     ? `<section class="sec paper np" aria-labelledby="kr-h">
 <h2 class="sec-h" id="kr-h">あわせて見る</h2>
-<ul class="krel">${p.related.map((r) => `<li><a href="${esc(r.href)}">${esc(r.t)}</a></li>`).join('')}</ul>
+<ul class="krel">${li}</ul>
 </section>`
     : '';
+};
 
 const srcBlock = (p) => `<section class="sec sec-src np" aria-labelledby="src-h">
 <h2 class="sec-h" id="src-h">出典</h2>

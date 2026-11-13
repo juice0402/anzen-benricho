@@ -106,3 +106,40 @@ test('読みもの：毎週の出典の点検に記事の出典が入る（確�
   assert.match(src, /for \(const y of YOMIMONO\) for \(const s of y\.src\) add\(\{ t: s\.t, u: s\.url \}/);
   assert.ok(!/YOMIMONO\.map\(\(y\) => \[[^\]]*checked/.test(src), '記事の確認日を期限の点検に入れている');
 });
+
+// 読みものから戻るリンク（#98）：links でつないだサイトの中のページに「読みもの：<h1>」が出て、つないでいないページには出ない。
+// ページは作るところ（src/pages）から組み立て、ビルドしたあと（dist がある）は dist の HTML でも同じことを確かめる
+test('読みもの：つないだページに読みものへ戻るリンクがあり、つないでいないページには出ない', async () => {
+  const { MONTH, THEMES, themesInOrder } = await import('../src/data/themes.mjs');
+  const { nextKaisei } = await import('../src/data/hourei.mjs');
+  const mods = await Promise.all(['home', 'gyoshu', 'months', 'theme', 'hourei', 'shikaku', 'kihon', 'kiroku', 'yomimono', 'info'].map((n) => import(`../src/pages/${n}.mjs`)));
+  const [home, gyoshu, months, theme, hourei, shikaku, kihon, kiroku, yomimono, info] = mods.map((m) => m.default);
+  const ctx = { month: MONTH, themes: THEMES, allThemes: themesInOrder(), kaisei: nextKaisei() };
+  const built = new Map(
+    [home(ctx), ...gyoshu(ctx), ...months(ALL_THEMES, MONTH), kiroku(ALL_THEMES), ...ALL_THEMES.flatMap(theme), ...hourei(), ...shikaku(), ...kihon(), ...yomimono(), ...info()]
+      .filter((p) => p.html && !p.file)
+      .map((p) => [p.path, p.html]),
+  );
+  const DIST = new URL('../dist', import.meta.url).pathname;
+  const fromDist = existsSync(`${DIST}/index.html`);
+  const want = new Map();
+  for (const y of YOMIMONO)
+    for (const l of y.links.filter((x) => x.href.startsWith('/'))) want.set(l.href, [...(want.get(l.href) || []), y]);
+  for (const ys of want.values()) ys.sort((a, b) => b.published.localeCompare(a.published));
+  const sources = [['src', built]];
+  if (fromDist) sources.push(['dist', new Map([...built.keys()].map((p) => [p, readFileSync(`${DIST}${p}index.html`, 'utf8')]))]);
+  for (const [where, pages] of sources) {
+    for (const [path, ys] of want) {
+      const html = pages.get(path);
+      assert.ok(html, `${where}: ${path} のページがない（読みもの ${ys[0].slug} の links）`);
+      ys.forEach((y, i) => {
+        const a = `<a href="${yomimonoPath(y)}">読みもの：`;
+        if (i < 2) assert.ok(html.includes(a), `${where}: ${path} に ${y.slug} へ戻るリンクがない`);
+        else assert.ok(!html.includes(a), `${where}: ${path} に読みものが3本以上`);
+      });
+    }
+    for (const [path, html] of pages) if (!want.has(path)) assert.ok(!html.includes('">読みもの：'), `${where}: ${path} はつないでいないのに読みものへ戻るリンクがある`);
+  }
+  for (const p of ['/anzen/12/', '/anzen/1/', '/anzen/2/', '/anzen/theme/kanki/', '/kihon/setsubi/', '/anzen/theme/tentou/', '/anzen/theme/tentou/seisou/'])
+    assert.ok(built.get(p)?.includes('">読みもの：'), `${p} に読みものへ戻るリンクがない`);
+});
