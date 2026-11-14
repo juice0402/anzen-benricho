@@ -17,7 +17,7 @@ CLAUDE.md は1万字以内に保つ。経緯・くわしいことは docs/ へ�
 - 資格の更新の期限 `/shikaku/koushin/` と資格ごとのページ（`src/data/shikaku.mjs`、計算は `src/client/koushin.js`・.ics は `src/client/ics.mjs`。端末の中だけ）。くわしくは docs/shikumi.md の「資格の更新の期限」
 - 知識のページ `/kihon/`（`src/data/kihon/*.mjs`。1ページ1つの問い・答えは40字まで・判定か道具かチェックか印刷が必ずある・条文は e-Gov を出典に。`tests/kihon.test.mjs`）。義務の区別 `kb`（g 法令の義務・d 努力義務・s 職場で決めること）。1年 `/anzen/nenkan/`。くわしくは docs/shikumi.md の「知識のページ」
 - 化学物質のコーナー `/kagaku/`（知識のページと同じ部品）。くわしくは docs/shikumi.md の「化学物質のコーナー」
-- 読みもの `/yomimono/`（`src/data/yomimono/`・`src/pages/yomimono.mjs`。書き方とネタの山は `docs/yomimono-neta.md`、決まりは `tests/yomimono.test.mjs`）。くわしくは docs/shikumi.md の「読みもの」
+- 読みもの `/yomimono/`（`src/data/yomimono/`・`src/pages/yomimono.mjs`。書き方とネタの山は `docs/yomimono-neta.md`、決まりは `tests/yomimono.test.mjs`）。RSS `/yomimono/feed.xml` をビルドで作る。くわしくは docs/shikumi.md の「読みもの」
 - そろえる物 `/soroeru/`（`src/data/kau.mjs`・`src/pages/soroeru.mjs`）。楽天の商品はこのページだけ・AdSense なし・楽天以外へのリンクなし。商品はビルドの前に `scripts/fetch-rakuten.mjs` が取り `data/rakuten/`（.gitignore）へ。くわしくは docs/shikumi.md の「そろえる物」
 - 月ごとのテーマ `/anzen/`（一覧）と `/anzen/<月>/`（運動・テーマごとの業種の入口・その月の法改正）
 - 月のページは「◯月号」（暦 `src/koyomi.mjs`・今月の1問・委員会で話すこと）。カレンダーの購読 `/calendar.ics` をビルドで作る。くわしくは docs/shikumi.md の「◯月号」

@@ -101,6 +101,7 @@ ${adSlot('home')}`;
       body,
       js: script('remember') + '\n' + clientLib('rec') + '\n' + script('rec'),
       isHome: true,
+      feed: true,
       wide: true,
     }),
   };

@@ -22,6 +22,7 @@ CLAUDE.md には要約だけを書き、くわしい仕様と経緯はここに�
 ## 読みもの
 
 - 読みもの `/yomimono/`（11/4 夜 #59）：目次と記事 `/yomimono/<slug>/`。データは `src/data/yomimono/`（1本1ファイル・`index.mjs` の `YOMIMONO` に新しい順）、ページは `src/pages/yomimono.mjs`。書き方とネタの山は `docs/yomimono-neta.md`、決まりは `tests/yomimono.test.mjs`（ひな形の項目・本文900字以上・公的な出典2つ以上・つなぐ先1〜3・写真 `ym-<slug>`）。記事は90日のテストと見張りの C の対象外、毎週の出典の点検には入る。ヘッダー・フッター・トップの「調べる」から
+- RSS（11/15 #106）：`/yomimono/feed.xml`（RSS 2.0・全部を新しい順・題・URL・データの description・公開日）。`src/pages/yomimono.mjs` の `feedXml` を `scripts/build.mjs` が書き出す（サイトマップには入れない・◯月号は入れない）。目次・記事・トップの head に `rel="alternate"`、目次の下に「RSS で読む」。記事を足すと RSS にも入る
 - 戻るリンク（11/13 #98）：記事の `links` でつないだサイトの中のページ（パスがそのまま同じもの）の「あわせて見る」の最後に「読みもの：<h1>」（`src/parts.mjs` の `yomiBack`。新しい順に2本まで）。節のない月のページ・業種の入口は、読みものがあるときだけ同じ形の節を広告の枠の前に（`yomiBackSec`）。テーマ・知識・資格・法改正・月・業種の入口のページが対象で、ほかのページを links に入れたらテストが止まる
 
 ## そろえる物

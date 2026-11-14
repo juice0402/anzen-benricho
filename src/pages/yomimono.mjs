@@ -1,5 +1,6 @@
 // 読みもの：目次 /yomimono/ と記事 /yomimono/<slug>/（11/4 育てる山 #59）
 // 見た目はいまの部品だけ：記事の頭は知識・資格のページと同じ（パンくず・見出し・16:9 の写真）、目次の1行はトップの「こんなときは」と同じ形
+// RSS：/yomimono/feed.xml（#106）。scripts/build.mjs が feedXml で書き出す。目次・記事・トップの head で知らせる
 // 記事の並び：はじめの答え → 節（表があれば表）→ 運営者のひとこと（voice があるときだけ）→ 職場で確かめる → 広告の枠 → 出典。印刷は作らない
 import { page, esc, adSlot } from '../layout.mjs';
 import { SITE } from '../site.mjs';
@@ -10,6 +11,35 @@ import { yomimonoHubDesc } from '../describe.mjs';
 import { packLineReading } from '../pack-line.mjs';
 
 const CRUMB = { name: '読みもの', href: '/yomimono/' };
+export const FEED = '/yomimono/feed.xml';
+
+// RSS の日付（RFC 822）。公開日の日本の0時
+const rfc822 = (d) => new Date(`${d}T00:00:00+09:00`).toUTCString().replace('GMT', '+0000');
+
+/** RSS 2.0：読みものの全部を新しい順に（題・URL・データの description・公開日）。0本なら作らない */
+export function feedXml(list = YOMIMONO) {
+  if (!list.length) return '';
+  const items = list
+    .map((y) => {
+      const url = SITE.url + yomimonoPath(y);
+      return `<item><title>${esc(y.title)}</title><link>${url}</link><guid isPermaLink="true">${url}</guid><description>${esc(y.description)}</description><pubDate>${rfc822(y.published)}</pubDate></item>`;
+    })
+    .join('\n');
+  const newest = list.map((y) => y.published).sort().pop();
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>${esc(SITE.name)}の読みもの</title>
+<link>${SITE.url}/yomimono/</link>
+<description>季節のネタや法改正を1本ずつ</description>
+<language>ja</language>
+<lastBuildDate>${rfc822(newest)}</lastBuildDate>
+<atom:link href="${SITE.url}${FEED}" rel="self" type="application/rss+xml"/>
+${items}
+</channel>
+</rss>
+`;
+}
 
 const table = (t) => `<div class="ym-tw"><table class="doc-tbl ym-t"><thead><tr>${t.head.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows
   .map((r) => `<tr>${r.map((c, i) => (i ? `<td>${esc(c)}</td>` : `<th scope="row">${esc(c)}</th>`)).join('')}</tr>`)
@@ -67,6 +97,7 @@ ${src}`;
       description: y.description,
       path,
       corner: 'yomimono',
+      feed: true,
       body,
       ld: [{ '@context': 'https://schema.org', '@type': 'Article', headline: y.h1, datePublished: y.published, dateModified: y.checked, image: `${SITE.url}/img/photo/${y.photo}-1200.webp`, inLanguage: 'ja', publisher: { '@type': 'Organization', name: SITE.name, url: `${SITE.url}/` } }],
       crumbs: [CRUMB, { name: y.h1 }],
@@ -84,6 +115,7 @@ function hub(list) {
 <ul class="ny ym-list">${list
     .map((y) => `<li><a href="${yomimonoPath(y)}">${photo(y.photo, { sizes: '96px', cls: 'ph ph-s' })}<span><b>${esc(y.h1)}</b><span>${esc(y.d)}</span></span></a></li>`)
     .join('')}</ul>
+<p><a href="${FEED}">RSS で読む</a></p>
 </section>`;
   return {
     path,
@@ -92,6 +124,7 @@ function hub(list) {
       description: yomimonoHubDesc(list, fmtDate),
       path,
       corner: 'yomimono',
+      feed: true,
       body,
       crumbs: [{ name: '読みもの' }],
     }),
