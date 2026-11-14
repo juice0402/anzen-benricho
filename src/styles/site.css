@@ -134,9 +134,9 @@ body { background: #fff; }
 .hr-list a { color: var(--ink); }
 .hr-list a:hover .hr-t { text-decoration: underline; }
 .hr-date { color: var(--brand); }
-.hr-date.soon, .hr-day.soon, .ks-lim b, .kt-out b, .kres.on { color: var(--red); }
+.hr-date.soon, .hr-day.soon, .ks-lim b, .db-over td:nth-child(4), .kt-out b, .kres.on { color: var(--red); }
 .kt-out .sk-ok b { color: var(--ink); }
-.pg-lead, .u-note, .hr-k, .hr-st, .hr-facts dt, .ks-note, .ks-pick legend, .ks-date, .ks-rules dt span, .ktbl .law, .ks-hint, .kres, .kt-out span, .kt-law, .kt-def, .kt-notes { color: var(--muted); }
+.pg-lead, .u-note, .hr-k, .hr-st, .hr-facts dt, .ks-note, .ks-pick legend, .ks-date, .ks-rules dt span, .db-d, .ktbl .law, .ks-hint, .kres, .kt-out span, .kt-law, .kt-def, .kt-notes { color: var(--muted); }
 .ks-date input, .ks-date textarea, .ks-ctl select, .ks-ctl input, .kt-in input[type="number"], .kt-in input[type="date"], .kt-in input[type="text"], .kt-in select { border: 1.5px solid #9aa0a6; border-radius: 3px; background: #fff; color: var(--ink); }
 .ks-out, .kt-out { border-top: 2px solid var(--brand); }
 .ks-ctl { background: var(--soft); }

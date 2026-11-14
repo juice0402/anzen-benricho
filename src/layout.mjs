@@ -36,7 +36,8 @@ export const css = () => minCss(read('styles/base.css') + read('styles/site.css'
 export const pageCss = (name) => minCss(read(`styles/${name}.css`));
 export const script = (name) => minJs(read(`client/${name}.js`));
 // テストでも使う部品（src/client/<名前>.mjs）を、export を外してページのスクリプトの前に入れる
-export const clientLib = (name) => minJs(read(`client/${name}.mjs`).replace(/^export /gm, ''));
+// 部品どうしの import の行も外す（先に入れた部品の関数をそのまま使う。daicho は ics のあと）
+export const clientLib = (name) => minJs(read(`client/${name}.mjs`).replace(/^import .*;$/gm, '').replace(/^export /gm, ''));
 
 // 広告の枠：審査に通って広告ユニットのIDを入れるまでは何も出さない。出すときは「広告」と書き、ボタンや掲示から離した所に置く
 export const adSlot = (name) => {

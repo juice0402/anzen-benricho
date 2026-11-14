@@ -157,6 +157,11 @@ button { font: inherit; color: inherit; }
 .ks-cal { display: grid; gap: 2px; padding-top: 6px; }
 .ks-cal[hidden] { display: none; }
 .ks-cal-b { justify-self: start; background: none; border: 0; padding: 0; min-height: 44px; font-size: 16px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.ks-dai { display: flex; flex-wrap: wrap; align-items: end; gap: 0 14px; padding-top: 4px; }
+.ks-dai .ks-date input { max-width: 9em; }
+.ks-db .sk-t td:nth-child(-n+2) { white-space: normal; word-break: break-all; }
+.ks-db .sk-t td:nth-child(2) { min-width: 5.5em; }
+.db-d { display: block; font-size: 11px; }
 .ks-rules { margin: 0; display: grid; gap: 4px; }
 .ks-rules dt { font-weight: 700; padding-top: 8px; display: flex; justify-content: space-between; gap: 8px; }
 .ks-rules dt span { font-weight: 400; font-size: 13px; white-space: nowrap; }
