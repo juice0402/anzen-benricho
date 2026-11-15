@@ -143,3 +143,34 @@ test('読みもの：つないだページに読みものへ戻るリンクが�
   for (const p of ['/anzen/12/', '/anzen/1/', '/anzen/2/', '/anzen/theme/kanki/', '/kihon/setsubi/', '/anzen/theme/tentou/', '/anzen/theme/tentou/seisou/'])
     assert.ok(built.get(p)?.includes('">読みもの：'), `${p} に読みものへ戻るリンクがない`);
 });
+
+test('読みもの：RSS /yomimono/feed.xml（全部・新しい順・本番の URL・エスケープ。#106）', async () => {
+  const { feedXml, FEED, default: yomimonoPages } = await import('../src/pages/yomimono.mjs');
+  assert.equal(FEED, '/yomimono/feed.xml');
+  const xml = feedXml();
+  assert.ok(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"'));
+  const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
+  assert.equal(items.length, YOMIMONO.length, 'RSS の件数が YOMIMONO とちがう');
+  items.forEach((it, i) => {
+    const y = YOMIMONO[i];
+    assert.ok(it.includes(`<link>https://anzen-benricho.com${yomimonoPath(y)}</link>`), `${y.slug} のリンク`);
+    assert.ok(it.includes(`<description>${y.description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')}</description>`), `${y.slug} の説明文が description のままでない`);
+    assert.match(it, /<pubDate>[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} \+0000<\/pubDate>/);
+  });
+  for (const [, u] of xml.matchAll(/<(?:link|guid[^>]*)>([^<]*)</g)) assert.ok(u.startsWith('https://anzen-benricho.com/'), `本番でない URL ${u}`);
+  assert.ok(!xml.includes('pages.dev'), 'pages.dev が入っている');
+  // XML の特別な字：中身に & < > がそのまま入らない
+  const evil = { ...YOMIMONO[0], title: 'A & B <c>', description: '1 > 0 & "x"' };
+  const x2 = feedXml([evil]);
+  assert.ok(x2.includes('<title>A &amp; B &lt;c&gt;</title>') && x2.includes('<description>1 &gt; 0 &amp; &quot;x&quot;</description>'));
+  assert.ok(!/&(?!amp;|lt;|gt;|quot;)/.test(x2), 'エスケープしていない &');
+  assert.equal(feedXml([]), '', '0本でも RSS ができる');
+  // head で知らせる（目次・記事・トップ）と、目次の「RSS で読む」
+  const link = '<link rel="alternate" type="application/rss+xml" title="安全衛生の便利帳の読みもの" href="/yomimono/feed.xml">';
+  const pages = yomimonoPages();
+  for (const p of pages) assert.ok(p.html.includes(link), `${p.path} の head に RSS がない`);
+  assert.ok(pages[0].html.includes('<a href="/yomimono/feed.xml">RSS で読む</a>'), '目次に「RSS で読む」がない');
+  const build = readFileSync(new URL('../scripts/build.mjs', import.meta.url), 'utf8');
+  assert.match(build, /feedXml\(\)/, 'build.mjs が RSS を書き出していない');
+  assert.match(readFileSync(new URL('../src/pages/home.mjs', import.meta.url), 'utf8'), /feed: true/, 'トップの head に RSS がない');
+});
