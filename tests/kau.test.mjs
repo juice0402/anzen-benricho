@@ -8,6 +8,7 @@ import monthPages from '../src/pages/months.mjs';
 import themePages from '../src/pages/theme.mjs';
 import { GYOSHU } from '../src/data/gyoshu.mjs';
 import SETSUBI from '../src/data/kihon/setsubi.mjs';
+import kirokuPage from '../src/pages/kiroku.mjs';
 
 const NG = ['おすすめ', 'お得', '最安', '今すぐ', 'しましょう', 'ぜひ', '便利', '簡単', '安心', 'ポイント', 'コツ', '定価', '手遅れ'];
 
@@ -149,4 +150,24 @@ test('問題集：月の節の「◯月号へ」の下に、その月のそろ�
   assert.ok(shown.length >= 9, `そろえる物の1行のある月が ${shown.length}`);
   assert.ok(!secs.some(([s, m]) => m === '10' && s.includes('/soroeru/')));
   noShop(q.html, '/anzen/quiz/');
+});
+
+// #110：1年の実施記録の12か月のテーマの各月に、その月のそろえる物へ文字のリンク。紙（.kr-sheet）には出さない
+test('1年の実施記録：12か月のテーマの各月にそろえる物のリンク、紙には出さない', () => {
+  const html = kirokuPage(ALL_THEMES).html;
+  const list = html.match(/<ul class="krel kr-list">[\s\S]*?<\/ul>/)?.[0] ?? '';
+  const sheet = html.match(/<div class="psheet pg kr-sheet">[\s\S]*?<\/div><\/div>/)?.[0] ?? '';
+  assert.ok(list && sheet);
+  let n = 0;
+  for (const m of Object.keys(KAU_MONTH).map(Number)) {
+    const k = kauOfMonth(m);
+    if (!k) continue; // ページがない・月のリンクを出さない物（CO2モニター）
+    n++;
+    const li = list.match(new RegExp(`<li><b>${m}月</b>[\\s\\S]*?</li>`))?.[0] ?? '';
+    assert.ok(li.includes(`<a href="/soroeru/${k.key}/">そろえる物：${k.t}</a>`), `${m}月：そろえる物のリンクがない`);
+  }
+  assert.ok(n >= 9, `リンクのある月が ${n}`);
+  for (const m of [3, 9, 10]) assert.ok(!(list.match(new RegExp(`<li><b>${m}月</b>[\\s\\S]*?</li>`))?.[0] ?? '').includes('/soroeru/'), `${m}月`);
+  assert.ok(!sheet.includes('/soroeru/'), '紙にそろえる物のリンクがある');
+  noShop(html, '/anzen/kiroku/');
 });
