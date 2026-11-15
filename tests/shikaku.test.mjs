@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { icsLimit } from '../src/client/ics.mjs';
 import { DAI_KEY, daiPut, daiDel, daiRows, daiLeft, daiName } from '../src/client/daicho.mjs';
 import { SHIKAKU, KOUSHIN_PAGES, SHIKAKU_CHECKED, BOUKA_CHECKED, NITTEI_CHECKED, koushinPath } from '../src/data/shikaku.mjs';
-import shikakuPages from '../src/pages/shikaku.mjs';
+import shikakuPages, { DAI_ROWS, DAI_COLS } from '../src/pages/shikaku.mjs';
 
 const day = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const lim = (key, y, m, d) => {
@@ -173,7 +173,7 @@ test('台帳：防火・防災の4月1日の数え方が計算と同じ', () => 
   }
 });
 
-test('台帳：入口だけに節とボタン。呼び名の欄は text・10字まで。0件は見出しと1行', () => {
+test('台帳：入口に節。資格ごとのページはボタンと入口の台帳への1行だけ。呼び名の欄は text・10字まで', () => {
   const [hub, ...rest] = shikakuPages();
   const main = hub.html.split('<main')[1];
   assert.ok(main.includes('id="db-h"') && main.indexOf('id="db-h"') > main.indexOf('id="ks-h"') && main.indexOf('id="db-h"') < main.indexOf('id="nt-h"'));
@@ -181,5 +181,34 @@ test('台帳：入口だけに節とボタン。呼び名の欄は text・10字�
   assert.ok(main.includes('id="k-save"'));
   assert.ok(hub.html.includes('anzen-shikaku-v1'), 'ページに台帳の部品');
   assert.ok(!hub.html.includes('import {'), 'import の行はページに入れない');
-  for (const p of rest) assert.ok(!p.html.includes('id="db-h"') && !p.html.includes('anzen-shikaku-v1'), `${p.path} には台帳を入れない`);
+  assert.equal(rest.length, 3);
+  for (const p of rest) {
+    const m = p.html.split('<main')[1].split('</main>')[0];
+    assert.ok(!m.includes('id="db-h"') && !m.includes('db-sheet') && !m.includes('print-btn'), `${p.path} には台帳の表と紙を入れない`);
+    assert.match(m, /<input id="k-who" type="text" inputmode="text" maxlength="10"/, `${p.path} に呼び名の欄`);
+    assert.ok(m.includes('id="k-save"') && p.html.includes('anzen-shikaku-v1'), `${p.path} に「台帳に残す」`);
+    assert.equal((m.match(/href="\/shikaku\/koushin\/#db-h"/g) || []).length, 1, `${p.path} に入口の台帳への1行`);
+    assert.ok(m.indexOf('#db-h') > m.indexOf('id="k-save"') && m.indexOf('#db-h') < m.indexOf('id="nt-h"'), `${p.path} の1行は計算の紙の中`);
+  }
+});
+
+// 台帳の A4 の紙（#104）
+test('台帳の紙：.psheet の中に表とサイト名と QR。0件のときは紙もボタンも hidden', () => {
+  const [hub] = shikakuPages();
+  const m = hub.html.split('<main')[1];
+  const sheet = /<div class="psheet pg db-sheet" hidden>([\s\S]*?)<\/div><\/div>/.exec(m);
+  assert.ok(sheet, '紙は hidden で入る');
+  assert.equal((sheet[1].match(/<tr>/g) || []).length, DAI_ROWS + 1, '行は決まった数（増やさない）');
+  assert.deepEqual(DAI_COLS.slice(0, 5), ['呼び名', '資格', '修了日', '期限', 'あと']);
+  assert.match(sheet[1], /<p class="ps-foot"><span>安全衛生の便利帳<\/span><span>anzen-benricho\.com<\/span><svg[^>]*class="qr"/);
+  assert.ok(sheet[1].includes('class="ps-note db-more" hidden'), '入りきらない分の1行');
+  assert.match(m, /<button class="btn print-btn db-print" type="button" hidden>A4で印刷<\/button>/);
+  assert.ok(m.indexOf('db-sheet') > m.indexOf('id="db-h"') && m.indexOf('db-sheet') < m.indexOf('id="nt-h"'));
+  // 印刷には紙だけ（ほかの節は np）
+  for (const id of ['ks-h', 'nt-h', 'rule-h', 'memo-h', 'sr-h']) assert.match(m, new RegExp(`<section class="[^"]*\\bnp\\b[^"]*" aria-labelledby="${id}"`), `${id} は印刷に出さない`);
+  const css = readFileSync(new URL('../src/styles/print.css', import.meta.url), 'utf8');
+  assert.ok(css.includes('.psheet.db-sheet:not([hidden]) { display: flex !important; }'));
+  const js = readFileSync(new URL('../src/client/daicho.js', import.meta.url), 'utf8');
+  assert.ok(js.includes("'ほかの' + (rows.length - trs.length) + '件は画面の台帳で見る'"));
+  assert.ok(js.includes('sheet.hidden = !rows.length') && js.includes('pbtn.hidden = !rows.length'), '0件は紙もボタンも出さない');
 });

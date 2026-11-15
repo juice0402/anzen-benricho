@@ -7,13 +7,17 @@ import { bandHead, SAKUTTO_SEISOU, SAKUTTO_GENBA, yomiBackLi, yomiBack } from '.
 import { KOUSHIN_KANREN, relKey, relD, SAKUTTO_D, MAX_KANREN } from '../data/kanren.mjs';
 import { SHIKAKU, SHIKAKU_CHECKED, NITTEI_CHECKED, KOUSHIN_PAGES, koushinPath } from '../data/shikaku.mjs';
 import { fmtDate } from '../data/hourei.mjs';
+import { qrSvg } from '../qr.mjs';
 
 const memoOf = (s) => `${s.rule.split('。')[0]}。再講習：${s.when}`;
 const attrs = (s) =>
   `value="${s.key}" data-name="${esc(s.name)}" data-years="${s.years}" data-early="${s.early}"${s.count ? ` data-count="${s.count}"` : ''} data-memo="${esc(memoOf(s))}"`;
 
 // 計算の紙。pick が true なら資格をえらぶ（入口）、ページでは hidden で1つ
-const form = (path, { pick = true, fixed = null, paper = '修了証書', note = '' } = {}) => `<section class="sec paper ks" aria-labelledby="ks-h">
+// 資格ごとのページから入口の台帳へ（#104）
+const DAI_HREF = '/shikaku/koushin/#db-h';
+
+const form = (path, { pick = true, fixed = null, paper = '修了証書', note = '' } = {}) => `<section class="sec paper ks${pick ? ' np' : ''}" aria-labelledby="ks-h">
 <h2 class="sec-h" id="ks-h">期限を出す</h2>
 ${pick
     ? `<fieldset class="ks-pick"><legend>資格</legend>
@@ -27,8 +31,9 @@ ${SHIKAKU.map((s, i) => `<label for="k-${s.key}"><input type="radio" name="k" id
 <p class="ks-re" id="k-re"></p>
 <p class="ks-note">正確な期限は、${esc(paper)}の表示で確かめてください。</p>
 <p class="ks-cal"><button type="button" class="ks-cal-b" id="k-cal" data-url="${SITE.url}${path}">カレンダーに入れる</button><span class="ks-note">期限・6か月前・1か月前の予定が入ります</span></p>
-${pick ? `<div class="ks-dai"><label class="ks-date" for="k-who">呼び名（なくてもよい）<input id="k-who" type="text" inputmode="text" maxlength="10" autocomplete="off" placeholder="例：Aさん"></label><button type="button" class="ks-cal-b" id="k-save">台帳に残す</button></div>
-<p class="ks-hint" id="k-msg" aria-live="polite"></p>` : ''}
+<div class="ks-dai"><label class="ks-date" for="k-who">呼び名（なくてもよい）<input id="k-who" type="text" inputmode="text" maxlength="10" autocomplete="off" placeholder="例：Aさん"></label><button type="button" class="ks-cal-b" id="k-save">台帳に残す</button></div>
+<p class="ks-hint" id="k-msg" aria-live="polite"></p>
+${pick ? '' : `<p class="ks-hint">残した分は<a href="${DAI_HREF}">資格の期限の台帳</a>に並びます</p>`}
 </div>
 ${note ? `<p class="ks-note">${esc(note)}</p>` : ''}
 </section>`;
@@ -46,39 +51,50 @@ const nitteiBlock = (n) => `<section class="sec paper" aria-labelledby="nt-h">
 <dl class="ktbl">${NT_ROWS.map(([k, f]) => `<div><dt>${k}</dt><dd>${esc(n[f])}</dd></div>`).join('')}<div><dt>出典</dt><dd>${n.src.map((s) => `<a class="law" href="${esc(s.u)}" rel="noopener">${esc(s.t)}</a>`).join('')}</dd></div><div><dt>確認日</dt><dd>${fmtDate(n.checked)}</dd></div></dl>
 </section>`;
 
-const js = (dai = false) => `${clientLib('ics')}\n${script('koushin')}${dai ? `\n${clientLib('daicho')}\n${script('daicho')}` : ''}`;
+const js = () => `${clientLib('ics')}\n${script('koushin')}\n${clientLib('daicho')}\n${script('daicho')}`;
 
 // 資格の期限の台帳（#102）：入口の計算の下。記録は端末の中だけ（src/client/daicho.mjs・daicho.js。localStorage anzen-shikaku-v1）
-const daichoBlock = () => `<section class="sec paper ks-db" aria-labelledby="db-h">
+// 印刷（#104）：1件以上あるときだけ A4 の紙（.psheet。画面には出さず印刷だけ）と「A4で印刷」。行は DAI_ROWS で増やさない。入りきらない分は紙の下に1行
+export const DAI_ROWS = 16;
+export const DAI_COLS = ['呼び名', '資格', '修了日', '期限', 'あと', '済'];
+const daichoBlock = (path) => `<section class="sec paper ks-db" aria-labelledby="db-h">
 <h2 class="sec-h" id="db-h">資格の期限の台帳</h2>
-<div class="sk-wrap db-wrap" hidden><table class="sk-t db-t"><thead><tr><th>呼び名</th><th>資格</th><th>期限</th><th>あと</th><th></th></tr></thead><tbody class="db-body"></tbody></table></div>
-<p class="ks-hint db-none">「台帳に残す」を押すと、ここに並びます</p>
+<div class="sk-wrap db-wrap np" hidden><table class="sk-t db-t"><thead><tr><th>呼び名</th><th>資格</th><th>期限</th><th>あと</th><th></th></tr></thead><tbody class="db-body"></tbody></table></div>
+<p class="ks-hint db-none np">「台帳に残す」を押すと、ここに並びます</p>
+<div class="psheet pg db-sheet" hidden><div class="ps-in">
+<p class="ps-title">資格の期限の台帳</p>
+<p class="ps-note">印刷した日 <span class="db-pd"></span>。「あと」はこの日からの日数です</p>
+<table class="pg-t pg-d"><thead><tr>${DAI_COLS.map((c) => `<th>${c}</th>`).join('')}</tr></thead><tbody>${`<tr>${'<td></td>'.repeat(DAI_COLS.length)}</tr>`.repeat(DAI_ROWS)}</tbody></table>
+<p class="ps-note db-more" hidden></p>
+<p class="ps-foot"><span>${esc(SITE.name)}</span><span>${SITE.url.replace('https://', '')}</span>${qrSvg(SITE.url + path)}</p>
+</div></div>
+<button class="btn print-btn db-print" type="button" hidden>A4で印刷</button>
 </section>`;
 
 function entrance() {
   const path = '/shikaku/koushin/';
   const pages = KOUSHIN_PAGES;
   // 入口の決まりは資格ごとに2行まで。くわしい話は各ページだけに書く
-  const table = `<section class="sec paper" aria-labelledby="rule-h">
+  const table = `<section class="sec paper np" aria-labelledby="rule-h">
 <h2 class="sec-h" id="rule-h">更新の決まり</h2>
 <dl class="ks-rules">${SHIKAKU.map((s) => `<dt><a href="${koushinPath(s.page)}">${esc(s.name)}</a><span>${esc(s.every)}</span></dt><dd><p>${esc(s.why)}。</p><p>${esc(s.rule.split('。')[0])}。</p></dd>`).join('')}</dl>
 </section>`;
   const uniq = [...new Map(SHIKAKU.flatMap((s) => s.src).map((s) => [s.u, s])).values()];
   const body = `${bandHead('講習・資格', '清掃作業監督者などの更新の期限', '<p class="pg-lead">修了証書の日付から、次の期限が出ます</p>', 'shikaku')}
 ${form(path)}
-${daichoBlock()}
-<section class="sec paper" aria-labelledby="nt-h">
+${daichoBlock(path)}
+<section class="sec paper np" aria-labelledby="nt-h">
 <h2 class="sec-h" id="nt-h">再講習の日程と受講料</h2>
 <dl class="ktbl">${SHIKAKU.map((s) => `<div><dt><a href="${koushinPath(s.page)}">${esc(s.name)}</a></dt><dd>${esc(s.ichi)}</dd></div>`).join('')}</dl>
 <p class="ks-note">確認日 ${fmtDate(NITTEI_CHECKED)}。出典は資格ごとのページに</p>
 </section>
 ${table}
-<section class="sec paper" aria-labelledby="memo-h">
+<section class="sec paper np" aria-labelledby="memo-h">
 <h2 class="sec-h" id="memo-h">資格ごとのページ</h2>
 <p>運営者は、病院清掃受託責任者・清掃作業監督者・甲種防火管理者・防災管理者の4つとも持っています。講習を受けたときのことは、資格ごとのページに書きました。</p>
 <ul class="krel">${pages.map((p) => `<li><a href="${koushinPath(p.page)}">${esc(p.h1)}</a></li>`).join('')}</ul>
 </section>
-<section class="sec paper" aria-labelledby="sr-h">
+<section class="sec paper np" aria-labelledby="sr-h">
 <h2 class="sec-h" id="sr-h">あわせて見る</h2>
 <ul class="krel"><li><a href="/shikaku/kigen/">期限のある資格・ない資格</a></li><li><a href="/shikaku/tokubetsu/">特別教育の一覧</a></li><li><a href="/anzen/theme/oosouji/seisou/">清掃・ビルメンの年末の大掃除</a></li><li><a href="/anzen/theme/kansen/seisou/">清掃・ビルメンの冬の感染症（おう吐物の処理）</a></li><li>${SAKUTTO_SEISOU}</li><li>${SAKUTTO_GENBA}</li>${yomiBackLi(path)}</ul>
 </section>
@@ -92,7 +108,7 @@ ${adSlot('end')}`;
       path,
       corner: 'kyotsu',
       body,
-      js: js(true),
+      js: js(),
       crumbs: [{ name: '資格の更新の期限' }],
     }),
     lastmod: [SHIKAKU_CHECKED, NITTEI_CHECKED, ...pages.map((p) => p.checked)].sort().pop(),
