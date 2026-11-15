@@ -72,7 +72,7 @@ const FOOT_LINKS = [
   ['/tokushoho/', '特定商取引法に基づく表記'],
 ];
 
-export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false, noAds = false, noindex: forceNoindex = false, ogTitle = '', wide = false, head = '', moreCss = '' }) {
+export function page({ title, description, path, corner, body, js = '', crumbs = [], ld = [], isHome = false, noAds = false, noindex: forceNoindex = false, ogTitle = '', wide = false, head = '', moreCss = '', feed = false }) {
   const base = '';
   const url = SITE.url + path;
   const noindex = !SITE.launched || forceNoindex;
@@ -123,7 +123,7 @@ ${noindex ? '' : `<meta property="og:url" content="${url}">\n`}${noindex ? '<met
 <link rel="icon" href="/favicon.svg?v=${ICON_V.svg}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=${ICON_V.apple}">
 <link rel="manifest" href="/manifest.webmanifest?v=${ICON_V.manifest}">
-${ads ? ADSENSE_TAG() : ''}
+${feed && YOMIMONO.length ? `<link rel="alternate" type="application/rss+xml" title="${esc(SITE.name)}の読みもの" href="/yomimono/feed.xml">\n` : ''}${ads ? ADSENSE_TAG() : ''}
 <style>${css()}${moreCss}</style>
 ${lds}
 </head>

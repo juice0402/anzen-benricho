@@ -13,7 +13,7 @@ import shikakuPages from '../src/pages/shikaku.mjs';
 import kihonPages from '../src/pages/kihon.mjs';
 import monthPages from '../src/pages/months.mjs';
 import kirokuPage from '../src/pages/kiroku.mjs';
-import yomimonoPages from '../src/pages/yomimono.mjs';
+import yomimonoPages, { feedXml, FEED } from '../src/pages/yomimono.mjs';
 import soroeruPages from '../src/pages/soroeru.mjs';
 import packPages from '../src/pages/pack.mjs';
 import { PRODUCTS_PATH } from '../src/rakuten.mjs';
@@ -48,6 +48,9 @@ if (SITE.adsense) writeFileSync(join(DIST, 'ads.txt'), `google.com, ${SITE.adsen
 if (existsSync(join(ROOT, 'public'))) cpSync(join(ROOT, 'public'), DIST, { recursive: true });
 // カレンダーの購読（毎月1日の◯月号・運動の期間・法改正の施行日。#42）
 writeFileSync(join(DIST, 'calendar.ics'), calendarIcs({ themes: ALL_THEMES }));
+// 読みものの RSS（#106）。読みものがあるときだけ。サイトマップには入れない
+const feed = feedXml();
+if (feed) writeFileSync(join(DIST, FEED.slice(1)), feed);
 // Pages Functions（functions/pack/_middleware.js）を動かすのは /pack/ の下だけ。/pack/ そのものと、ほかのページは静的なまま（#82）
 writeFileSync(join(DIST, '_routes.json'), JSON.stringify(PACK_ROUTES, null, 2) + '\n');
 // 公開したら sitemap.xml（404 はのぞく）。lastmod は作り直した日

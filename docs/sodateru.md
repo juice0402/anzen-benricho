@@ -126,7 +126,7 @@
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-10）
 
-### [ ] 資格の期限の台帳（その2：A4の紙と資格ごとのページ）
+### [x] 資格の期限の台帳（その2：A4の紙と資格ごとのページ）（#104）
 - やること：「資格の期限を何人分も残す台帳（その1）」でできた台帳を、A4 1枚の台帳の紙にして印刷できるようにする（`.psheet`・紙のすみにサイト名と QR）。台帳が1件以上あるときだけ「印刷する」のボタンを出す。資格ごとのページ（kantoku・byouin・bouka）には「台帳に残す」と、入口の台帳への1行のリンクだけを足す。
 - できあがりの条件：`npm run check` が緑。印刷が A4 1枚（Playwright で PDF にして数える）。呼び名に `<b>` などを入れても紙の上で HTML にならない。資格ごとのページの計算の部分もスマホの1画面（390×660）に入る。スマホとパソコンのスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
 - 決まったこと：印刷は A4 1枚で、紙のすみにサイト名と QR（CLAUDE.md・claude/anzen-handoff.md の「大事な決めごと」）。記録は端末の中だけで送らない（CLAUDE.md）
@@ -136,7 +136,7 @@
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-10）
 
-### [ ] 読みものの RSS
+### [x] 読みものの RSS（#106）
 - やること：読みものの RSS `/yomimono/feed.xml` をビルドで作る（RSS 2.0。記事ごとに題・URL・説明文〔データの description〕・公開日〔published〕。新しい順・全部）。読みものの目次と記事のページ、トップの head に `<link rel="alternate" type="application/rss+xml">`（読みものが1本以上あるときだけ）。目次 /yomimono/ の下に「RSS で読む」の文字のリンクを1行。テストは tests/yomimono.test.mjs に足す。CLAUDE.md の「読みもの」の行と docs/shikumi.md の「読みもの」に RSS のことを短く
 - できあがりの条件：`npm run check` が緑。テストで、feed.xml の件数が `YOMIMONO` と同じ・リンクが https://anzen-benricho.com/ から始まる・pages.dev が入らない・XML の特別な字（& < >）がエスケープされている、を見る。docs/yomimono-neta.md の書き方は変えずに、記事を足すと RSS にも入る
 - 決まったこと：楽しさの「呼び戻せる入口：ホーム画面に追加・カレンダーの購読（.ics）・RSS」（claude/site-principles.md の「楽しさで、わざわざ来てもらう」）。ホーム画面に追加（/manifest.webmanifest）とカレンダーの購読（/calendar.ics）はもうあるので、まだの RSS を足す。形はサクッと計算の読みものの RSS（公開リポジトリ juice0402/sakutto-keisan の src/pages/yomimono.mjs の `FEED`・`feedXml`、src/layout.mjs の `feed`）に合わせる。外部のファイルは読まない（CLAUDE.md）

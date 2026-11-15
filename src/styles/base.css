@@ -162,6 +162,15 @@ button { font: inherit; color: inherit; }
 .ks-db .sk-t td:nth-child(-n+2) { white-space: normal; word-break: break-all; }
 .ks-db .sk-t td:nth-child(2) { min-width: 5.5em; }
 .db-d { display: block; font-size: 11px; }
+.db-print { margin-top: 12px; }
+.db-print[hidden], .psheet.db-sheet { display: none; }
+.pg-d { table-layout: fixed; }
+.pg-d th, .pg-d td { padding: .6cqw .7cqw; font-size: 2.4cqw; height: 5cqw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pg-d td:first-child { width: auto; }
+.pg-d th:nth-child(1) { width: 17%; }
+.pg-d th:nth-child(2) { width: 28%; }
+.pg-d th:nth-child(3), .pg-d th:nth-child(4) { width: 17.5%; }
+.pg-d th:nth-child(5) { width: 14%; }
 .ks-rules { margin: 0; display: grid; gap: 4px; }
 .ks-rules dt { font-weight: 700; padding-top: 8px; display: flex; justify-content: space-between; gap: 8px; }
 .ks-rules dt span { font-weight: 400; font-size: 13px; white-space: nowrap; }

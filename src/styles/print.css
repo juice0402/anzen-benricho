@@ -13,6 +13,8 @@
   /* 知識のページ：A4 の紙だけ */
   .np, .ks-ctl { display: none !important; }
   .psheet[hidden] { display: none !important; }
+  /* 資格の期限の台帳（#104）：画面では紙を出さず、1件以上あるときだけ印刷に出す */
+  .psheet.db-sheet:not([hidden]) { display: flex !important; }
   .ps-in { padding: 5cqw 6.5cqw 4cqw !important; gap: 2.4cqw !important; }
   .psheet { width: 186mm !important; height: 272mm !important; aspect-ratio: auto !important; border: 1px solid #9aa3a8 !important; box-shadow: none !important; margin: 0 !important; break-inside: avoid; }
   /* 紙のすみの QR：サイト名とドメインの右に。まわりの白い余白（4マス）は SVG の中にある */
