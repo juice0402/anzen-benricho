@@ -20,14 +20,14 @@ CLAUDE.md は1万字以内に保つ。経緯・くわしいことは docs/ へ�
 - 読みもの `/yomimono/`（`src/data/yomimono/`・`src/pages/yomimono.mjs`。書き方とネタの山は `docs/yomimono-neta.md`、決まりは `tests/yomimono.test.mjs`）。RSS `/yomimono/feed.xml` をビルドで作る。くわしくは docs/shikumi.md の「読みもの」
 - そろえる物 `/soroeru/`（`src/data/kau.mjs`・`src/pages/soroeru.mjs`）。楽天の商品はこのページだけ・AdSense なし・楽天以外へのリンクなし。商品はビルドの前に `scripts/fetch-rakuten.mjs` が取り `data/rakuten/`（.gitignore）へ。くわしくは docs/shikumi.md の「そろえる物」
 - 月ごとのテーマ `/anzen/`（一覧）と `/anzen/<月>/`（運動・テーマごとの業種の入口・その月の法改正）
-- 月のページは「◯月号」（暦 `src/koyomi.mjs`・今月の1問・委員会で話すこと）。カレンダーの購読 `/calendar.ics` をビルドで作る。くわしくは docs/shikumi.md の「◯月号」
+- 月のページは「◯月号」（暦 `src/koyomi.mjs`・今月の1問・委員会で話すこと）と今月の1問の問題集 `/anzen/quiz/`。カレンダーの購読 `/calendar.ics` をビルドで作る。くわしくは docs/shikumi.md の「◯月号」
 - 今年度の記録（端末の中だけ。localStorage `anzen-rec-v1`）と `/anzen/kiroku/`。くわしくは docs/shikumi.md の「今年度の記録」
 - 印刷は A4 1枚。知識のページは紙（.psheet）だけ、ほかは np で印刷に出さない。印刷が1枚に収まるかは Playwright で PDF にして数える（長い掲示は print.css ですき間をつめている）
 - 紙の QR（`src/qr.mjs`。印刷のときだけ出る）とホーム画面に追加（`/manifest.webmanifest`）。Canva のポスターには QR を入れない。くわしくは docs/shikumi.md の「紙の QR とホーム画面に追加」
 - 業種の入口 `/anzen/gyoshu/<業種>/`（トップの業種の名前から）：その業種の今月のテーマと掲示の決まり
 - ページの形（10/22）：テーマの入口 `/anzen/theme/<slug>/`（運動・業種ごとに多いけが・業種をえらぶ）と、1業種1ページ `/anzen/theme/<slug>/<業種>/`（掲示・朝礼・やること・出典）。業種の名前は各ページへのリンクで、いまのページの業種に紺の下線。えらんだ業種はブラウザに覚え、トップの業種の名前を太い下線で目立たせる
 - 広告：AdSense は `SITE.adsense`・枠は `adSlot()`。広告のないページ（`noAds`：about・プライバシー・免責・404）、掲示・業種の名前・ボタンのそば、印刷には置かない。枠には「広告」と書く。自動広告は使わない。空のページ・「準備中」は出さない。A8.net の文字の広告は知識のページのデータの `a8`（コードとリンクの文字は書きかえない・1ページ1つ）。お問い合わせは `SITE.contact`。くわしくは docs/shikumi.md の「広告とお問い合わせ」
-- 2026-10-22 公開（https://anzen-benricho.com、`SITE.launched: true`）。AdSense は審査待ち。くわしくは docs/shikumi.md の「広告とお問い合わせ」
+- 2026-10-22 公開（https://anzen-benricho.com、`SITE.launched: true`）。AdSense は審査待ち。通ったら自動広告がオフか確かめ、広告ユニット3つの番号を `SITE.adSlots` に入れる。くわしくは docs/shikumi.md の「広告とお問い合わせ」
 - 検索エンジンへのお知らせ：sitemap.xml（ビルドで作る）と、本番の公開のたびに変わったページを IndexNow で知らせる（`scripts/indexnow.mjs`。Bing など。鍵は `public/<鍵>.txt`、前に知らせた記録は Actions の cache）。Google は Search Console とサイトマップ
 - 検索結果での見え方：説明文はページのデータから `src/describe.mjs` で作る（全角80〜120文字）。`verify-dist.mjs` が長さ・同じ説明文・使わない言葉などを見張る。くわしくは docs/shikumi.md の「検索結果での見え方」
 - 共有されたときの画像は全ページ同じ `public/img/og.jpg`（URL に中身の印 ?v=）。くわしくは docs/shikumi.md の「共有されたときの画像」
