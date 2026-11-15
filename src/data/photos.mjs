@@ -46,5 +46,6 @@ export const PHOTO = {
   'ym-fuyu-neta': '冬の朝の通用口の前に立てかけた雪かきのスコップと、まいた融雪剤',
   'ym-kashitsuki-teire': '休憩室の棚の上で、タンクを外して置いた卓上の加湿器と、たたんだふきん',
   'ym-touketsu-iriguchi': '雪の日のビルの出入口の床に敷いた、長いゴムの泥落としマット',
+  'ym-chubo-yuka-kutsu': '飲食店の厨房の洗い場の前の床と、そろえて置いた白い作業靴',
 };
 export const photoBase = (k) => `/img/photo/${k}`;
