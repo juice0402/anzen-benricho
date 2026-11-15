@@ -172,3 +172,42 @@
 - 読むファイル：CLAUDE.md、src/data/hourei.mjs、src/pages/hourei.mjs、src/pages/kihon.mjs（faqBlock）、tests/hourei.test.mjs、scripts/check-sources.mjs、プロジェクトの資料 claude/anzen-handoff.md の「義務の区別」
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-12）
+
+### [ ] 月ごとのテーマの一覧に「12か月の委員会で話すこと」
+- やること：月ごとのテーマの一覧 `/anzen/`（src/pages/months.mjs の `index`）の「月」の節の下・広告の枠 `adSlot('end')` の上に、「12か月の委員会で話すこと」の節を足す。月の順（`monthsOf` のいまの並び）に、月ごとの h3「◯月」→ テーマごとにテーマの名前（テーマが2つ以上の月だけ。月のページの `gidaiHtml` と同じ）→ そのテーマの `gidai` の3行（いまの `ul.gd`）→ 月のページと同じ議事録の紙へのリンク1行（いまの `p.gd-a`「この議題が入った議事録の紙（A4）」・`/kihon/gijiroku/?t=<slug>`。できれば月のページの gidaiHtml の中身を共通の関数にして両方で使う）。中身はテーマのデータの gidai だけで、新しい文は書かない。テストを足す（tests/numa.test.mjs か新しい tests/months.test.mjs。dist を読む）
+- できあがりの条件：`npm run check` が緑。テストで、/anzen/ に gidai のある全テーマの gidai の文がすべてある・各テーマの /kihon/gijiroku/?t=<slug> へのリンクがある・節は広告の枠より上、を見る。/anzen/ の title・説明文（describe）は変えない。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：/anzen/ の title はもう「月ごとの安全衛生テーマ一覧｜朝礼ネタ・掲示物・委員会の議題」なのに、議題はページにない（src/pages/months.mjs）。検索語「11月 安全衛生委員会 テーマ」が1表示・1.0位で出ていて、/anzen/ のまとまりが表示いちばん（claude/search-data-anzen.md の 11/11 の回：39ページ・162表示）。1画面めの下に、そのページにしかない中身を置く（claude/site-principles.md の「広告の審査（AdSense）」）。どのページにも印刷・道具・チェックのどれかを持たせる（claude/anzen-handoff.md の「大事な決めごと」）＝議事録の紙へつなぐ。gijiroku は ?t=<テーマ> でえらんだ形で開く（src/pages/kihon.mjs の186行めの説明・src/client/kihon.js）。anzen は検索の落ちこみの「くらべ役」で、ふだんの足しはしてよい（claude/common-tasks.md の C-028）
+- 迷ったら：gidai のないテーマは出さない（議事録のリンクも出さない）。h3 の「◯月」は月のページ /anzen/<月>/#gd-h への文字のリンクにする。新しい見た目の形は作らず、いまの `.gd`・`.gd-t`・`.gd-a` を使う。月のページの説明の1行（pg-lead・「委員会のない職場は…」の u-note）は節の頭に1回だけにする。トップと月のページはさわらない。印刷には出さない（np。/anzen/ に紙はないので、ふつうはなにもしなくてよい）。テーマの名前は `t.title`（seoName ではない。月のページと同じ）
+- 読むファイル：CLAUDE.md、src/pages/months.mjs（index・gidaiHtml）、src/pages/kihon.mjs・src/client/kihon.js（gijiroku の ?t=）、src/data/themes.mjs、tests/numa.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-15）
+
+### [ ] 読みものから、つないだテーマのそろえる物へ1行（買う理由・その5）
+- やること：読みもののページ（src/pages/yomimono.mjs の「あわせて見る」の `ul.krel`）の、links の行のあと・法人パックの行（`packLineReading`）の前に、そろえる物へ「そろえる物：<物の名前>」の文字のリンクを1行足す。物は、その読みものの links の href のうち `/anzen/theme/<slug>/`（業種のページ `/anzen/theme/<slug>/<業種>/` も）の slug を上から見て、`kauOfTheme(slug)` が最初に返した物（1本に1行まで）。links にテーマのページがない読みもの・物のないテーマだけの読みものには出さない。テストを足す（tests/kau.test.mjs か tests/yomimono.test.mjs。dist を読む）
+- 順番：「1年の実施記録に、月ごとのそろえる物」のあと（同じ tests/kau.test.mjs をさわることがある。マージ待ちなら、そのブランチの上に積む）
+- できあがりの条件：`npm run check` が緑。テストで、テーマのページにつないでいて物のある読みものには、その物の /soroeru/<key>/ へのリンクが1つだけある・そうでない読みものにはない・読みもののページに楽天の商品とクレジットがなく、AdSense のコードは今までどおりある、を見る。いまの3本（fuyu-neta・kashitsuki-teire・touketsu-iriguchi）のどれに出るかを PR の本文に書く。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：楽天の商品はそろえる物のページだけ。ほかのページからは文字のリンクだけで、AdSense はそのまま（CLAUDE.md・この山の「テーマのページと問題集から、そろえる物へ1行」の決まったこと）。物は kau.mjs の `kauOfTheme`（ページがあり monthLink が false でない物。#94）。遊びに来た人・読みに来た人に、いまの買う理由を渡すもの（claude/site-principles.md の「買いに来る理由がある人を集める」）。読みものの書き方（docs/yomimono-neta.md）は変えない（予約タスクがそのまま書ける。この山の「読みものから、つないだページへ戻るリンク」の決まったこと）
+- 迷ったら：物の名前は kau.mjs の `t` のまま、なぜ今か（why）や灰色の1行（.ym-d）は足さない。読みもののデータに新しい欄は足さず、links から決める。links に同じテーマが2回あっても1行。新しい見た目の形は作らない（いまの .krel の li）。本文の中・最初の画面・ボタンのそばには置かない
+- 読むファイル：CLAUDE.md、src/pages/yomimono.mjs、src/pack-line.mjs（packLineReading の入れ方）、src/data/kau.mjs（kauOfTheme）、src/data/yomimono/index.mjs、tests/kau.test.mjs、tests/yomimono.test.mjs、scripts/verify-dist.mjs（楽天のページの点検）
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-15）
+
+### [ ] テーマの入口に、よくある質問（その1：しくみと12月の4テーマ）
+- やること：テーマの入口 `/anzen/theme/<slug>/`（src/pages/theme.mjs）に「よくある質問」の節を出すしくみを作り、12月の4テーマ（oosouji・koutsu・harassment・kansen）のデータ（src/data/<テーマ>.mjs のテーマの1段め）に `faq: [{ q, a }]` を2〜3つずつ足す。節は入口のページ（src/pages/theme.mjs の入口を作る所）の「出典」の節（`src-h`）のすぐ上。業種をえらぶ所・掲示より下。形は法改正のページのよくある質問（この山の「法改正のページに、よくある質問」で作るもの）と同じ dl.faq・印刷に出さない np。kihon.mjs の faqBlock が export されていなければ、export して使う（前の項目で共通の部品になっていれば、それを使う）。問いは、そのテーマで担当者が聞きそうなこと（法令の義務か・どの業種に多いか・掲示はいつ貼るか など）。答えは1〜2文。出典は、そのテーマの4業種の src を合わせたもの（どの業種の出典でもよい）から2つ以上で一致したことだけ
+- 順番：「法改正のページに、よくある質問」のあと（同じ形の部品を使う。そちらがマージ待ちなら、そのブランチの上に積む。まだ PR になっていなければ、この項目は取らずに止める）
+- できあがりの条件：`npm run check` が緑。テスト（tests/data.test.mjs か新しい tests/faq.test.mjs）に、faq は0〜3つ・問いは「？」で終わる・答えは全角120字まで・同じ問いがほかのテーマや法改正のページと重ならない、を足した。業種のページの印刷が A4 1枚のまま。PR の check-run の出典の点検が通った（src/data を変えるので動く）。書いていない別の Claude（サブエージェント）が、各テーマの業種のデータの出典（src）と照らして点検し、直した（点検ができなかったときは、その FAQ を入れずに PR の本文に「点検できず外した」と書く）。スマホ（390×660）のスクショで、入口の1画面めが変わっていないことを見た
+- 決まったこと：答えのページを育てる（連絡 C-026 の②「ページ・記事のボリューム（水増しはしない）」・claude/common-tasks.md）。12月のテーマが今いちばんの波（claude/search-data-anzen.md の 11/11 の回：/anzen/theme/koutsu/ 22表示・1クリック・8.2位、「12月 安全衛生 ネタ」21表示、「交通安全 冬 ネタ」5表示）。答えはそのテーマのデータの出典（各業種の src）にあることだけで、2つ以上で一致したもの（CLAUDE.md の中身の決まり）。言葉は「法令の義務」「努力義務」「職場で決めること」（claude/anzen-handoff.md の「義務の区別」）。勧めは「呼びかけている」「すすめている」と書く（claude/anzen-handoff.md の「テーマの作り方のメモ」）。年末年始無災害運動は 12月1日〜1月15日（claude/anzen-handoff.md の「大事な決めごと」）。年末の交通安全運動の期間は都道府県ごとで決めつけない（claude/anzen-seisou-tougou-plan.md の「公開のあとに残っていること」）
+- 迷ったら：2つの出典で一致しない問いは入れない（FAQ が0〜1つのテーマがあってよい）。新しい出典は足さない。title・説明文・確認日（checked）は変えない。読みもののネタの山にある題（インフルエンザで休ませるのは法令の決まり？・カスハラ対策の義務化）とは重なってよいが、FAQ では長く説明せず1〜2文で答え、ネタの題そのものの問い（年末年始無災害運動とは、も）は入れない。区分に迷う業種は「労働基準監督署に確認」。FAQPage の構造化データは作らない。業種のページ（/anzen/theme/<slug>/<業種>/）と月のページには出さない（入口だけ）。時間が足りなければ koutsu・oosouji から先に書き、残りのテーマは PR の本文に「残り」と書く
+- 読むファイル：CLAUDE.md、src/pages/theme.mjs、src/pages/hourei.mjs（前の項目のよくある質問の部品）、src/pages/kihon.mjs（faqBlock）、src/data/oosouji.mjs・koutsu.mjs・harassment.mjs・kansen.mjs、tests/data.test.mjs、scripts/check-sources.mjs、プロジェクトの資料 claude/anzen-handoff.md の「義務の区別」「大事な決めごと」
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-15）
+
+### [ ] テーマの入口に、よくある質問（その2：1月・2月のテーマ）
+- やること：その1で作ったしくみのまま、1月・2月のテーマ（tentou・issanka・youtsu）のデータに `faq: [{ q, a }]` を2〜3つずつ足す。コードは変えない（データとテストだけ）
+- 順番：「テーマの入口に、よくある質問（その1）」のあと（マージ待ちなら、そのブランチの上に積む。まだ PR になっていなければ、この項目は取らずに止める）
+- できあがりの条件：その1と同じ（`npm run check` が緑・テストの決まりが通る・出典の点検が通った・書いていない別の Claude が出典と照らして点検し直した）
+- 決まったこと：その1の決まったことと同じ。1月・2月のネタは早めに（claude/search-data-anzen.md の 11/11 の回の見立て「1月・2月のネタも早めに」・「2月 安全衛生 ネタ」3表示・6.3位）。酸欠・一酸化炭素は「呼吸器のない人は入らず119番」「換気→外から測る→基準の内か確かめて入る」「症状が出た人は火や窓に向かわず外へ出て知らせる」のとおり（claude/anzen-handoff.md の「大事な決めごと」）。冬の転倒は「12月から2月か3月まで」（claude/anzen-handoff-old.md の PR #49）
+- 迷ったら：その1の迷ったらと同じ。読みもののネタの山にある「腰痛を防ぐ重さの目安（国の指針）」とは重なってよいが、重さの数字の表は FAQ に入れず1〜2文で答える。2月の2つ目のテーマ「洗剤と薬品のラベル」はまだないので、さわらない
+- 読むファイル：その1と同じ（データは src/data/tentou.mjs・issanka.mjs・youtsu.mjs）
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-15）
