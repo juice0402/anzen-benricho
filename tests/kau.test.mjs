@@ -169,5 +169,6 @@ test('1年の実施記録：12か月のテーマの各月にそろえる物の�
   assert.ok(n >= 9, `リンクのある月が ${n}`);
   for (const m of [3, 9, 10]) assert.ok(!(list.match(new RegExp(`<li><b>${m}月</b>[\\s\\S]*?</li>`))?.[0] ?? '').includes('/soroeru/'), `${m}月`);
   assert.ok(!sheet.includes('/soroeru/'), '紙にそろえる物のリンクがある');
+  assert.ok(html.includes('pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'), '記録帳に AdSense のコードがない');
   noShop(html, '/anzen/kiroku/');
 });
