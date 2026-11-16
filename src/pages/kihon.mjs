@@ -3,7 +3,7 @@
 import { page, esc, script, clientLib, adSlot, fudaLabel } from '../layout.mjs';
 import { kihonHubDesc, kagakuHubDesc } from '../describe.mjs';
 import { SITE } from '../site.mjs';
-import { bandHead, gyoshuPath, yomiBackLi } from '../parts.mjs';
+import { bandHead, gyoshuPath, yomiBackLi, faqSec } from '../parts.mjs';
 import { GYOSHU } from '../data/gyoshu.mjs';
 import { KIHON, BANDS } from '../data/kihon/index.mjs';
 import { fmtDate, HOUREI, todayJst } from '../data/hourei.mjs';
@@ -281,13 +281,7 @@ const douguBlock = (p) =>
 </section>`
     : '';
 
-const faqBlock = (p) =>
-  p.faq && p.faq.length
-    ? `<section class="sec paper np" aria-labelledby="kf-h">
-<h2 class="sec-h" id="kf-h">よくある質問</h2>
-<dl class="faq">${p.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${esc(f.a)}</dd>`).join('')}</dl>
-</section>`
-    : '';
+const faqBlock = (p) => faqSec(p.faq, 'kf-h');
 
 // 最後にこのページをつないだ読みもの（#98）
 const relatedBlock = (p) => {

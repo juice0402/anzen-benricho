@@ -16,7 +16,7 @@
 |---|---|
 | `site.mjs` | サイト名・URL・コーナー・`SITE`（launched・adsense・adSlots・contact） |
 | `layout.mjs` | ページの外側（head・ヘッダー・フッター・パンくず） |
-| `parts.mjs` | 共通部品（業種の名前の並び・月の見出し・URL） |
+| `parts.mjs` | 共通部品（業種の名前の並び・月の見出し・URL・よくある質問の節 `faqSec`） |
 | `rail.mjs` | パソコンの右の柱 |
 | `describe.mjs` | 説明文（meta description） |
 | `koyomi.mjs` | 月のページの暦と `/calendar.ics` |

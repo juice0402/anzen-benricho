@@ -29,6 +29,21 @@ test('法改正：必須の項目がそろっている', () => {
   }
 });
 
+// よくある質問（#117）：0〜3つ・問いは「？」で終わる・答えは全角120字まで・同じ問いをほかの改正のページで使わない
+test('法改正：よくある質問の形', () => {
+  const qs = new Set();
+  for (const h of HOUREI) {
+    if (h.faq === undefined) continue;
+    assert.ok(Array.isArray(h.faq) && h.faq.length <= 3, `${h.slug} faq は0〜3つ`);
+    for (const f of h.faq) {
+      assert.ok(f.q.endsWith('？'), `${h.slug} 問いは「？」で終わる: ${f.q}`);
+      assert.ok(f.a && [...f.a].length <= 120, `${h.slug} 答えは120字まで: ${f.q}`);
+      assert.ok(!qs.has(f.q), `同じ問いがほかのページにもある: ${f.q}`);
+      qs.add(f.q);
+    }
+  }
+});
+
 test('法改正：確認日から90日をこえていない', () => {
   assert.ok(within90(HOUREI_CHECKED), `確認日 ${HOUREI_CHECKED}。公式を開いて確かめ直し、HOUREI_CHECKED を直す`);
 });

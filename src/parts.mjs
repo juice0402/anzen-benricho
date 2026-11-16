@@ -59,3 +59,12 @@ export const yomiBackSec = (path, np = 'np') => {
   const li = yomiBackLi(path);
   return li ? `<section class="sec paper${np ? ' np' : ''}" aria-labelledby="yb-h">\n<h2 class="sec-h" id="yb-h">あわせて見る</h2>\n<ul class="krel">${li}</ul>\n</section>` : '';
 };
+
+// よくある質問の節（知識のページ・法改正のページで共通。印刷に出さない np）。faq は [{ q, a }]、hid は見出しの id
+export const faqSec = (faq, hid) =>
+  faq && faq.length
+    ? `<section class="sec paper np" aria-labelledby="${hid}">
+<h2 class="sec-h" id="${hid}">よくある質問</h2>
+<dl class="faq">${faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${esc(f.a)}</dd>`).join('')}</dl>
+</section>`
+    : '';
