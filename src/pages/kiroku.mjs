@@ -1,12 +1,19 @@
 // 1年の実施記録（A4 1枚）/anzen/kiroku/（10/31 連絡 C-016 案B・#43）
 // 表は4月〜3月。テーマの名前はビルドで入れ、掲示・朝礼・やることの日付は端末の記録から入れる（src/client/rec.js。送らない）。
 // 記録のない所は空欄（手で書ける）。印刷は紙（.psheet）だけ。ページには12か月のテーマの一覧（ページにしかない中身）
+// 一覧の各月に、その月のそろえる物へ文字のリンク（kauOfMonth。紙には出さない・楽天の商品は出さない。#110）
 import { page, esc, clientLib, script } from '../layout.mjs';
 import { SITE } from '../site.mjs';
 import { bandHead, themePath } from '../parts.mjs';
 import { qrSvg } from '../qr.mjs';
 import { REC_MONTHS, recFyOf } from '../client/rec.mjs';
 import { todayJst } from '../data/hourei.mjs';
+import { kauOfMonth, kauPath } from '../data/kau.mjs';
+
+const kauLink = (m) => {
+  const k = kauOfMonth(m);
+  return k ? `<a href="${kauPath(k.key)}">そろえる物：${esc(k.t)}</a>` : '';
+};
 
 export default function kirokuPage(themes) {
   const path = '/anzen/kiroku/';
@@ -29,7 +36,7 @@ ${sheet}
 </section>
 <section class="sec paper np" aria-labelledby="ky-th">
 <h2 class="sec-h" id="ky-th">${fy}年度の12か月のテーマ</h2>
-<ul class="krel kr-list">${REC_MONTHS.map((m) => `<li><b>${m}月</b>${of(m).map((t) => `<a href="${themePath(t)}">${esc(t.title)}</a>`).join('・')}</li>`).join('')}</ul>
+<ul class="krel kr-list">${REC_MONTHS.map((m) => `<li><b>${m}月</b>${of(m).map((t) => `<a href="${themePath(t)}">${esc(t.title)}</a>`).join('・')}${kauLink(m)}</li>`).join('')}</ul>
 <p class="u-note"><a href="/">トップの今年度の記録へ</a></p>
 </section>`;
   return {
