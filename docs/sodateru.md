@@ -154,7 +154,7 @@
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-10）
 
-### [ ] CLAUDE.md を1万字以内に戻す（問題集と資格の日程は docs/shikumi.md へ）
+### [x] CLAUDE.md を1万字以内に戻す（問題集と資格の日程は docs/shikumi.md へ）（#112）
 - やること：CLAUDE.md（2026-11-12 の main で `wc -m` が 19,343。決まりは1万字以内）を1万字以内に戻す。「いまの状態」の長い行（AdSense・A8・お問い合わせ・検索結果での見え方・法人パック・自動で育つしくみ・そろえる物 など）は、くわしい所を docs/shikumi.md の節（なければ新しい節）か docs/pack.md へ文のまま移し、CLAUDE.md には1行と「くわしくは docs/shikumi.md の「◯◯」」だけ残す。あわせて、今月の1問の問題集（PR #89。/anzen/quiz/・localStorage `anzen-quiz-v1`）を docs/shikumi.md の「◯月号」の節に、資格の再講習の日程と受講料（PR #87）が docs/shikumi.md の「資格の更新の期限」にあるかを確かめ、ないものを足す
 - 順番：PR #87・#89 のマージのあと（どちらも docs/shikumi.md か同じ話にかかる。まだ開いていれば main の上に作り、PR の本文に「#87・#89 のあとにマージ」と書く）
 - できあがりの条件：`wc -m CLAUDE.md` が 10000 以下。`npm run check` が緑（コードは変えない）。CLAUDE.md から外した文が、すべて docs/ のどこかにある（PR の本文に、移した行と移した先の表）。書いていない別の Claude が、前と後の CLAUDE.md と docs をくらべて、なくなった決めごとがないかを点検した

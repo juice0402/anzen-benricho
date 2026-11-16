@@ -3,6 +3,8 @@
 1か月分 500円（税込）・1回払い。買った人だけ開ける、その月のパックのページを、会社名入りで A4 に印刷する（PDF はブラウザの印刷から）。
 決めたこと：issue #82・プロジェクトの資料 `claude/anzen-pack-plan.md`。
 
+- 法人パック（#82。1か月分500円）：`/pack/`（売る）・`/pack/<YYYY-MM>/`（買った人だけ。Pages Functions `functions/pack/_middleware.js` が Stripe に確かめる）・`/tokushoho/`（特定商取引法に基づく表記。いつもある）。`src/data/pack.mjs` の支払いリンクが null のあいだは /pack/ を作らない。Functions は /pack/ の下だけ（`dist/_routes.json`）。Stripe の鍵は Cloudflare の秘密の設定だけ。
+
 ## ファイル
 | 場所 | 中身 |
 |---|---|
