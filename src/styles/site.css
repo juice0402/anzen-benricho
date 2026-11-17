@@ -251,6 +251,8 @@ body { background: #fff; }
 .qz-src li::before { content: none; }
 .gd { list-style: disc; padding-left: 1.4em; display: grid; gap: 4px; }
 .gd-t { font-size: 15px; font-weight: 700; margin-top: 6px; }
+.gd-m { font-size: 18px; font-weight: 700; margin-top: 8px; }
+.gd-m a { display: inline-block; padding: 8px 0; }
 .gd-a a { display: inline-block; padding: 10px 0; }
 .pk-one { font-size: 15px; margin: 10px 0 4px; }
 .pk-one a { display: inline-block; padding: 6px 0; }
