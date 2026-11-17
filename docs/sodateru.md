@@ -211,3 +211,41 @@
 - 読むファイル：その1と同じ（データは src/data/tentou.mjs・issanka.mjs・youtsu.mjs）
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-15）
+
+### [ ] テーマの入口に、よくある質問（その3：火事・手のけが・心の健康）
+- やること：その1で作ったしくみのまま、検索で表示のあるテーマ（kasai・te・kokoro）のデータ（src/data/kasai.mjs・te.mjs・kokoro.mjs のテーマの1段め）に `faq: [{ q, a }]` を2〜3つずつ足す。コードは変えない（データとテストだけ）
+- 順番：「テーマの入口に、よくある質問（その2）」のあと（マージ待ちなら、そのブランチの上に積む。その1がまだ PR になっていなければ、この項目は取らずに止める）
+- できあがりの条件：その1と同じ（`npm run check` が緑・テストの決まりが通る・PR の check-run の出典の点検が通った・下書きを見ていない別の Claude〔サブエージェント〕が各業種のデータの出典〔src〕と照らして点検し直した・業種のページの印刷が A4 1枚のまま）
+- 決まったこと：その1の決まったことと同じ（答えのページを育てる＝連絡 C-026 の②）。表示のあるテーマから選んだ（claude/search-data-anzen.md の 11/11 の回：/anzen/theme/kasai/ 8表示・4.9位、「飲食店 手の怪我」3表示・10.7位、11/6 の回：/anzen/theme/te/inshoku/ 4表示、/anzen/theme/kokoro/seizo/ 3表示）。火事は、消防法と火災予防条例の決まりを「法令の区分では」と書き、迷うときは「消防署に確認」（CLAUDE.md の中身の決まり）。防火管理者は、収容人員が店や飲食店の入る建物は30人以上・事務所だけは50人以上。少量危険物は何Lからは書かない（claude/anzen-handoff.md の「大事な決めごと」の火事）。anzen は検索の「くらべ役」で、ふだんの小さな足しはしてよい（claude/sodatsu-spec.md の「検索が落ちたあいだの決まり」）
+- 迷ったら：その1の迷ったらと同じ（2つの出典で一致しない問いは入れない・FAQ が0〜1つのテーマがあってよい・新しい出典は足さない・title・説明文・確認日は変えない・FAQPage の構造化データは作らない・入口だけに出す）。心の健康は、相談の窓口の電話番号を書かず、ストレスチェックの50人未満の義務化（2028年4月1日から）は「法改正のページ」へのつなぎで済ませて、FAQ では長く説明しない（読みもののネタの山に「50人未満のストレスチェック義務化への準備」があるため）。手のけがは、業種ごとの数字（割合）を FAQ に入れない（数字の出典の年と条件を1〜2文で言い切れないため）。時間が足りなければ kasai・te から先に書き、残りは PR の本文に「残り」と書く
+- 読むファイル：その1と同じ（データは src/data/kasai.mjs・te.mjs・kokoro.mjs）、src/data/hourei.mjs（stress-check の slug）
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-17）
+
+### [ ] 1年の実施記録に「今月の1問」の欄
+- やること：1年の実施記録 `/anzen/kiroku/`（src/pages/kiroku.mjs の紙の表 `kr-t`）の「やること」と「確認」のあいだに「1問」の欄を足す。ビルドで各月の行（`tr data-m`）に、その月のテーマのうち quiz のあるテーマの slug を `data-q="slug,slug"` で入れ、ページでは端末の問題集の記録（localStorage の anzen-quiz-v1・src/client/quiz.mjs の `quizStamp`）を読んで、その月の問いが全部正解なら「○」を入れる（○を入れる処理は src/client/rec.js の `.kr-t` を埋める所に足す）（まだなら空欄＝手で書ける）。quiz.mjs はページでは export を外して入れる（`clientLib('quiz')` のいまの入れ方。rec と同じ）。紙の下の注記（.ps-note）に「1問は問題集で正解した月に○（年度では分けません）」を足す（1行の決まりにかかったら短くする）。記録を新しく保存しない（読むだけ）
+- できあがりの条件：`npm run check` が緑。テスト（tests/rec.test.mjs か tests/quiz.test.mjs）で、/anzen/kiroku/ の表に「1問」の列がある・quiz のある月の行に data-q がありテーマの slug と合う・quiz のない月は data-q が空か無い、を見る。Playwright で anzen-quiz-v1 に1つの月の全部の slug を入れて開き、その月の行だけに「○」が出る。印刷が A4 1枚のまま（Playwright で PDF にしてページ数を数える）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：楽しさの7つの③「積み上がるもの」④「ここにしかない記録」（連絡 C-016・claude/site-principles.md の「楽しさで、わざわざ来てもらう」）。問題集は正解した問いを端末の中だけに覚える（#88・src/client/quiz.mjs）。今年度の記録は端末の中だけで送らない（CLAUDE.md）。印刷は A4 1枚（CLAUDE.md）。新しい保存のキーは作らないので、プライバシーポリシーの STORED は変えない
+- 迷ったら：問題集の記録には年度がないので、年度で分けずに「その月の問いが全部正解なら○」とする（年度の切りかえで消さない）。テーマが2つ以上ある月は、全部正解のときだけ○（quizStamp のまま）。欄が増えて紙が A4 2枚になるときは、列の幅をせばめ、「テーマ」の字を小さくしない（ほかの列の幅で合わせる）。それでも収まらなければ PR の本文に書いて止める。○の字は記号の「○」を使い、絵文字や色の印は使わない。ページの一覧（12か月のテーマ）には○を出さない（紙だけ）
+- 読むファイル：CLAUDE.md、src/pages/kiroku.mjs、src/client/rec.js・rec.mjs、src/client/quiz.mjs・quiz.js、src/pages/months.mjs（QUIZ_PATH と問題集の作り）、tests/rec.test.mjs・tests/quiz.test.mjs、docs/shikumi.md の「今年度の記録」「印刷」の節
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-17）
+
+### [ ] 法改正のページに「施行日をカレンダーに入れる」
+- やること：法改正のページ `/hourei/<改正>/`（src/pages/hourei.mjs の detail）の、まだ施行されていない改正だけ、上の表（hr-facts）の施行日の下に「施行日をカレンダーに入れる」の文字のリンクを1つ出す。リンク先はビルドで作る `/hourei/<slug>/shikou.ics`（終日の予定1つ。SUMMARY は「施行：<改正の題>」、DESCRIPTION はページの URL と NOTE の1文。DTEND は施行日の翌日（koyomi.mjs の `DTEND;VALUE=DATE` と同じ）。書き出しは scripts/build.mjs で calendar.ics と同じく `writeFileSync` で（フォルダは `mkdirSync` の recursive で作る）。作り方は src/koyomi.mjs の calendarIcs と同じく src/client/ics.mjs の icsDay・icsStamp・icsText・icsFold を使う）。public/_headers に `/hourei/*/shikou.ics` の Content-Type（text/calendar; charset=utf-8。/calendar.ics と同じ）を足す
+- できあがりの条件：`npm run check` が緑。tests/hourei.test.mjs に、施行済みの改正にはリンクも .ics もない・これからの改正には .ics があり DTSTART がデータの date と同じ・SUMMARY に題が入る・行の長さが75オクテット以内（icsFold）、を足した。ics の形は tests/ics.test.mjs のいまの決まりに合う。.ics はサイトマップに入れない。スマホ（390×660）で上の表の高さが大きく変わっていないことをスクショで見た
+- 決まったこと：楽しさの7つの②「呼び戻せる入口（カレンダーの購読など）」（連絡 C-016・claude/site-principles.md の「楽しさで、わざわざ来てもらう」）。法改正のページは押されている（claude/search-data-anzen.md の 11/11 の回：/hourei/ 6ページ・34表示・2クリック、/hourei/kagaku-2027/ 3.3位・2クリック）。施行日はもう /calendar.ics の購読にも入っている（src/koyomi.mjs）ので、このリンクは1件だけ入れたい人のためのもの。外のスクリプトは読まない・何も送らない（CLAUDE.md）
+- 迷ったら：「施行済み」かどうかは、ページの「施行済み／これから」と同じ判定（inForce と作り直しの日）。リンクは .hr-facts の施行日の dd の中に置き、新しい見た目の形は作らない（いまのリンクの下線のまま・ボタンにしない）。購読のほうへの案内は足さない（1行に1つ）。UID は `hourei-<slug>@anzen-benricho.com` のように決まった形にする（作り直しても同じ）。VALARM（通知）は入れない
+- 読むファイル：CLAUDE.md、src/pages/hourei.mjs、src/data/hourei.mjs、src/koyomi.mjs（calendarIcs）、src/client/ics.mjs、scripts/build.mjs（calendar.ics を書く所）、public/_headers、tests/hourei.test.mjs・tests/ics.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-17）
+
+### [ ] 法改正のページの「職場ですること」のチェックを端末に残す
+- やること：法改正のページ `/hourei/<改正>/` の「職場ですること」（`ul.todo` のチェック欄）で付けたチェックを、端末の localStorage の新しいキー `anzen-hourei-todo-v1` に残し、次に開いたときにも付いているようにする。中身は `{ <改正の slug>: [チェックした行の文] }`（行の番号ではなく文で覚える）。新しい `src/client/hourei-todo.js` を作り、detail の `page({ ... js: script('hourei-todo') })` で読ませる（いまの src/client/hourei.js は一覧のページ専用で、個別のページには読まれていない）。対象は `.sec-todo .todo` の中のチェック欄だけ（一覧の「うちの職場」の `ul.todo` とまぜない）。localStorage の読み書きは try/catch で包む（hourei.js の `hourei-u` の作りを写すだけ）。プライバシーポリシー（src/pages/info.mjs の `STORED`）に「法改正のページの『職場ですること』で付けたチェック」を1行足す
+- 順番：「法改正のページに「施行日をカレンダーに入れる」」のあと（同じ src/pages/hourei.mjs・tests/hourei.test.mjs をさわることがある。マージ待ちなら、そのブランチの上に積む）
+- できあがりの条件：`npm run check` が緑。テストで、キーの名前・送らない（fetch・sendBeacon・XMLHttpRequest がない）・プライバシーポリシーの STORED にある、を見る。Playwright で1つの改正のページのチェックを2つ付けて開き直すと付いたまま・ほかの改正のページには付かない、を確かめた。印刷に出る所は変わらない
+- 決まったこと：連絡 C-026 の③「自分の数字が残る」（11/6 しょーくん「自分で計算できるなどの来る理由を継続していくことが大切」・claude/common-tasks.md）。利用者のデータは端末の中だけで送らない（CLAUDE.md の方針の前提）。プライバシーポリシーの「ブラウザに保存する情報」に足す（資格の期限の台帳 #102 と同じ）
+- 迷ったら：チェックを全部外したら、その改正の slug をキーの中から消す（空の配列を残さない）。「チェックを全部消す」ボタンは作らない。チェックした日付は残さない。localStorage が使えないときは、いままでどおり残らないだけにする（エラーを出さない）。一覧のページ（/hourei/）に「◯つ済み」などは出さない。データの文を直したときは、その行のチェックが外れてよい（番号で覚えない）
+- 読むファイル：CLAUDE.md、src/pages/hourei.mjs、src/layout.mjs（page の js と script() の渡し方）、src/client/hourei.js（作りを写すだけ）、src/pages/info.mjs（STORED）、tests/hourei.test.mjs、tests/shikaku.test.mjs（送らないの見方の例）
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-17）
