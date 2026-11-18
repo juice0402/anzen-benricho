@@ -79,7 +79,7 @@ export default {
 - [x] 加湿器の手入れとレジオネラ 冬の事務所で毎日・毎月すること（PR #72・2026-11-08）
 - [x] 凍った床と雪の日の出入口 清掃・ビルメンが朝に整えること（PR #84・2026-11-11）
 - [x] 厨房の床のすべりと靴 飲食店の転倒を床の手入れと履き物で減らす（PR #109・2026-11-15）
-- [ ] 高年齢の人の転倒を減らす職場の見直し — 2026年4月からの努力義務と、エイジフレンドリーガイドラインの職場の見直し（段差・明るさ）／出典 https://www.mhlw.go.jp/stf/newpage_10178.html ・ https://jsite.mhlw.go.jp/fukushima-roudoukyoku/anzen_eisei_rousai_boushi_taisaku_00011.html ／つなぐ先 /hourei/koureisha/ ・ /anzen/theme/kourei/
+- [x] 高年齢の人の転倒を減らす職場の見直し 段差・床・明るさと体力チェック（PR #124・2026-11-18）
 - [ ] インフルエンザで休ませるのは法令の決まり？ — 法令の区分では就業禁止（安衛則61条）に当たるか、休ませるかは職場で決めることか／出典 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/infulenza/QA2026.html ・ https://www.mhlw.go.jp/bunya/kenkou/kekkaku-kansenshou04/21.html （平成21年の新型インフルエンザの Q&A。季節性と同じとは書かない）。61条の言い方は労働局の資料か安全衛生情報センターでもう1つ確かめ、2つで一致しなければ飛ばす／つなぐ先 /anzen/theme/kansen/
 - [ ] 腰痛を防ぐ重さの目安（国の指針）— 人の力で持つ重さは、男性は体重のおおむね40%以下など／出典 https://www.mhlw.go.jp/content/11303000/001376471.pdf ・ https://www.mhlw.go.jp/content/11300000/000957787.pdf ／つなぐ先 /anzen/theme/youtsu/
 - [ ] お店のバックヤードのカゴ車・台車のけが — ロールボックスパレットの使い方の決まりごと（押す向き・前が見える高さ・床）／出典 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000098500.html ・ https://jsite.mhlw.go.jp/gunma-roudoukyoku/content/contents/001943839.pdf ／つなぐ先 /anzen/theme/youtsu/
