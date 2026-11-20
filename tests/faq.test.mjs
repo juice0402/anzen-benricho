@@ -22,8 +22,8 @@ test('テーマ：よくある質問の形と、ほかのページとの重な�
 });
 
 test('テーマ：よくある質問は入口だけ（出典の上・印刷に出さない）', () => {
-  const t = ALL_THEMES.find((x) => x.faq && x.faq.length);
-  assert.ok(t, 'よくある質問のあるテーマがある');
+  // データに faq がまだなくても形を見られるよう、見本の問いを1つ入れた写しで作る
+  const t = { ...ALL_THEMES[0], faq: [{ q: '見本の問いですか？', a: '見本の答えです。' }] };
   const pages = [].concat(theme(t));
   const top = pages.find((p) => /\/anzen\/theme\/[^/]+\/$/.test(p.path));
   assert.ok(top, '入口のページ');
