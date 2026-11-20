@@ -9,6 +9,17 @@ import { fmtDate } from '../data/hourei.mjs';
 import { YOMIMONO, yomimonoPath } from '../data/yomimono/index.mjs';
 import { yomimonoHubDesc } from '../describe.mjs';
 import { packLineReading } from '../pack-line.mjs';
+import { kauOfTheme, kauPath } from '../data/kau.mjs';
+
+// #122：links のテーマのページ（業種のページも）を上から見て、最初に物のあるテーマのそろえる物へ1行（1本に1行まで）
+const kauLineReading = (links) => {
+  for (const l of links) {
+    const m = l.href.match(/^\/anzen\/theme\/([^/]+)\/(?:[^/]+\/)?$/);
+    const k = m && kauOfTheme(m[1]);
+    if (k) return `<li><a href="${kauPath(k.key)}">そろえる物：${esc(k.t)}</a></li>`;
+  }
+  return '';
+};
 
 const CRUMB = { name: '読みもの', href: '/yomimono/' };
 export const FEED = '/yomimono/feed.xml';
@@ -69,7 +80,7 @@ ${s.table ? table(s.table) : ''}
     : '';
   const links = `<section class="sec paper" aria-labelledby="ym-l">
 <h2 class="sec-h" id="ym-l">職場で確かめる</h2>
-<ul class="krel">${y.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.t)}<span class="ym-d">${esc(l.d)}</span></a></li>`).join('')}${packLineReading(y.slug)}</ul>
+<ul class="krel">${y.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.t)}<span class="ym-d">${esc(l.d)}</span></a></li>`).join('')}${kauLineReading(y.links)}${packLineReading(y.slug)}</ul>
 </section>`;
   const others = otherReadings(y.slug);
   const more = others.length

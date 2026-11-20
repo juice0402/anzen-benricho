@@ -172,3 +172,46 @@ test('1年の実施記録：12か月のテーマの各月にそろえる物の�
   assert.ok(html.includes('pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'), '記録帳に AdSense のコードがない');
   noShop(html, '/anzen/kiroku/');
 });
+
+// #122：読みものの「職場で確かめる」に、links でつないだテーマ（業種のページも）の最初の物へ1行。テーマのない・物のない読みものには出さない
+test('読みもの：つないだテーマのそろえる物へ1行（文字のリンクだけ。AdSense はそのまま）', async () => {
+  const { existsSync, readFileSync } = await import('node:fs');
+  const { YOMIMONO, yomimonoPath } = await import('../src/data/yomimono/index.mjs');
+  const { default: yomimonoPages } = await import('../src/pages/yomimono.mjs');
+  const built = new Map(yomimonoPages().map((p) => [p.path, p.html]));
+  const DIST = new URL('../dist', import.meta.url).pathname;
+  const sources = [['src', built]];
+  if (existsSync(`${DIST}/index.html`)) sources.push(['dist', new Map([...built.keys()].map((p) => [p, readFileSync(`${DIST}${p}index.html`, 'utf8')]))]);
+  const want = (y) => {
+    for (const l of y.links) {
+      const m = l.href.match(/^\/anzen\/theme\/([^/]+)\/(?:[^/]+\/)?$/);
+      const k = m && kauOfTheme(m[1]);
+      if (k) return k;
+    }
+    return null;
+  };
+  let n = 0;
+  for (const [where, pages] of sources) {
+    for (const y of YOMIMONO) {
+      const path = yomimonoPath(y);
+      const html = pages.get(path);
+      assert.ok(html, `${where}: ${path} がない`);
+      const sec = html.match(/<section class="sec paper" aria-labelledby="ym-l">[\s\S]*?<\/section>/)?.[0] ?? '';
+      const k = want(y);
+      if (k) {
+        if (where === 'src') n++;
+        assert.ok(sec.includes(`<li><a href="/soroeru/${k.key}/">そろえる物：${k.t}</a></li>`), `${where}: ${path} にそろえる物の1行がない`);
+        assert.equal((html.match(/href="\/soroeru\/[a-z0-9]+\/"/g) || []).length, 1, `${where}: ${path}：そろえる物のリンクは1つだけ`);
+      } else {
+        assert.ok(!/href="\/soroeru\/[a-z0-9]+\/"/.test(html), `${where}: ${path}：テーマの物がないのにそろえる物のリンクがある`);
+      }
+      noShop(html, `${where}: ${path}`);
+    }
+  }
+  // いまの記事：転倒のテーマにつないだ2本に出て、換気（CO2モニターは monthLink: false）と月のページだけの2本には出ない
+  assert.ok(n >= 2, `そろえる物の1行のある読みものが ${n}`);
+  const of = (slug) => want(YOMIMONO.find((y) => y.slug === slug) || { links: [] });
+  if (YOMIMONO.some((y) => y.slug === 'touketsu-iriguchi')) assert.equal(of('touketsu-iriguchi')?.theme, 'tentou');
+  if (YOMIMONO.some((y) => y.slug === 'kashitsuki-teire')) assert.equal(of('kashitsuki-teire'), null);
+  if (YOMIMONO.some((y) => y.slug === 'fuyu-neta')) assert.equal(of('fuyu-neta'), null);
+});
