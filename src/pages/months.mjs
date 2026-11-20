@@ -37,16 +37,34 @@ ${qs.map((t) => qzItem(t, qs.length > 1)).join('\n')}
 };
 
 // 今月の委員会で話すこと（テーマごとに議題の例3つ。印刷には出さない）。テーマごとに、その議題が入った議事録の紙（/kihon/gijiroku/?t=<テーマ>。#80）へ
-const gidaiHtml = (ts, m) => {
+// gidaiItems は月のページと一覧 /anzen/ の「12か月の委員会で話すこと」（#120）で同じ。テーマの名前はテーマが2つ以上の月だけ（h は見出しの段）
+const gidaiItems = (ts, h = 'h3') => {
   const gs = ts.filter((t) => t.gidai);
-  if (!gs.length) return '';
+  return gs.map((t) => `${gs.length > 1 ? `<${h} class="gd-t">${esc(t.title)}</${h}>` : ''}<ul class="gd">${t.gidai.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>
+<p class="gd-a"><a href="/kihon/gijiroku/?t=${t.slug}">この議題が入った議事録の紙（A4）</a></p>`).join('\n');
+};
+const GD_LEAD = '<p class="pg-lead">運営者が委員会の資料に使う議題の立て方です</p>';
+const GD_NOTE = '<p class="u-note">委員会のない職場は、朝礼や打ち合わせの議題に</p>';
+const gidaiHtml = (ts, m) => {
+  if (!ts.some((t) => t.gidai)) return '';
   return `<section class="sec gd-s np" aria-labelledby="gd-h">
 <h2 class="sec-h" id="gd-h">今月の委員会で話すこと</h2>
-<p class="pg-lead">運営者が委員会の資料に使う議題の立て方です</p>
+${GD_LEAD}
 ${packLineMonth(m)}
-${gs.map((t) => `${gs.length > 1 ? `<h3 class="gd-t">${esc(t.title)}</h3>` : ''}<ul class="gd">${t.gidai.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>
-<p class="gd-a"><a href="/kihon/gijiroku/?t=${t.slug}">この議題が入った議事録の紙（A4）</a></p>`).join('\n')}
-<p class="u-note">委員会のない職場は、朝礼や打ち合わせの議題に</p>
+${gidaiItems(ts)}
+${GD_NOTE}
+</section>`;
+};
+// 一覧 /anzen/ の「12か月の委員会で話すこと」：月の順に、月の名前（月のページの議題の節へ）→ その月の議題。説明の2行は節の頭に1回だけ
+const gidaiYearHtml = (themes, ms) => {
+  const rows = ms.filter((m) => themes.some((t) => t.month === m && t.gidai));
+  if (!rows.length) return '';
+  return `<section class="sec gd-s np" aria-labelledby="ag-h">
+<h2 class="sec-h" id="ag-h">12か月の委員会で話すこと</h2>
+${GD_LEAD}
+${GD_NOTE}
+${rows.map((m) => `<h3 class="gd-m"><a href="/anzen/${m}/#gd-h">${m}月</a></h3>
+${gidaiItems(themes.filter((t) => t.month === m), 'h4')}`).join('\n')}
 </section>`;
 };
 
@@ -119,6 +137,7 @@ function index(themes, from) {
 <p class="u-note"><a href="/anzen/kiroku/">1年の実施記録の表（A4）へ</a></p>
 <p class="u-note"><a href="${QUIZ_PATH}">12か月分の今月の1問をまとめて解く（問題集）</a></p>
 </section>
+${gidaiYearHtml(themes, ms)}
 ${adSlot('end')}`;
   return {
     path,

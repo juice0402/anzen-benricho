@@ -173,7 +173,7 @@
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-12）
 
-### [ ] 月ごとのテーマの一覧に「12か月の委員会で話すこと」
+### [x] 月ごとのテーマの一覧に「12か月の委員会で話すこと」（#120）
 - やること：月ごとのテーマの一覧 `/anzen/`（src/pages/months.mjs の `index`）の「月」の節の下・広告の枠 `adSlot('end')` の上に、「12か月の委員会で話すこと」の節を足す。月の順（`monthsOf` のいまの並び）に、月ごとの h3「◯月」→ テーマごとにテーマの名前（テーマが2つ以上の月だけ。月のページの `gidaiHtml` と同じ）→ そのテーマの `gidai` の3行（いまの `ul.gd`）→ 月のページと同じ議事録の紙へのリンク1行（いまの `p.gd-a`「この議題が入った議事録の紙（A4）」・`/kihon/gijiroku/?t=<slug>`。できれば月のページの gidaiHtml の中身を共通の関数にして両方で使う）。中身はテーマのデータの gidai だけで、新しい文は書かない。テストを足す（tests/numa.test.mjs か新しい tests/months.test.mjs。dist を読む）
 - できあがりの条件：`npm run check` が緑。テストで、/anzen/ に gidai のある全テーマの gidai の文がすべてある・各テーマの /kihon/gijiroku/?t=<slug> へのリンクがある・節は広告の枠より上、を見る。/anzen/ の title・説明文（describe）は変えない。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
 - 決まったこと：/anzen/ の title はもう「月ごとの安全衛生テーマ一覧｜朝礼ネタ・掲示物・委員会の議題」なのに、議題はページにない（src/pages/months.mjs）。検索語「11月 安全衛生委員会 テーマ」が1表示・1.0位で出ていて、/anzen/ のまとまりが表示いちばん（claude/search-data-anzen.md の 11/11 の回：39ページ・162表示）。1画面めの下に、そのページにしかない中身を置く（claude/site-principles.md の「広告の審査（AdSense）」）。どのページにも印刷・道具・チェックのどれかを持たせる（claude/anzen-handoff.md の「大事な決めごと」）＝議事録の紙へつなぐ。gijiroku は ?t=<テーマ> でえらんだ形で開く（src/pages/kihon.mjs の186行めの説明・src/client/kihon.js）。anzen は検索の落ちこみの「くらべ役」で、ふだんの足しはしてよい（claude/common-tasks.md の C-028）
