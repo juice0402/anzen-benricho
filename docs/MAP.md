@@ -37,7 +37,7 @@
 - `scripts/`：`build.mjs`・`verify-dist.mjs`・`fetch-rakuten.mjs`・`check-sources.mjs`・`indexnow.mjs`・`mihari.mjs`・`merge-ok.mjs`
 - `functions/pack/_middleware.js`：Pages Functions はこれだけ（`/pack/` の下）
 - `public/`：そのままコピー（アイコン・manifest・robots・IndexNow の鍵・`_headers`・写真・ポスター）
-- `tests/*.test.mjs`：`node --test`（`data` 3点セット、`kihon` 知識のページ、`yomimono`、`photos` など）
+- `tests/*.test.mjs`：`node --test`（`data` 3点セット、`kihon` 知識のページ、`yomimono`、`photos`、`faq` テーマの入口のよくある質問 など）
 - `art/poster/`：ポスターの絵を描く道具
 
 ## 300行より大きいファイル（見出しと行の目安）
