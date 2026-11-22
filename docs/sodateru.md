@@ -249,3 +249,40 @@
 - 読むファイル：CLAUDE.md、src/pages/hourei.mjs、src/layout.mjs（page の js と script() の渡し方）、src/client/hourei.js（作りを写すだけ）、src/pages/info.mjs（STORED）、tests/hourei.test.mjs、tests/shikaku.test.mjs（送らないの見方の例）
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-17）
+
+### [ ] ヒヤリハットを端末に残す帳（その1：記録と月の表）
+- やること：ヒヤリハットのページ `/kihon/hiyari/`（src/data/kihon/hiyari.mjs）に、職場を測る記録帳（/kihon/sokutei/・#77）と同じ形の「ヒヤリハットの帳」を足す。欄は 日付（はじめは今日）・場所（`inputmode="text"`・`maxlength="20"`）・何が起きそうだったか（`maxlength="60"`）・事故の型（月のヒヤリハットの紙の `tally.types` の21分類から1つえらぶ。えらばなくてもよい）・対策（`maxlength="40"`）。「帳に残す」で localStorage の新しいキー `anzen-hiyari-v1` に残す（送らない）。その下に、えらんだ月（記録のある月だけをえらべる。はじめは記録のいちばん新しい月）の一覧（日付の順・1行ずつ消せる）と、その月の件数・事故の型ごとの件数（多い順）を、いまの表（pg-t）で出す。足す・消す・月ごとに数えるは新しい部品 `src/client/hiyari.mjs`（sokutei.mjs と同じく、ページでは export を外して `clientLib('hiyari')` で入れる）、画面の動きは `src/client/hiyari.js`。kihon-tools.mjs の TOOLS に `hiyari` を足し、hiyari.mjs のデータに `tool: 'hiyari'` と toolData（欄の名前）。kihon.mjs の js の読み分け（いまは sokutei だけ）に hiyari を足す。プライバシーポリシー（src/pages/info.mjs の `STORED`）に「ヒヤリハットの帳に残した記録」を1行。印刷の紙に入れるのは次の項目
+- できあがりの条件：`npm run check` が緑。新しい tests/hiyari.test.mjs で、キーの名前・送らない（fetch・sendBeacon・XMLHttpRequest がない）・月ごとの件数と事故の型ごとの件数・21分類にない型は数えない・STORED にある、を見る。場所や「何が起きそうだったか」に `<b>` などを入れても HTML にならない（エスケープ）。用紙（報告書の紙・月の紙）の印刷はいままでどおり A4 1枚ずつ（Playwright で PDF にして数える）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：連絡 C-026 の③「自分で計算できる・自分の数字が残る」（11/6 しょーくん「自分で計算できるなどの来る理由を継続していくことが大切」・claude/common-tasks.md）と、楽しさの7つの③「積み上がるもの」④「ここにしかない記録」（連絡 C-016・claude/site-principles.md の「楽しさで、わざわざ来てもらう」）。/kihon/hiyari/ は「ヒヤリハット 書き方」「ヒヤリハット報告書」で出ているのに 66.5位（claude/search-data-anzen.md の 11/11 の回：8表示）。記入例は職場のあんぜんサイトの事例だけ・事故の型は職場のあんぜんサイトの21分類の名前・集計と委員会での話し合いは法令の義務ではない（claude/anzen-handoff.md の「大事な決めごと」のヒヤリハット）。利用者のデータは端末の中だけで送らない（CLAUDE.md）。プライバシーポリシーの「ブラウザに保存する情報」に足す（資格の期限の台帳 #102 と同じ）
+- 迷ったら：placeholder に自分で作った例文は入れない（記入例は職場のあんぜんサイトの事例だけのため。欄の名前だけでよい）。帳の頭の1行は「人の名前は書かない。記録はこの端末の中だけ」の形で、.u-note の26字に収める。日付と「何が起きそうだったか」が空なら残さない（1行の案内）。同じ日・同じ文でも上書きせず足す（ヒヤリハットは同じことが2回起きてよいため）。記録は500件まで。こえたら残さず「古い記録を消してから」の1行（だまって消さない）。月は日付の年と月で分け、年度では分けない。書きかえの機能は作らない（消して入れ直す）。新しい見た目の形は作らず、記録帳（sokutei）の部品と表（pg-t）を使う。記録帳の画面の大きさ（入力から答えまでスマホ1画面）は、帳の入力の欄までがスマホの1画面に入ればよい（一覧と表は下へ）。「ヒヤリハットの集計は義務？」の FAQ の答えはそのまま
+- 読むファイル：CLAUDE.md、src/data/kihon/hiyari.mjs、src/pages/kihon.mjs・kihon-tools.mjs、src/client/sokutei.mjs・sokutei.js（作りを写す）、src/pages/info.mjs（STORED）、tests/sokutei.test.mjs、docs/shikumi.md の「知識のページ」
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-22）
+
+### [ ] ヒヤリハットを端末に残す帳（その2：月の紙に入れて印刷）
+- やること：その1で残した記録を、いまの「月のヒヤリハット」の紙（hiyari.mjs の `sheet.tally`・委員会用の1か月の集計表）に入れて印刷できるようにする。帳でえらんだ月の記録を、紙の表の 日付・場所・何が起きそうだったか・事故の型・対策 の欄に日付の順で入れ、件数の欄に数を入れる（「対策をした日」と「委員会で話したこと」は手で書くので空のまま）。記録のない月や帳が0件のときは、いまの白紙の紙のまま。kihon.mjs の紙の表の作り（`s.fill === 'sokutei'` の形）に `fill: 'hiyari'` を足し、紙を埋めるのは src/client/hiyari.js
+- 順番：「ヒヤリハットを端末に残す帳（その1）」のあと（同じ hiyari.js・tests/hiyari.test.mjs をさわる。マージ待ちなら、そのブランチの上に積む。その1がまだ PR になっていなければ、この項目は取らずに止める）
+- できあがりの条件：`npm run check` が緑。印刷が A4 1枚のまま（Playwright で、記録0件・5件・12件で PDF にしてページ数を数える）。tests/hiyari.test.mjs に、紙の行に入るのは `tally.rows`（いまは10行）まで・こえた分の数の1行・記録のない月は空の紙、を足した。紙の上でも `<b>` などが HTML にならない。紙の下の事故の型の21分類（この並び・名前のまま）は変わらない。スマホ（390×660）のスクショと PDF の1ページめの絵を並べて1枚にした
+- 決まったこと：その1の決まったことと同じ。印刷は A4 1枚で、紙のすみにサイト名と QR（CLAUDE.md・claude/anzen-handoff.md の「大事な決めごと」）。資格の期限の台帳の紙（#104）・職場を測る記録帳の紙（#77）と同じ形
+- 迷ったら：紙に入りきらない月は、日付の新しい順ではなく古い順に10行入れ、紙の下に「ほかの◯件は画面の帳で見る」の1行（記録帳と台帳の紙と同じ形・.ps-note）。件数の欄は、紙に入らなかった分も入れた、その月の全部の数。事故の型の欄は21分類の名前のまま（略さない）。字が欄に入りきらないときは、字を小さくせず折り返す（それで2枚になるときは「何が起きそうだったか」の列を広げ、ほかの列でせばめる。それでも収まらなければ PR の本文に書いて止める）。報告書の紙（1件ずつの用紙）には入れない
+- 読むファイル：CLAUDE.md、src/data/kihon/hiyari.mjs（tally）、src/pages/kihon.mjs（紙の表・fill）、src/client/hiyari.mjs・hiyari.js（その1で作る）、src/client/sokutei.js（紙を埋める形）、tests/hiyari.test.mjs、docs/shikumi.md の「印刷」
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-22）
+
+### [ ] 業種の入口に「この業種で使う道具と知識」
+- やること：業種の入口 `/anzen/gyoshu/<業種>/`（src/pages/gyoshu.mjs）の「ほかの月のテーマ」の下・広告の枠 `adSlot('end')` の上に、その業種の担当者が使う知識のページ・道具へのリンクを、理由の1行（`.ym-d` の灰色の1行。テーマのページの「あわせて見る」と同じ形）つきで2〜4本出す「あわせて見る」の節を足す。つなぎ方は src/data/kanren.mjs に新しい `GYOSHU_KANREN`（業種の key → [{ href, t, d }]）を足し、d はなるべく今の `D`（relD）の言い方を使う。清掃・ビルメンのいまの「あわせて見る」（資格の更新・サクッと計算の2つ・読みもの）は残し、その前に足す。ほかの3業種は、いまの読みものの節（yomiBackSec）の中に入れる形でも、別の節でもよい（同じ見出しを2つ出さない）。テストを足す（tests/numa.test.mjs か新しい tests/gyoshu.test.mjs。dist を読む）
+- できあがりの条件：`npm run check` が緑。テストで、GYOSHU_KANREN の href がどれも dist にあるページ・4業種のどの入口にも1本以上・1ページ5本まで（読みもの・資格の更新・サクッと計算もふくめて）・どの行にも d がある（全角30字まで）・節は広告の枠より上、を見る。入口の title・説明文（gyoshuDesc）は変えない。4業種の入口のスマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
+- 決まったこと：連絡 C-027「サイトの中の沼」（claude/common-tasks.md）：読み終えた人が「戻る」を押さずに、関係の理由が分かる次のページへ進めるように。数はしぼる・並べるだけにしない・水増ししない（この山の「このテーマを深く」の決まったこと）。業種の入口はクリックの出ているページ（claude/search-data-anzen.md の 11/11 の回：/anzen/gyoshu/seizo/ 7表示・2クリック・3.7位）で、答えのページを育てる（連絡 C-026）。C-027 のつなぎは検索の落ちこみのあいだもしてよい（claude/common-tasks.md の C-028）。ほかのサイトへのリンクは新しく足さない（claude/anzen-handoff.md の「広告・アフィリエイト・お問い合わせ」：C-027 では、ほかのサイトへのリンクは足さない）。つなぎのリストは .krel＋.ym-d で、新しい形は作らない（claude/anzen-handoff.md の「デザイン」）
+- 迷ったら：えらぶページは、その業種の中身があるもの（業種ごとの事例・判定のある知識のページ）か、その業種のテーマの掲示・やることに出てくる道具だけにする。例：事務所・店舗 → /kihon/setsubi/（照度・トイレの数・救急箱）・/kihon/sokutei/、飲食 → /kihon/hiyari/・/kagaku/mazenai/、製造 → /kihon/ky/・/kagaku/sds/・/shikaku/tokubetsu/、清掃・ビルメン → /kagaku/mazenai/。データを開いてその業種の中身がなければ外す（無理に足さない）。D にないページの d は、そのページの h1 か title の言い方から短く作り、「おすすめ」「便利」など使わない言葉を使わない。1ページ5本をこえるときは読みものを残し、足すほうを減らす。トップ・月のページ・テーマのページはさわらない。印刷には出さない（np。入口に紙はないので、ふつうはなにもしなくてよい）
+- 読むファイル：CLAUDE.md、src/pages/gyoshu.mjs、src/data/kanren.mjs（D・relD・MAX_KANREN）、src/parts.mjs（yomiBackSec・yomiBackLi）、src/data/kihon/ の各ファイル（業種の中身があるかを見る）、tests/numa.test.mjs
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-22）
+
+### [ ] トップに「資格の期限が近い人」の1行（台帳から）
+- やること：トップ（src/pages/home.mjs）の「これからの予定」の節の終わり（`calSub()` のあと）に、ふだんは隠した1行 `<p class="u-note dai-near" hidden>` を置き、端末の資格の期限の台帳（localStorage `anzen-shikaku-v1`・#102）に、期限まで180日以内か期限切れの行があるときだけ、「資格の期限が近い人 ◯人・あと◯日」（いちばん近い行の残りの日数。期限切れなら「期限切れ」）を、台帳 `/shikaku/koushin/#db-h` への文字のリンクで出す。台帳の読み取りと日数はいまの src/client/daicho.mjs（daiLoad・daiRows・daiLeft）を使い、トップの js に `clientLib('ics')`・`clientLib('daicho')` と新しい小さな `src/client/dai-near.js` を足す（同じ計算を2か所に書かない）。記録を新しく保存しない（読むだけ）
+- できあがりの条件：`npm run check` が緑。テスト（tests/shikaku.test.mjs か新しいテスト）で、トップに `dai-near` の行が hidden で入っている・送らない（fetch・sendBeacon・XMLHttpRequest がない）を見る。Playwright で、台帳が0件・期限が200日先の1件だけ・30日先と期限切れの2件、の3つで開き、1つめと2つめは出ない・3つめは「2人・期限切れ」が出る、を確かめた。トップのページの重さ（gzip）の増え方を PR の本文に書いた。スマホ（390×660）でトップの1画面めが変わっていないことをスクショで見た
+- 決まったこと：楽しさの7つの②「呼び戻せる入口」③「積み上がるもの」（連絡 C-016・claude/site-principles.md の「楽しさで、わざわざ来てもらう」）と、連絡 C-026 の③「自分の数字が残る」：台帳に残した数字が、次にトップを開いたときに見える。資格の更新はいちばん表示の多いページ（claude/search-data-anzen.md の 11/11 の回：/shikaku/koushin/ 69表示・8.0位）。記録は端末の中だけで送らない（CLAUDE.md）。新しい保存のキーは作らないので、プライバシーポリシーの STORED は変えない。トップのいちばん上は「◯月の掲示と朝礼」のまま（CLAUDE.md の「トップ」）。anzen は検索の「くらべ役」で作りを大きく変えない（claude/common-tasks.md の C-028）＝1行だけ足す
+- 迷ったら：180日は、ふだん隠した行が出る目安として決めた（台帳の表の「期限切れ」の出し方は変えない）。呼び名はトップに出さない（人数と日数だけ）。ボタンや色の印・「NEW」などは付けず、いまの .u-note の文字のリンクのまま。.u-note の26字に収める。localStorage が使えないときは、なにも出さない（エラーを出さない）。「今年度の記録」の節には置かない（掲示・朝礼の記録とまぜない）。daicho.mjs が ics.mjs の icsLimit を使うので、ics を先に入れる（資格のページと同じ順）。トップのほかの節はさわらない
+- 読むファイル：CLAUDE.md、src/pages/home.mjs、src/pages/shikaku.mjs（DAI_HREF・js の入れ方）、src/client/daicho.mjs・daicho.js、src/layout.mjs（clientLib）、tests/shikaku.test.mjs、docs/shikumi.md の「トップ」「資格の更新の期限」
+- マージ：する
+- 足した：育てる山の補充（自動・2026-11-22）
