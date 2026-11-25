@@ -38,6 +38,13 @@ export const TENTOU = {
     { q: '冬の転倒の運動は、いつありますか？', a: '雪の多い地域の労働局が、12月から2月か3月まで行います。名前と期間は局ごとにちがいます。' },
     { q: '凍った道は、どう歩けば転びにくいですか？', a: '小さな歩幅で、靴の裏全体をつけてゆっくり歩きます。手はポケットに入れずに出しておきます。' },
   ],
+  // よくある質問の答えを確かめた資料のうち、上の出典にないもの（#127・入口の出典に出る。c は開いて確かめた日）
+  faqSrc: [
+    { t: '職場のあんぜんサイト 冬季における転倒防止対策（小さな歩幅で靴の裏全体を地面に付けて歩く）', u: 'https://anzeninfo.mhlw.go.jp/information/tentou1501_28.html', c: '2026-11-25' },
+    { t: '石川労働局 冬季における転倒防止対策（小さな歩幅で靴の裏全体を地面に付けて歩く）', u: 'https://jsite.mhlw.go.jp/ishikawa-roudoukyoku/content/contents/002477015.pdf', c: '2026-11-25' },
+    { t: '富山労働局 令和7年度「冬季無災害運動」（ポケットに手を入れて歩かない）', u: 'https://jsite.mhlw.go.jp/toyama-roudoukyoku/news_topics/oshirase/R06toukimusaigai_00003.html', c: '2026-11-22' },
+    { t: '松本労働基準監督署 令和7年度冬季労働災害防止運動（ポケットに手を入れたまま歩かない）', u: 'https://jsite.mhlw.go.jp/nagano-roudoukyoku/content/contents/R7_toukirousaiboushi-leaflet_matsumoto.pdf', c: '2026-11-22' },
+  ],
   gyoshu: [
     {
       key: 'jimusho',
