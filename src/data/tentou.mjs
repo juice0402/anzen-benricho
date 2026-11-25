@@ -41,7 +41,6 @@ export const TENTOU = {
   // よくある質問の答えを確かめた資料のうち、上の出典にないもの（#127・入口の出典に出る。c は開いて確かめた日）
   faqSrc: [
     { t: '職場のあんぜんサイト 冬季における転倒防止対策（小さな歩幅で靴の裏全体を地面に付けて歩く）', u: 'https://anzeninfo.mhlw.go.jp/information/tentou1501_28.html', c: '2026-11-25' },
-    { t: '石川労働局 冬季における転倒防止対策（小さな歩幅で靴の裏全体を地面に付けて歩く）', u: 'https://jsite.mhlw.go.jp/ishikawa-roudoukyoku/content/contents/002477015.pdf', c: '2026-11-25' },
     { t: '富山労働局 令和7年度「冬季無災害運動」（ポケットに手を入れて歩かない）', u: 'https://jsite.mhlw.go.jp/toyama-roudoukyoku/news_topics/oshirase/R06toukimusaigai_00003.html', c: '2026-11-22' },
     { t: '松本労働基準監督署 令和7年度冬季労働災害防止運動（ポケットに手を入れたまま歩かない）', u: 'https://jsite.mhlw.go.jp/nagano-roudoukyoku/content/contents/R7_toukirousaiboushi-leaflet_matsumoto.pdf', c: '2026-11-22' },
   ],

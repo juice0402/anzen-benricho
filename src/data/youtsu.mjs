@@ -43,7 +43,7 @@ export const YOUTSU = {
   ],
   // よくある質問の答えを確かめた資料のうち、上の出典にないもの（#127・入口の出典に出る。c は開いて確かめた日）
   faqSrc: [
-    { t: '茨城労働局 妊産婦等の女性に就業させてはならない業務（満18歳以上の女性は断続作業30kg・継続作業20kg）', u: 'https://jsite.mhlw.go.jp/ibaraki-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_keiyaku/hourei_seido/kijun01/kijun01_21.html', c: '2026-11-25' },
+    { t: '厚生労働省 妊産婦等の就業制限の業務の範囲（表2：満18歳以上の女性は断続作業30kg・継続作業20kg）', u: 'https://www.mhlw.go.jp/bunya/koyoukintou/seisaku05/pdf/01d02.pdf', c: '2026-11-25' },
   ],
   gyoshu: [
     {
