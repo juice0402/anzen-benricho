@@ -34,6 +34,15 @@ export const KOUTSU = {
     { q: '自転車のながらスマホは、反則金の対象ですか？', a: '2026年4月1日から、16歳以上の人は反則金の対象です。スマホを手に持って見ながら乗ると1万2千円です。' },
     { q: 'アルコールチェックは、どの事業所に要りますか？', a: '安全運転管理者を置く事業所の法令の義務です。運転の前と後に検知器を使って確かめ、記録を1年間残します。' },
   ],
+  // よくある質問の答えを確かめた資料のうち、上の出典にないもの（#125・入口の出典に出る。c は開いて確かめた日）
+  faqSrc: [
+    { t: '警察庁 自転車ルールブック（令和7年9月。ヘルメットの着用の努力義務・ながらスマホの反則金1万2千円・令和8年4月1日から）', u: 'https://www.npa.go.jp/bureau/traffic/bicycle/portal/pdf/guide_traffic-rules.pdf', c: '2026-11-25' },
+    { t: '警察庁 頭部の保護が重要です（全ての自転車利用者のヘルメット着用が努力義務）', u: 'https://www.npa.go.jp/bureau/traffic/anzen/toubuhogo.html', c: '2026-11-25' },
+    { t: '警察庁 自転車の交通反則通告制度（2026年4月1日から・16歳以上）', u: 'https://www.npa.go.jp/bureau/traffic/bicycle/info.html', c: '2026-11-21' },
+    { t: '警察庁 令和8年4月1日から自転車に青切符が適用されます（ポスター）', u: 'https://www.npa.go.jp/bureau/traffic/bicycle/portal/pdf/r7_poster_tate_aokippu.pdf', c: '2026-11-25' },
+    { t: '警察庁 自転車の新しい制度（青切符の対象は16歳以上・2026年4月1日から）', u: 'https://www.npa.go.jp/bureau/traffic/bicycle/portal/system.html', c: '2026-11-25' },
+    { t: '警察庁 安全運転管理者による酒気帯びの確認のQ&A（運転の前と後・検知器・記録を1年間保存）', u: 'https://www.npa.go.jp/bureau/traffic/anzenuntenkanrisya/pdf/QA.pdf', c: '2026-11-25' },
+  ],
   gyoshu: [
     {
       key: 'jimusho',
