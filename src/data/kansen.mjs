@@ -37,6 +37,11 @@ export const KANSEN = {
     { q: 'おう吐物を消毒する液の濃さは？', a: '塩素系の消毒液で、おう吐物の処理には0.1%、トイレやドアノブなどふだんのふき取りには0.02%を使います。' },
     { q: 'アルコールの消毒は、手洗いのかわりになりますか？', a: 'ノロウイルスにはアルコールがあまり効かず、かわりになりません。トイレのあとや調理の前は、石けんと流水で手を洗います。' },
   ],
+  // よくある質問の答えを確かめた資料のうち、上の出典にないもの（#125・入口の出典に出る。c は開いて確かめた日）
+  faqSrc: [
+    { t: '厚生労働省 インフルエンザ（総合ページ）（例年12月〜3月が流行シーズン）', u: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/infulenza/index.html', c: '2026-11-25' },
+    { t: '大阪府 ノロウイルスの感染を広げないために（消毒液の濃さ 0.1%と0.02%）', u: 'https://www.pref.osaka.lg.jp/documents/3759/noroleaflet.pdf', c: '2026-11-21' },
+  ],
   gyoshu: [
     {
       key: 'jimusho',

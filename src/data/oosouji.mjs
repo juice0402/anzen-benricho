@@ -35,6 +35,14 @@ export const OOSOUJI = {
     { q: '機械を掃除するとき、はさまれを防ぐには？', a: '機械を止めてスイッチを切り、完全に止まってから手を入れます。はさまれは、掃除や調整などふだんと違う作業のときに多く起きています。' },
     { q: '油やワックスをふいた布は、どう捨てますか？', a: '水を十分にふくませてから捨てます。水にひたさないまま袋や箱に入れて置いておくと、自然に発火することがあります。' },
   ],
+  // よくある質問の答えを確かめた資料のうち、上の出典にないもの（#125・入口の出典に出る。c は開いて確かめた日）
+  faqSrc: [
+    { t: '鳥取労働局 はしご、脚立からの墜落・転落防止（天板での作業をしない）', u: 'https://jsite.mhlw.go.jp/tottori-roudoukyoku/content/contents/5.tenntouri-huretto-031027.pdf', c: '2026-11-21' },
+    { t: '岡山労働局 脚立・はしごの安全使用（天板での作業をしない）', u: 'https://jsite.mhlw.go.jp/okayama-roudoukyoku/content/contents/000683747.pdf', c: '2026-11-21' },
+    { t: '武生労働基準監督署 はさまれ・巻き込まれ災害の撲滅に向けて（機械を止めてから掃除）', u: 'https://jsite.mhlw.go.jp/fukui-roudoukyoku/content/contents/001480527.pdf', c: '2026-11-21' },
+    { t: 'NITE 油の自然発火の注意喚起（ワックスや塗料が付いた布をふくむ。2025年7月）', u: 'https://www.nite.go.jp/data/000158361.pdf', c: '2026-11-21' },
+    { t: '東京都 油による自然発火に注意（油の付いた布の自然発火）', u: 'https://www.shouhiseikatu.metro.tokyo.lg.jp/trouble/documents/trouble74-shizenhakka.pdf', c: '2026-11-21' },
+  ],
   gyoshu: [
     {
       key: 'jimusho',

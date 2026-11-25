@@ -109,7 +109,7 @@ ${fuda((g) => gyoshuPath(t, g))}
 ${faqSec(t.faq, 'tf-h')}
 <section class="sec sec-src" aria-labelledby="src-h">
 <h2 class="sec-h" id="src-h">出典</h2>
-${srcList([...t.common, ...t.gyoshu.map((g) => g.src[0])])}
+${srcList([...t.common, ...t.gyoshu.map((g) => g.src[0]), ...(t.faqSrc || []).map((s) => ({ ...s, chk: `確認日 ${fmtDate(s.c)}` }))])}
 <p class="src-note">確認日 ${fmtDate(t.checked)}。${esc(t.note)}</p>
 </section>
 ${nextHtml(t)}

@@ -32,3 +32,21 @@ test('テーマ：よくある質問は入口だけ（出典の上・印刷に�
   assert.match(top.html, /<section class="sec paper np" aria-labelledby="tf-h">/);
   for (const p of pages) if (p !== top) assert.ok(!p.html.includes('id="tf-h"'), `${p.path} にはよくある質問を出さない`);
 });
+
+// よくある質問の答えを確かめた資料（#125 の続き・司令塔 11/25「出典に足してから」）：入口の出典にだけ出し、確認日を添える
+test('テーマ：よくある質問の出典（faqSrc）は名前・URL・確認日があり、入口の出典にだけ出る', () => {
+  for (const t of ALL_THEMES) {
+    if (t.faqSrc === undefined) continue;
+    assert.ok(Array.isArray(t.faqSrc) && t.faq && t.faq.length, `${t.slug} faqSrc はよくある質問のあるテーマだけ`);
+    const pages = [].concat(theme(t));
+    const top = pages.find((p) => /\/anzen\/theme\/[^/]+\/$/.test(p.path));
+    for (const s of t.faqSrc) {
+      assert.ok(s.t && /^https:\/\//.test(s.u), `${t.slug} 名前と URL: ${s.t}`);
+      assert.match(s.c, /^\d{4}-\d{2}-\d{2}$/, `${t.slug} 確認日: ${s.t}`);
+      const days = (Date.now() - Date.parse(s.c + 'T00:00:00+09:00')) / 86400000;
+      assert.ok(days <= 90, `${t.slug} 確認日 ${s.c} から90日をこえた。公式を開いて確かめ直す: ${s.t}`);
+      const i = top.html.indexOf(`href="${s.u}"`);
+      assert.ok(i > top.html.indexOf('id="src-h"'), `${t.slug} 入口の出典に出る: ${s.u}`);
+    }
+  }
+});

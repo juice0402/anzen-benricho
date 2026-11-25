@@ -48,5 +48,6 @@ export const PHOTO = {
   'ym-touketsu-iriguchi': '雪の日のビルの出入口の床に敷いた、長いゴムの泥落としマット',
   'ym-chubo-yuka-kutsu': '飲食店の厨房の洗い場の前の床と、そろえて置いた白い作業靴',
   'ym-kourei-tentou-minaoshi': '明るい廊下の壁の手すりと、ふちに黄色い滑り止めを付けた低い段差',
+  'ym-youtsu-omosa-meyasu': '倉庫の通路に置いた平台車と、その上にのせた段ボール箱',
 };
 export const photoBase = (k) => `/img/photo/${k}`;
