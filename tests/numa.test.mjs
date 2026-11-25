@@ -13,7 +13,7 @@ const seisou = GYOSHU.find((g) => g.key === 'seisou');
 
 test('続けて準備する：来月のテーマを同じ業種で・この月の号', () => {
   const r = nextLinks(th('tentou'), seisou);
-  assert.deepEqual(r.map((x) => x.href), ['/anzen/theme/youtsu/seisou/', '/anzen/1/']);
+  assert.deepEqual(r.map((x) => x.href), ['/anzen/theme/youtsu/seisou/', '/anzen/theme/label/seisou/', '/anzen/1/']);
   assert.match(r[0].t, /^2月 腰痛予防（清掃・ビルメン）$/);
   // 11月 → 12月は4テーマ、12月 → 1月は2テーマ（年をまたぐ）
   assert.equal(nextLinks(th('kasai'), seisou).length, 4 + 1);

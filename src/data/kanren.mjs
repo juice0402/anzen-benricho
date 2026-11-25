@@ -110,6 +110,7 @@ const D = {
   '/kihon/shishobyo/': '休業4日以上は遅滞なく、1〜3日は3か月ごと',
   '/kagaku/mazenai/': '塩素系と酸性の洗剤をまぜない',
   '/kagaku/': 'SDS・化学物質管理者・リスクアセスメント',
+  '/kagaku/kanrisha/': '対象物を扱う事業場は、人数にかかわらず選ぶ',
   '/shikaku/kigen/': '推進者講習や特別教育に有効期限はない',
   '/shikaku/koushin/': '4つの資格の次の期限を出す',
   '/shikaku/koushin/byouin/': '4年ごと。全国ビルメンテナンス協会の再講習',
