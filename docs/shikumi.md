@@ -50,7 +50,7 @@ CLAUDE.md には要約だけを書き、くわしい仕様と経緯はここに�
 
 ## ポスター
 
-- ポスター（10/26 連絡 C-004）：Canva Pro で A4 の印刷用 PDF。絵は自分たちで描く（`art/poster/<テーマ>/` の SVG・PNG。黒い太い線と赤1色、人は描かない）。文字はデータの掲示の決まりから。Canva へは raw.githubusercontent.com の PNG を取りこむ（シェルからは Canva に上げられない）。PDF は `art/poster/import.json` を claude/ のブランチに push すると `poster-import.yml` が public/poster/ に取りこむ。業種のデータの `poster` に置き場所を書くと「A4で印刷」の下にリンクが出る。10/27 時点で12月4テーマ・1月〜3月・4月2テーマ・5月〜11月・11月2テーマの68枚（11月は働きすぎを防ぐ・職場の火事に備える。12か月すべてにテーマがある）
+- ポスター（10/26 連絡 C-004）：Canva Pro で A4 の印刷用 PDF。絵は自分たちで描く（`art/poster/<テーマ>/` の SVG・PNG。黒い太い線と赤1色、人は描かない）。文字はデータの掲示の決まりから。Canva へは raw.githubusercontent.com の PNG を取りこむ（シェルからは Canva に上げられない）。PDF は `art/poster/import.json` を claude/ のブランチに push すると `poster-import.yml` が public/poster/ に取りこむ。業種のデータの `poster` に置き場所を書くと「A4で印刷」の下にリンクが出る。10/27 時点で12月4テーマ・1月〜3月・4月2テーマ・5月〜11月・11月2テーマの68枚（11月は働きすぎを防ぐ・職場の火事に備える。12か月すべてにテーマがある）。11/25 に2月の2つ目「洗剤と薬品のラベルを確かめる」（label・化学物質管理強調月間）の4枚を足した（Canva DAHb7gjelPQ。書き出しは Claude の環境から直接取れた）
   - 道具：絵は `art/poster/lib.mjs` の部品で描き `render.mjs` で PNG（`_sheet.png` で4枚を見る）。Canva は大掃除の本番を copy-design すると ID がそのままなので、`canva-ops.mjs <テーマ>` が `template-b.json`・`assets.json`・`alt.json` から edit-design の操作を作る（字の幅を測って1行に収める。1けたの月は字を寄せ、題が長いと業種を帯の上へ）。書き出しはページごと（pdf・a4・pro）、URL は約1時間で切れる
 
 ## トップ
