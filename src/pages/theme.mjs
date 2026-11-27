@@ -1,12 +1,12 @@
 // 毎月のテーマ（例 12月「年末の大掃除」）
-//   /anzen/theme/<slug>/          テーマの入口：運動、業種ごとに多いけが、業種をえらぶ
+//   /anzen/theme/<slug>/          テーマの入口：運動、業種ごとに多いけが、業種をえらぶ、よくある質問（faq・#125。入口だけ）
 //   /anzen/theme/<slug>/<業種>/   業種のページ：掲示・朝礼・やること・出典（1業種1ページ。検索と広告の審査で中身が1ページにまとまるように）
 import { page, esc, script, adSlot, clientLib } from '../layout.mjs';
 
 // 今月の実施（#43）：押した日を端末の中だけに残す（src/client/rec.mjs）。今ある「やること」のチェックは保存しないまま
 const REC_ITEMS = ['掲示を貼った', '朝礼で話した', 'やることを済ませた'];
 import { SITE } from '../site.mjs';
-import { themePath, gyoshuPath, fuda, monthHead, titleHtml, undoLine, yomiBack } from '../parts.mjs';
+import { themePath, gyoshuPath, fuda, monthHead, titleHtml, undoLine, yomiBack, faqSec } from '../parts.mjs';
 import { ALL_THEMES } from '../data/themes.mjs';
 import { qrSvg } from '../qr.mjs';
 import { themeDesc, themeGyoshuDesc } from '../describe.mjs';
@@ -106,9 +106,10 @@ ${fuda((g) => gyoshuPath(t, g))}
 <h2 class="sec-h" id="memo-h">業種ごとに多いこと</h2>
 <dl class="memo">${t.gyoshu.map((g) => `<dt><a href="${gyoshuPath(t, g)}">${esc(g.name)}</a></dt><dd>${esc(g.memo)}</dd>`).join('')}</dl>
 </section>
+${faqSec(t.faq, 'tf-h')}
 <section class="sec sec-src" aria-labelledby="src-h">
 <h2 class="sec-h" id="src-h">出典</h2>
-${srcList([...t.common, ...t.gyoshu.map((g) => g.src[0])])}
+${srcList([...t.common, ...t.gyoshu.map((g) => g.src[0]), ...(t.faqSrc || []).map((s) => ({ ...s, chk: `確認日 ${fmtDate(s.c)}` }))])}
 <p class="src-note">確認日 ${fmtDate(t.checked)}。${esc(t.note)}</p>
 </section>
 ${nextHtml(t)}

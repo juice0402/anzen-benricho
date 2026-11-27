@@ -12,6 +12,7 @@ const add = (s, where) => list.set(s.u, list.get(s.u) || { ...s, where });
 for (const t of THEMES) {
   for (const s of t.common) add(s, t.title);
   for (const g of t.gyoshu) for (const s of g.src) add(s, `${t.title}・${g.label}`);
+  for (const s of t.faqSrc || []) add(s, `${t.title}・よくある質問`);
 }
 for (const h of HOUREI) for (const s of h.src) add(s, `法改正・${h.title}`);
 for (const k of SHIKAKU) for (const s of k.src) add(s, `資格・${k.name}`);
@@ -46,6 +47,7 @@ for (const s of list.values()) {
 const days = (iso) => Math.floor((Date.now() - Date.parse(iso + 'T00:00:00+09:00')) / 86400000);
 const old = [
   ...THEMES.map((t) => [t.title, t.checked]),
+  ...THEMES.flatMap((t) => (t.faqSrc || []).map((s) => [`${t.title}・よくある質問の出典`, s.c])),
   ['法改正', HOUREI_CHECKED],
   ['資格の更新の期限', SHIKAKU_CHECKED],
   ['資格の再講習の日程と受講料', NITTEI_CHECKED],
