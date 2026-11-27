@@ -53,7 +53,7 @@
     if (fyEl) fyEl.textContent = fy + '年度';
   }
 
-  // 1年の実施記録の表：記録のある所に日付、押したテーマ
+  // 1年の実施記録の表：記録のある所に日付、押したテーマ。1問はその月の問いが問題集で全部正解なら○（quiz.mjs を前に入れたときだけ・読むだけ）
   var tbl = document.querySelector('.kr-t');
   if (tbl) {
     var st = recLoad();
@@ -62,10 +62,13 @@
     try { names0 = JSON.parse(tbl.getAttribute('data-names') || '{}'); } catch (e) {}
     var fyT = document.querySelector('.kr-fyt');
     if (fyT) fyT.textContent = String(f);
+    var qst = typeof quizLoad === 'function' ? quizLoad() : null;
     tbl.querySelectorAll('tr[data-m]').forEach(function (tr) {
       var row = recRow(st, f, Number(tr.getAttribute('data-m')));
       var tds = tr.querySelectorAll('td');
       row.dates.forEach(function (d, k) { tds[k + 1].textContent = d ? Number(d.slice(5, 7)) + '/' + Number(d.slice(8, 10)) : ''; });
+      var qs = (tr.getAttribute('data-q') || '').split(',').filter(Boolean);
+      if (qst && quizStamp(qst, qs)) tds[4].textContent = '○';
       if (row.themes.length) {
         var names = row.themes.map(function (s) { return names0[s] || ''; }).filter(Boolean);
         if (names.length) tr.querySelector('.kr-th').textContent = names.join('・');

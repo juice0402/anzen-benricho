@@ -38,7 +38,7 @@ CLAUDE.md には要約だけを書き、くわしい仕様と経緯はここに�
 
 ## 今年度の記録
 
-- 今年度の記録（10/31 C-016 案B・#43）：業種のページの「今月の実施」（掲示・朝礼・やることを押した日）を端末の中だけに残す（localStorage `anzen-rec-v1`。`src/client/rec.mjs`・`rec.js`、`tests/rec.test.mjs`）。トップの今月のテーマの下にスタンプ帳（4月〜3月）、`/anzen/kiroku/` に1年の実施記録の A4 の表
+- 今年度の記録（10/31 C-016 案B・#43）：業種のページの「今月の実施」（掲示・朝礼・やることを押した日）を端末の中だけに残す（localStorage `anzen-rec-v1`。`src/client/rec.mjs`・`rec.js`、`tests/rec.test.mjs`）。トップの今月のテーマの下にスタンプ帳（4月〜3月）、`/anzen/kiroku/` に1年の実施記録の A4 の表。表の「1問」の欄は、各月の行の `data-q`（その月の quiz のあるテーマの slug）と問題集の記録 `anzen-quiz-v1` を rec.js が読み、全部正解なら○（読むだけ・年度で分けない。ページには `clientLib('quiz')` を rec の前に入れる・#136）
 
 ## 紙の QR とホーム画面に追加
 

@@ -48,3 +48,24 @@ test('問題集のスクリプトは送らない（通信の関数を使わな�
   }
   assert.ok(!/<script[^>]+src=/.test(qp.html.replace(/<script async src="https:\/\/pagead2[^>]+>/g, '')), '外のスクリプトを読まない');
 });
+
+// #136：1年の実施記録の紙に「1問」の欄。quiz のある月の行に data-q（その月の quiz のあるテーマの slug）、ない月は data-q なし
+test('1年の実施記録の表に「1問」の列。各月の行の data-q はその月の quiz のあるテーマ', async () => {
+  const { default: kirokuPage } = await import('../src/pages/kiroku.mjs');
+  const html = kirokuPage(ALL_THEMES).html;
+  const tbl = html.match(/<table class="pg-t kr-t"[\s\S]*?<\/table>/)?.[0] ?? '';
+  assert.ok(tbl.includes('<th>やること</th><th>1問</th><th>確認</th>'), '「やること」と「確認」のあいだに「1問」');
+  const rows = [...tbl.matchAll(/<tr data-m="(\d+)"( data-q="([^"]*)")?>([\s\S]*?)<\/tr>/g)];
+  assert.equal(rows.length, 12);
+  let withQ = 0;
+  for (const [, m, , q, inner] of rows) {
+    const want = ALL_THEMES.filter((t) => t.month === Number(m) && t.quiz).map((t) => t.slug);
+    if (want.length) { withQ++; assert.deepEqual((q || '').split(','), want, `${m}月の data-q`); }
+    else assert.ok(!q, `${m}月は quiz がないので data-q は空か無い`);
+    assert.equal((inner.match(/<td/g) || []).length, 6, `${m}月の欄の数`);
+  }
+  assert.ok(withQ > 0);
+  assert.ok(html.includes('function quizStamp('), 'quiz.mjs を export を外して入れる');
+  assert.ok(!/export /.test(html.match(/<script>[\s\S]*?<\/script>/g)?.join('') ?? ''), 'export が残っていない');
+  assert.ok(html.includes('1問は問題集で正解した月に○'), '紙の下の注記');
+});

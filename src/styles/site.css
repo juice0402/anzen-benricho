@@ -277,7 +277,10 @@ body { background: #fff; }
 .kr-t { font-size: 2.5cqw; table-layout: fixed; }
 .kr-t th:nth-child(1) { width: 8%; }
 .kr-t th:nth-child(2) { width: 38%; }
-.kr-t th:nth-child(n+3) { width: 13.5%; }
+.kr-t th:nth-child(n+3) { width: 12%; }
+.kr-t th:nth-child(6) { width: 8%; }
+.kr-t th:nth-child(7) { width: 10%; }
+.kr-t td:nth-child(6) { text-align: center; }
 .kr-t th[scope="row"] { white-space: nowrap; }
 .kr-t thead th { font-size: 2.2cqw; white-space: nowrap; }
 .kr-t td, .kr-t th[scope="row"] { height: 6.6cqw; }

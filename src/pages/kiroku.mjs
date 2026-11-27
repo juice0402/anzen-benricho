@@ -1,6 +1,6 @@
 // 1年の実施記録（A4 1枚）/anzen/kiroku/（10/31 連絡 C-016 案B・#43）
 // 表は4月〜3月。テーマの名前はビルドで入れ、掲示・朝礼・やることの日付は端末の記録から入れる（src/client/rec.js。送らない）。
-// 記録のない所は空欄（手で書ける）。印刷は紙（.psheet）だけ。ページには12か月のテーマの一覧（ページにしかない中身）
+// 1問の欄は、問題集（src/client/quiz.mjs）でその月の問いが全部正解なら○（読むだけ・年度で分けない。#136）。記録のない所は空欄（手で書ける）。印刷は紙（.psheet）だけ。ページには12か月のテーマの一覧（ページにしかない中身）
 // 一覧の各月に、その月のそろえる物へ文字のリンク（kauOfMonth。紙には出さない・楽天の商品は出さない。#110）
 import { page, esc, clientLib, script } from '../layout.mjs';
 import { SITE } from '../site.mjs';
@@ -19,13 +19,18 @@ export default function kirokuPage(themes) {
   const path = '/anzen/kiroku/';
   const fy = recFyOf(todayJst());
   const of = (m) => themes.filter((t) => t.month === m);
+  // 1問：その月の quiz のあるテーマの slug（ページで問題集の記録 anzen-quiz-v1 を読み、全部正解なら○。#136）
+  const qOf = (m) => {
+    const qs = of(m).filter((t) => t.quiz).map((t) => t.slug);
+    return qs.length ? ` data-q="${esc(qs.join(','))}"` : '';
+  };
   const names = Object.fromEntries(themes.map((t) => [t.slug, t.title]));
   const host = SITE.url.replace(/^https?:\/\//, '');
   const sheet = `<div class="psheet pg kr-sheet"><div class="ps-in">
 <p class="ps-title">安全衛生の実施記録 <span class="kr-fyt">${fy}</span>年度</p>
-<table class="pg-t kr-t" data-names="${esc(JSON.stringify(names))}"><thead><tr><th>月</th><th>テーマ</th><th>掲示</th><th>朝礼</th><th>やること</th><th>確認</th></tr></thead>
-<tbody>${REC_MONTHS.map((m) => `<tr data-m="${m}"><th scope="row">${m}月</th><td class="kr-th">${of(m).map((t) => esc(t.title)).join('・')}</td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table>
-<p class="ps-note">日付は、このサイトの業種のページで押した日。空欄は手で書く。確認は担当者の印</p>
+<table class="pg-t kr-t" data-names="${esc(JSON.stringify(names))}"><thead><tr><th>月</th><th>テーマ</th><th>掲示</th><th>朝礼</th><th>やること</th><th>1問</th><th>確認</th></tr></thead>
+<tbody>${REC_MONTHS.map((m) => `<tr data-m="${m}"${qOf(m)}><th scope="row">${m}月</th><td class="kr-th">${of(m).map((t) => esc(t.title)).join('・')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table>
+<p class="ps-note">日付は業種のページで押した日、1問は問題集で正解した月に○（年度で分けない）。空欄は手で書く。確認は担当者の印</p>
 <p class="ps-foot"><span>${esc(SITE.name)}</span><span>${host}</span>${qrSvg(SITE.url + path)}</p>
 </div></div>`;
   const body = `${bandHead('月ごとのテーマ', '1年の実施記録（A4）', '<p class="pg-lead">委員会や年度末の振り返りで使う1年の表</p>')}
@@ -47,7 +52,7 @@ ${sheet}
       path,
       corner: 'anzen',
       body,
-      js: `${clientLib('rec')}\n${script('rec')}\n${PRINT_JS}`,
+      js: `${clientLib('rec')}\n${clientLib('quiz')}\n${script('rec')}\n${PRINT_JS}`,
       crumbs: [{ name: '月ごとのテーマ', href: '/anzen/' }, { name: '1年の実施記録' }],
     }),
   };
