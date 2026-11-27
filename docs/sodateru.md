@@ -222,7 +222,7 @@
 - マージ：する
 - 足した：育てる山の補充（自動・2026-11-17）
 
-### [ ] 1年の実施記録に「今月の1問」の欄
+### [x] 1年の実施記録に「今月の1問」の欄（#136）
 - やること：1年の実施記録 `/anzen/kiroku/`（src/pages/kiroku.mjs の紙の表 `kr-t`）の「やること」と「確認」のあいだに「1問」の欄を足す。ビルドで各月の行（`tr data-m`）に、その月のテーマのうち quiz のあるテーマの slug を `data-q="slug,slug"` で入れ、ページでは端末の問題集の記録（localStorage の anzen-quiz-v1・src/client/quiz.mjs の `quizStamp`）を読んで、その月の問いが全部正解なら「○」を入れる（○を入れる処理は src/client/rec.js の `.kr-t` を埋める所に足す）（まだなら空欄＝手で書ける）。quiz.mjs はページでは export を外して入れる（`clientLib('quiz')` のいまの入れ方。rec と同じ）。紙の下の注記（.ps-note）に「1問は問題集で正解した月に○（年度では分けません）」を足す（1行の決まりにかかったら短くする）。記録を新しく保存しない（読むだけ）
 - できあがりの条件：`npm run check` が緑。テスト（tests/rec.test.mjs か tests/quiz.test.mjs）で、/anzen/kiroku/ の表に「1問」の列がある・quiz のある月の行に data-q がありテーマの slug と合う・quiz のない月は data-q が空か無い、を見る。Playwright で anzen-quiz-v1 に1つの月の全部の slug を入れて開き、その月の行だけに「○」が出る。印刷が A4 1枚のまま（Playwright で PDF にしてページ数を数える）。スマホ（390×660）とパソコン（1280×800）のスクショを並べて1枚にし、claude/site-principles.md の「使わないもの」と照らした
 - 決まったこと：楽しさの7つの③「積み上がるもの」④「ここにしかない記録」（連絡 C-016・claude/site-principles.md の「楽しさで、わざわざ来てもらう」）。問題集は正解した問いを端末の中だけに覚える（#88・src/client/quiz.mjs）。今年度の記録は端末の中だけで送らない（CLAUDE.md）。印刷は A4 1枚（CLAUDE.md）。新しい保存のキーは作らないので、プライバシーポリシーの STORED は変えない
