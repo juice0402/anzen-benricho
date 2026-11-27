@@ -81,7 +81,7 @@ export default {
 - [x] 厨房の床のすべりと靴 飲食店の転倒を床の手入れと履き物で減らす（PR #109・2026-11-15）
 - [x] 高年齢の人の転倒を減らす職場の見直し 段差・床・明るさと体力チェック（PR #124・2026-11-18）
 - [x] 腰痛を防ぐ重さの目安 体重の40%と女性の30kg・20kg（PR #130・2026-11-22）
-- [ ] お店のバックヤードのカゴ車・台車のけが — ロールボックスパレットの使い方の決まりごと（押す向き・前が見える高さ・床）／出典 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000098500.html ・ https://jsite.mhlw.go.jp/gunma-roudoukyoku/content/contents/001943839.pdf ／つなぐ先 /anzen/theme/youtsu/
+- [x] カゴ車のけがを防ぐ 使う前の5つの基本と止め方（PR #132・2026-11-25）
 - [ ] 50人未満の職場の委員会の進め方 — 委員会の義務がない職場で、関係労働者の意見を聴く機会（安衛則23条の2）をどう回すか／出典 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/1.html ・ https://www.mhlw.go.jp/content/11303000/001576427.pdf ／つなぐ先 月のページの「今月の委員会で話すこと」（/anzen/<月>/）・ /kihon/ninzu/ ・ /kihon/hozon/ ／経験：運営者の職場（50人以下）では安全衛生推進委員会を毎月1回ひらき、運営者が毎月1テーマの資料を作って配り、説明している
 - [ ] 指差し呼称とタッチ・アンド・コールは何のため？ — 2つの目的のちがい（指差呼称は確かめの誤りを減らす、タッチ・アンド・コールはチームの一体感）／出典 https://anzeninfo.mhlw.go.jp/yougo/yougo72_1.html ・ https://www.mhlw.go.jp/new-info/kobetu/roudou/gyousei/anzen/dl/shakai_e_Part2.pdf ／つなぐ先 /kihon/ky/
 - [ ] ヒヤリハットが出てこないときに見直すこと — 報告が集まらない職場で、責めない取り決めや共有のしかたを見直す／出典 https://anzeninfo.mhlw.go.jp/yougo/yougo26_1.html ・ https://anzeninfo.mhlw.go.jp/hiyari/anrdh00.html ／つなぐ先 /kihon/hiyari/
